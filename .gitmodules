@@ -1,0 +1,24 @@
+[submodule "TRAID_AID"]
+	path = TRAID_AID
+	url = https://github.com/Brucesquared2/TRAID_AID.git
+[submodule "TradingView-Screener"]
+	path = TradingView-Screener
+	url = https://github.com/Brucesquared2/TradingView-Screener.git
+[submodule "TA-Library---screeners"]
+	path = TA-Library---screeners
+	url = https://github.com/Brucesquared2/TA-Library---screeners.git
+[submodule "chrome-devtools-mcp"]
+	path = chrome-devtools-mcp
+	url = https://github.com/Brucesquared2/chrome-devtools-mcp.git
+[submodule "adk-python"]
+	path = adk-python
+	url = https://github.com/Brucesquared2/adk-python.git
+[submodule "reflex"]
+	path = reflex
+	url = https://github.com/Brucesquared2/reflex.git
+[submodule "node"]
+	path = node
+	url = https://github.com/Brucesquared2/node.git
+[submodule "TA_Library"]
+	path = TA_Library
+	url = https://github.com/Brucesquared2/TA_Library.git
