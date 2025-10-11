@@ -1,0 +1,261 @@
+Fibonacci Ratios HTF [theEccentricTrader]  ( Daily )
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Fibonacci Ratios HTF [theEccentricTrader]', overlay = true)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] ? low[1] : na
+
+htf = input.timeframe(title = 'HTF Resolution', defval = '1D')
+
+[shPriceHTF, slPriceHTF, closeHTF] = request.security(syminfo.tickerid, htf, [shPrice[1], slPrice[1], close[1]], lookahead = barmerge.lookahead_on)
+
+peakHTF = ta.valuewhen(shPriceHTF, shPriceHTF, 0)
+shOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+shCloseBarIndexHTF = ta.valuewhen(shPriceHTF and not shPriceHTF[1], bar_index, 0)
+
+troughHTF = ta.valuewhen(slPriceHTF, slPriceHTF, 0)
+slOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+slCloseBarIndexHTF = ta.valuewhen(slPriceHTF and not slPriceHTF[1], bar_index, 0)
+
+var shAnchorForSL = 0
+var slAnchorForSH = 0
+
+
+//////////// lines and labels //////////// 
+
+
+addExtensions = input(defval = true, title = 'Show Fibonacci Extensions', group = "Fibonacci Extensions")
+
+zeroLineColor = input(defval = color.blue, title = '00.0% Color', inline = '1', group = "Line Coloring") 
+twoThreeSixLineColor = input(defval = color.green, title = '23.6% Color', inline = '2', group = "Line Coloring")  
+threeEightTwoLineColor = input(defval = color.orange, title = '38.2% Color', inline = '3', group = "Line Coloring") 
+fiveHundredLineColor = input(defval = color.red, title = '50.0% Color', inline = '4', group = "Line Coloring")  
+sixOneEightLineColor = input(defval = color.yellow, title = '61.8% Color', inline = '5', group = "Line Coloring")  
+sevenEightSixLineColor = input(defval = color.maroon, title = '78.6% Color', inline = '6', group = "Line Coloring")  
+oneHundredLineColor = input(defval = color.purple, title = '100.0% Color', inline = '1', group = "Line Coloring")  
+oneSixOneEightLineColor = input(defval = color.yellow, title = '161.8% Color', inline = '2', group = "Line Coloring")  
+twoSixOneEightLineColor = input(defval = color.blue, title = '261.8% Color', inline = '3', group = "Line Coloring")  
+threeSixOneEightLineColor = input(defval = color.green, title = '361.8% Color', inline = '4', group = "Line Coloring")  
+fourTwoThreeSixLineColor = input(defval = color.orange, title = '423.6% Color', inline = '5', group = "Line Coloring")  
+fourSixOneEightLineColor = input(defval = color.red, title = '461.8% Color', inline = '6', group = "Line Coloring")
+
+selectExtend = input.string(title = 'Extend Line Type', defval = 'Right', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendLines = selectExtend == 'None' ? extend.none : selectExtend == 'Right' ? extend.right : selectExtend == 'Left' ? extend.left : selectExtend == 'Both' ? extend.both : na
+symbolRoundNumber = syminfo.mintick >= 0.1 ? 1 : syminfo.mintick == 0.01 ? 2 : syminfo.mintick == 0.001 ? 3 : syminfo.mintick == 0.0001 ? 4 : syminfo.mintick == 0.00001 ? 5 : 
+ syminfo.mintick == 0.000001 ? 6 : syminfo.mintick == 0.0000001 ? 7 : syminfo.mintick == 0.00000001 ? 8 : na
+
+addLabels = input(defval = true, title = 'Show Labels', group = "Labels")
+
+labelTextColor = input(defval = color.white, title = 'Label Text Color', group = "Label Coloring")
+labelTextOutlineColor = input(defval = color.black, title = 'Label Text Outline Color', group = "Label Coloring")
+
+var zeroLineHTF = line.new(na, na, na, na, color = zeroLineColor, style = line.style_solid, extend = extendLines)
+var twoThreeSixLineHTF = line.new(na, na, na, na, color = twoThreeSixLineColor, style = line.style_solid, extend = extendLines)
+var threeEightTwoLineHTF = line.new(na, na, na, na, color = threeEightTwoLineColor, style = line.style_solid, extend = extendLines)
+var fiftyLineHTF = line.new(na, na, na, na, color = fiveHundredLineColor, style = line.style_solid, extend = extendLines)
+var sixOneEightLineHTF = line.new(na, na, na, na, color = sixOneEightLineColor, style = line.style_solid, extend = extendLines)
+var sevenEightSixLineHTF = line.new(na, na, na, na, color = sevenEightSixLineColor, style = line.style_solid, extend = extendLines)
+var oneHundredLineHTF = line.new(na, na, na, na, color = oneHundredLineColor, style = line.style_solid, extend = extendLines)
+var oneSixOneEightLineHTF = line.new(na, na, na, na, color = oneSixOneEightLineColor, style = line.style_solid, extend = extendLines)
+var twoSixOneEightLineHTF = line.new(na, na, na, na, color = twoSixOneEightLineColor, style = line.style_solid, extend = extendLines)
+var threeSixOneEightLineHTF = line.new(na, na, na, na, color = threeSixOneEightLineColor, style = line.style_solid, extend = extendLines)
+var fourTwoThreeSixLineHTF = line.new(na, na, na, na, color = fourTwoThreeSixLineColor, style = line.style_solid, extend = extendLines)
+var fourSixOneEightLineHTF = line.new(na, na, na, na, color = fourSixOneEightLineColor, style = line.style_solid, extend = extendLines)
+
+var zeroLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var twoThreeSixLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var threeEightTwoLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var fiftyLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var sixOneEightLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var sevenEightSixLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var oneHundredLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var oneSixOneEightLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var twoSixOneEightLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var threeSixOneEightLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var fourTwoThreeSixLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+var fourSixOneEightLabelHTF = label.new(na, na, style = label.style_text_outline, color = labelTextOutlineColor, textcolor = labelTextColor, size = size.small)
+
+if slPriceHTF  
+
+    lowerTimeFrameLookbackLowestLowBars = (bar_index - slOpenBarIndexHTF)
+    lowestLowPassThrough = low[1]
+    for e = 2 to lowerTimeFrameLookbackLowestLowBars by 1
+        if low[e] == slPriceHTF
+            lowestLowPassThrough := low[e]
+            lowerTimeFrameLookbackLowestLowBars := e
+    slAnchorForSH := bar_index - lowerTimeFrameLookbackLowestLowBars
+
+    line.set_xy1(zeroLineHTF, shAnchorForSL, slPriceHTF)
+    line.set_xy2(zeroLineHTF, bar_index, slPriceHTF)
+    line.set_xy1(twoThreeSixLineHTF, shAnchorForSL, slPriceHTF + (peakHTF - slPriceHTF) * 0.236)
+    line.set_xy2(twoThreeSixLineHTF, bar_index, slPriceHTF + (peakHTF - slPriceHTF) * 0.236)
+    line.set_xy1(threeEightTwoLineHTF, shAnchorForSL, slPriceHTF + (peakHTF - slPriceHTF) * 0.382)
+    line.set_xy2(threeEightTwoLineHTF, bar_index, slPriceHTF + (peakHTF - slPriceHTF) * 0.382)
+    line.set_xy1(fiftyLineHTF, shAnchorForSL, slPriceHTF + (peakHTF - slPriceHTF) * 0.5)
+    line.set_xy2(fiftyLineHTF, bar_index, slPriceHTF + (peakHTF - slPriceHTF) * 0.5)
+    line.set_xy1(sixOneEightLineHTF, shAnchorForSL, slPriceHTF + (peakHTF - slPriceHTF) * 0.618)
+    line.set_xy2(sixOneEightLineHTF, bar_index, slPriceHTF + (peakHTF - slPriceHTF) * 0.618)
+    line.set_xy1(sevenEightSixLineHTF, shAnchorForSL, slPriceHTF + (peakHTF - slPriceHTF) * 0.786)
+    line.set_xy2(sevenEightSixLineHTF, bar_index, slPriceHTF + (peakHTF - slPriceHTF) * 0.786)
+    line.set_xy1(oneHundredLineHTF, shAnchorForSL, peakHTF)
+    line.set_xy2(oneHundredLineHTF, bar_index, peakHTF)
+
+    line.set_xy1(oneSixOneEightLineHTF, addExtensions ? shAnchorForSL : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 0.618 : na)
+    line.set_xy2(oneSixOneEightLineHTF, addExtensions ? bar_index : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 0.618 : na)
+    line.set_xy1(twoSixOneEightLineHTF, addExtensions ? shAnchorForSL : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 1.618 : na)
+    line.set_xy2(twoSixOneEightLineHTF, addExtensions ? bar_index : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 1.618 : na)
+    line.set_xy1(threeSixOneEightLineHTF, addExtensions ? shAnchorForSL : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 2.618 : na)
+    line.set_xy2(threeSixOneEightLineHTF, addExtensions ? bar_index : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 2.618 : na)
+    line.set_xy1(fourTwoThreeSixLineHTF, addExtensions ? shAnchorForSL : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 3.236 : na)
+    line.set_xy2(fourTwoThreeSixLineHTF, addExtensions ? bar_index : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 3.236 : na)
+    line.set_xy1(fourSixOneEightLineHTF, addExtensions ? shAnchorForSL : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 3.618 : na)
+    line.set_xy2(fourSixOneEightLineHTF, addExtensions ? bar_index : na, addExtensions ? peakHTF + (peakHTF - troughHTF) * 3.618 : na)
+
+    zeroPriceHTF = line.get_price(zeroLineHTF, bar_index)
+    label.set_x(zeroLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(zeroLabelHTF, addLabels ? troughHTF : na)
+    label.set_text(zeroLabelHTF, text = '0.00%\n' + str.tostring(math.round(zeroPriceHTF, symbolRoundNumber)))
+    twoThreeSixPriceHTF = line.get_price(twoThreeSixLineHTF, bar_index)
+    label.set_x(twoThreeSixLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(twoThreeSixLabelHTF, addLabels ? troughHTF + (peakHTF - troughHTF) * 0.236 : na)
+    label.set_text(twoThreeSixLabelHTF, text = '23.6%\n' + str.tostring(math.round(twoThreeSixPriceHTF, symbolRoundNumber)))
+    threeEightTwoPriceHTF = line.get_price(threeEightTwoLineHTF, bar_index)
+    label.set_x(threeEightTwoLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(threeEightTwoLabelHTF, addLabels ? troughHTF + (peakHTF - troughHTF) * 0.382 : na)
+    label.set_text(threeEightTwoLabelHTF, text = '38.2%\n' + str.tostring(math.round(threeEightTwoPriceHTF, symbolRoundNumber)))
+    fiftyPriceHTF = line.get_price(fiftyLineHTF, bar_index)
+    label.set_x(fiftyLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(fiftyLabelHTF, addLabels ? troughHTF + (peakHTF - troughHTF) * 0.5 : na)
+    label.set_text(fiftyLabelHTF, text = '50.0%\n' + str.tostring(math.round(fiftyPriceHTF, symbolRoundNumber)))
+    sixOneEightPriceHTF = line.get_price(sixOneEightLineHTF, bar_index)
+    label.set_x(sixOneEightLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(sixOneEightLabelHTF, addLabels ? troughHTF + (peakHTF - troughHTF) * 0.618 : na)
+    label.set_text(sixOneEightLabelHTF, text = '61.8%\n' + str.tostring(math.round(sixOneEightPriceHTF, symbolRoundNumber)))
+    sevenEightSixPriceHTF = line.get_price(sevenEightSixLineHTF, bar_index)
+    label.set_x(sevenEightSixLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(sevenEightSixLabelHTF, addLabels ? troughHTF + (peakHTF - troughHTF) * 0.786 : na)
+    label.set_text(sevenEightSixLabelHTF, text = '78.6%\n' + str.tostring(math.round(sevenEightSixPriceHTF, symbolRoundNumber)))
+    oneHundredPriceHTF = line.get_price(oneHundredLineHTF, bar_index)
+    label.set_x(oneHundredLabelHTF, addLabels ? shAnchorForSL : na)
+    label.set_y(oneHundredLabelHTF, addLabels ? peakHTF : na)
+    label.set_text(oneHundredLabelHTF, text = '100.0%\n' + str.tostring(math.round(oneHundredPriceHTF, symbolRoundNumber)))
+
+    oneSixOneEightPriceHTF = line.get_price(oneSixOneEightLineHTF, bar_index)
+    label.set_x(oneSixOneEightLabelHTF, addExtensions and addLabels ? shAnchorForSL : na)
+    label.set_y(oneSixOneEightLabelHTF, addExtensions and addLabels ? peakHTF + (peakHTF - troughHTF) * 0.618 : na)
+    label.set_text(twoSixOneEightLabelHTF, text = '161.8%\n' + str.tostring(math.round(oneSixOneEightPriceHTF, symbolRoundNumber)))
+    twoSixOneEightPriceHTF = line.get_price(twoSixOneEightLineHTF, bar_index)
+    label.set_x(twoSixOneEightLabelHTF, addExtensions and addLabels ? shAnchorForSL : na)
+    label.set_y(twoSixOneEightLabelHTF, addExtensions and addLabels ? peakHTF + (peakHTF - troughHTF) * 1.618 : na)
+    label.set_text(twoSixOneEightLabelHTF, text = '261.8%\n' + str.tostring(math.round(twoSixOneEightPriceHTF, symbolRoundNumber)))
+    threeSixOneEightPriceHTF = line.get_price(threeSixOneEightLineHTF, bar_index)
+    label.set_x(threeSixOneEightLabelHTF, addExtensions and addLabels ? shAnchorForSL : na)
+    label.set_y(threeSixOneEightLabelHTF, addExtensions and addLabels ? peakHTF + (peakHTF - troughHTF) * 2.618 : na)
+    label.set_text(threeSixOneEightLabelHTF, text = '361.8%\n' + str.tostring(math.round(threeSixOneEightPriceHTF, symbolRoundNumber)))
+    fourTwoThreeSixPriceHTF = line.get_price(fourTwoThreeSixLineHTF, bar_index)
+    label.set_x(fourTwoThreeSixLabelHTF, addExtensions and addLabels ? shAnchorForSL : na)
+    label.set_y(fourTwoThreeSixLabelHTF, addExtensions and addLabels ? peakHTF + (peakHTF - troughHTF) * 3.236 : na)
+    label.set_text(fourTwoThreeSixLabelHTF, text = '423.6%\n' + str.tostring(math.round(fourTwoThreeSixPriceHTF, symbolRoundNumber)))
+    fourSixOneEightPriceHTF = line.get_price(fourSixOneEightLineHTF, bar_index)
+    label.set_x(fourSixOneEightLabelHTF, addExtensions and addLabels ? shAnchorForSL : na)
+    label.set_y(fourSixOneEightLabelHTF, addExtensions and addLabels ? peakHTF + (peakHTF - troughHTF) * 3.618 : na)
+    label.set_text(fourSixOneEightLabelHTF, text = '461.8%\n' + str.tostring(math.round(fourSixOneEightPriceHTF, symbolRoundNumber)))
+
+if shPriceHTF 
+
+    lowerTimeFrameLookbackHighestHighBars = (bar_index - shOpenBarIndexHTF) 
+    highestHighPassThrough = high[1]
+    for i = 2 to lowerTimeFrameLookbackHighestHighBars by 1
+        if high[i] == shPriceHTF
+            highestHighPassThrough := high[i]
+            lowerTimeFrameLookbackHighestHighBars := i
+    shAnchorForSL := bar_index - lowerTimeFrameLookbackHighestHighBars
+
+    line.set_xy1(zeroLineHTF, slAnchorForSH, peakHTF)
+    line.set_xy2(zeroLineHTF, bar_index, peakHTF)
+    line.set_xy1(twoThreeSixLineHTF, slAnchorForSH, peakHTF - (peakHTF - troughHTF) * 0.236)
+    line.set_xy2(twoThreeSixLineHTF, bar_index, peakHTF - (peakHTF - troughHTF) * 0.236)
+    line.set_xy1(threeEightTwoLineHTF, slAnchorForSH, peakHTF - (peakHTF - troughHTF) * 0.382)
+    line.set_xy2(threeEightTwoLineHTF, bar_index, peakHTF - (peakHTF - troughHTF) * 0.382)
+    line.set_xy1(fiftyLineHTF, slAnchorForSH, peakHTF - (peakHTF - troughHTF) * 0.5)
+    line.set_xy2(fiftyLineHTF, bar_index, peakHTF - (peakHTF - troughHTF) * 0.5)
+    line.set_xy1(sixOneEightLineHTF, slAnchorForSH, peakHTF - (peakHTF - troughHTF) * 0.618)
+    line.set_xy2(sixOneEightLineHTF, bar_index, peakHTF - (peakHTF - troughHTF) * 0.618)
+    line.set_xy1(sevenEightSixLineHTF, slAnchorForSH, peakHTF - (peakHTF - troughHTF) * 0.786)
+    line.set_xy2(sevenEightSixLineHTF, bar_index, peakHTF - (peakHTF - troughHTF) * 0.786)
+    line.set_xy1(oneHundredLineHTF, slAnchorForSH, troughHTF)
+    line.set_xy2(oneHundredLineHTF, bar_index, troughHTF)
+
+    line.set_xy1(oneSixOneEightLineHTF, addExtensions ? slAnchorForSH : na, addExtensions ? troughHTF - (peakHTF - troughHTF) * 0.618 : na)
+    line.set_xy2(oneSixOneEightLineHTF, addExtensions ? bar_index : na, troughHTF - (peakHTF - troughHTF) * 0.618)
+    line.set_xy1(twoSixOneEightLineHTF, addExtensions ? slAnchorForSH : na, addExtensions ? troughHTF - (peakHTF - troughHTF) * 1.618 : na)
+    line.set_xy2(twoSixOneEightLineHTF, addExtensions ? bar_index : na, troughHTF - (peakHTF - troughHTF) * 1.618)
+    line.set_xy1(threeSixOneEightLineHTF, addExtensions ? slAnchorForSH : na, addExtensions ? troughHTF - (peakHTF - troughHTF) * 2.618 : na)
+    line.set_xy2(threeSixOneEightLineHTF, addExtensions ? bar_index : na, troughHTF - (peakHTF - troughHTF) * 2.618)
+    line.set_xy1(fourTwoThreeSixLineHTF, addExtensions ? slAnchorForSH : na, addExtensions ? troughHTF - (peakHTF - troughHTF) * 3.236 : na)
+    line.set_xy2(fourTwoThreeSixLineHTF, addExtensions ? bar_index : na, troughHTF - (peakHTF - troughHTF) * 3.236)
+    line.set_xy1(fourSixOneEightLineHTF, addExtensions ? slAnchorForSH : na, addExtensions ? troughHTF - (peakHTF - troughHTF) * 3.618 : na)
+    line.set_xy2(fourSixOneEightLineHTF, addExtensions ? bar_index : na, troughHTF - (peakHTF - troughHTF) * 3.618)
+
+    zeroPriceHTF = line.get_price(zeroLineHTF, bar_index)
+    label.set_x(zeroLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(zeroLabelHTF, addLabels ? peakHTF : na)
+    label.set_text(zeroLabelHTF, text = '0.00%\n' + str.tostring(math.round(zeroPriceHTF, symbolRoundNumber)))
+    twoThreeSixPriceHTF = line.get_price(twoThreeSixLineHTF, bar_index)
+    label.set_x(twoThreeSixLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(twoThreeSixLabelHTF, addLabels ? peakHTF - (peakHTF - troughHTF) * 0.236 : na)
+    label.set_text(twoThreeSixLabelHTF, text = '23.6%\n' + str.tostring(math.round(twoThreeSixPriceHTF, symbolRoundNumber)))
+    threeEightTwoPriceHTF = line.get_price(threeEightTwoLineHTF, bar_index)
+    label.set_x(threeEightTwoLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(threeEightTwoLabelHTF, addLabels ? peakHTF - (peakHTF - troughHTF) * 0.382 : na)
+    label.set_text(threeEightTwoLabelHTF, text = '38.2%\n' + str.tostring(math.round(threeEightTwoPriceHTF, symbolRoundNumber)))
+    fiftyPriceHTF = line.get_price(fiftyLineHTF, bar_index)
+    label.set_x(fiftyLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(fiftyLabelHTF, addLabels ? peakHTF - (peakHTF - troughHTF) * 0.5 : na)
+    label.set_text(fiftyLabelHTF, text = '50.0%\n' + str.tostring(math.round(fiftyPriceHTF, symbolRoundNumber)))
+    sixOneEightPriceHTF = line.get_price(sixOneEightLineHTF, bar_index)
+    label.set_x(sixOneEightLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(sixOneEightLabelHTF, addLabels ? peakHTF - (peakHTF - troughHTF) * 0.618 : na)
+    label.set_text(sixOneEightLabelHTF, text = '61.8%\n' + str.tostring(math.round(sixOneEightPriceHTF, symbolRoundNumber)))
+    sevenEightSixPriceHTF = line.get_price(sevenEightSixLineHTF, bar_index)
+    label.set_x(sevenEightSixLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(sevenEightSixLabelHTF, addLabels ? peakHTF - (peakHTF - troughHTF) * 0.786 : na)
+    label.set_text(sevenEightSixLabelHTF, text = '78.6%\n' + str.tostring(math.round(sevenEightSixPriceHTF, symbolRoundNumber)))
+    oneHundredPriceHTF = line.get_price(oneHundredLineHTF, bar_index)
+    label.set_x(oneHundredLabelHTF, addLabels ? slAnchorForSH : na)
+    label.set_y(oneHundredLabelHTF, addLabels ? troughHTF : na)
+    label.set_text(oneHundredLabelHTF, text = '100.0%\n' + str.tostring(math.round(oneHundredPriceHTF, symbolRoundNumber)))
+
+    oneSixOneEightPriceHTF = line.get_price(oneSixOneEightLineHTF, bar_index)
+    label.set_x(oneSixOneEightLabelHTF, addExtensions and addLabels ? slAnchorForSH : na)
+    label.set_y(oneSixOneEightLabelHTF, addExtensions and addLabels ? troughHTF - (peakHTF - troughHTF) * 0.618 : na)
+    label.set_text(oneSixOneEightLabelHTF, text = '161.8%\n' + str.tostring(math.round(oneSixOneEightPriceHTF, symbolRoundNumber)))
+    twoSixOneEightPriceHTF = line.get_price(twoSixOneEightLineHTF, bar_index)
+    label.set_x(twoSixOneEightLabelHTF, addExtensions and addLabels ? slAnchorForSH : na)
+    label.set_y(twoSixOneEightLabelHTF, addExtensions and addLabels ? troughHTF - (peakHTF - troughHTF) * 1.618 : na)
+    label.set_text(twoSixOneEightLabelHTF, text = '261.8%\n' + str.tostring(math.round(twoSixOneEightPriceHTF, symbolRoundNumber)))
+    threeSixOneEightPriceHTF = line.get_price(threeSixOneEightLineHTF, bar_index)
+    label.set_x(threeSixOneEightLabelHTF, addExtensions and addLabels ? slAnchorForSH : na)
+    label.set_y(threeSixOneEightLabelHTF, addExtensions and addLabels ? troughHTF - (peakHTF - troughHTF) * 2.618 : na)
+    label.set_text(threeSixOneEightLabelHTF, text = '361.8%\n' + str.tostring(math.round(threeSixOneEightPriceHTF, symbolRoundNumber)))
+    fourTwoThreeSixPriceHTF = line.get_price(fourTwoThreeSixLineHTF, bar_index)
+    label.set_x(fourTwoThreeSixLabelHTF, addExtensions and addLabels ? slAnchorForSH : na)
+    label.set_y(fourTwoThreeSixLabelHTF, addExtensions and addLabels ? troughHTF - (peakHTF - troughHTF) * 3.236 : na)
+    label.set_text(fourTwoThreeSixLabelHTF, text = '423.6%\n' + str.tostring(math.round(fourTwoThreeSixPriceHTF, symbolRoundNumber)))
+    fourSixOneEightPriceHTF = line.get_price(fourTwoThreeSixLineHTF, bar_index)
+    label.set_x(fourSixOneEightLabelHTF, addExtensions and addLabels ? slAnchorForSH : na)
+    label.set_y(fourSixOneEightLabelHTF, addExtensions and addLabels ? troughHTF - (peakHTF - troughHTF) * 3.618 : na)
+    label.set_text(fourSixOneEightLabelHTF, text = '461.8%\n' + str.tostring(math.round(fourSixOneEightPriceHTF, symbolRoundNumber)))
+
+    

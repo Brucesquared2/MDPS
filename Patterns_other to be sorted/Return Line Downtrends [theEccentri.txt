@@ -1,0 +1,87 @@
+Return Line Downtrends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Return Line Downtrends [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibSwing/3 as sw
+import theEccentricTrader/PubLibTrend/3 as tr
+
+///////////////////////////
+// CONDITIONAL VARIABLES //
+///////////////////////////
+
+sl = sw.sl()
+
+rldt_1p = tr.rldt_1p()
+rldt_2p = tr.rldt_2p()
+rldt_3p = tr.rldt_3p()
+rldt_4p = tr.rldt_4p()
+rldt_5p = tr.rldt_5p()
+rldt_6p = tr.rldt_6p()
+rldt_7p = tr.rldt_7p()
+rldt_8p = tr.rldt_8p()
+rldt_9p = tr.rldt_9p()
+rldt_10p = tr.rldt_10p()
+rldt_11p = tr.rldt_11p()
+rldt_12p = tr.rldt_12p()
+rldt_13p = tr.rldt_13p()
+rldt_14p = tr.rldt_14p()
+rldt_15p = tr.rldt_15p()
+rldt_16p = tr.rldt_16p()
+rldt_17p = tr.rldt_17p()
+rldt_18p = tr.rldt_18p()
+rldt_19p = tr.rldt_19p()
+rldt_20p = tr.rldt_20p()
+
+///////////
+// PLOTS //
+///////////
+
+plotshape(sl and rldt_1p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '1', textcolor = color.red)
+plotshape(sl and rldt_2p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '2', textcolor = color.red)
+plotshape(sl and rldt_3p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '3', textcolor = color.red)
+plotshape(sl and rldt_4p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '4', textcolor = color.red)
+plotshape(sl and rldt_5p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '5', textcolor = color.red)
+plotshape(sl and rldt_6p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '6', textcolor = color.red)
+plotshape(sl and rldt_7p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '7', textcolor = color.red)
+plotshape(sl and rldt_8p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '8', textcolor = color.red)
+plotshape(sl and rldt_9p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '9', textcolor = color.red)
+plotshape(sl and rldt_10p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '10', textcolor = color.red)
+plotshape(sl and rldt_11p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '11', textcolor = color.red)
+plotshape(sl and rldt_12p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '12', textcolor = color.red)
+plotshape(sl and rldt_13p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '13', textcolor = color.red)
+plotshape(sl and rldt_14p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '14', textcolor = color.red)
+plotshape(sl and rldt_15p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '15', textcolor = color.red)
+plotshape(sl and rldt_16p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '16', textcolor = color.red)
+plotshape(sl and rldt_17p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '17', textcolor = color.red)
+plotshape(sl and rldt_18p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '18', textcolor = color.red)
+plotshape(sl and rldt_19p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '19', textcolor = color.red)
+plotshape(sl and rldt_20p and low <= low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '20', textcolor = color.red)
+
+plotshape(sl and rldt_1p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '1', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_2p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '2', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_3p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '3', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_4p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '4', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_5p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '5', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_6p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '6', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_7p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '7', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_8p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '8', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_9p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '9', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_10p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '10', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_11p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '11', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_12p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '12', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_13p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '13', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_14p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '14', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_15p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '15', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_16p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '16', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_17p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '17', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_18p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '18', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_19p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '19', textcolor = color.red, offset = -1)
+plotshape(sl and rldt_20p and low > low[1] and barstate.isconfirmed, style = shape.triangledown, location = location.belowbar, color = color.red, text = '20', textcolor = color.red, offset = -1)

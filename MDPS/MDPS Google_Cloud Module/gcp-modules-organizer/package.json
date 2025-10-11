@@ -1,0 +1,25 @@
+{
+  "name": "gcp-modules-organizer",
+  "version": "1.0.0",
+  "description": "A project to acquire and organize Google Cloud Platform modules from GitHub into a modular project structure.",
+  "main": "src/main.ts",
+  "scripts": {
+    "start": "ts-node src/main.ts",
+    "organize": "bash scripts/organize.sh",
+    "setup": "bash scripts/setup.sh"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "typescript": "^4.4.4",
+    "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gcp-modules-organizer.git"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

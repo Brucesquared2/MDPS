@@ -1,0 +1,77 @@
+Trendlines HTF [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Trendlines HTF [theEccentricTrader]', overlay = true)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] ? low[1] : na
+
+htf = input.timeframe(title = 'HTF Resolution', defval = '1D')
+
+[shPriceHTF, slPriceHTF, closeHTF] = request.security(syminfo.tickerid, htf, [shPrice[1], slPrice[1], close[1]], lookahead = barmerge.lookahead_on)
+
+shPriceOneHTF = ta.valuewhen(shPriceHTF, shPriceHTF, 1)
+shOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+shCloseBarIndexHTF = ta.valuewhen(shPriceHTF and not shPriceHTF[1], bar_index, 0)
+var shOpenBarIndexOneHTF = 0
+shCloseBarIndexOneHTF = ta.valuewhen(shPriceHTF and not shPriceHTF[1], bar_index, 1)
+
+slPriceOneHTF = ta.valuewhen(slPriceHTF, slPriceHTF, 1)
+slOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+slCloseBarIndexHTF = ta.valuewhen(slPriceHTF and not slPriceHTF[1], bar_index, 0)
+var slOpenBarIndexOneHTF = 0
+slCloseBarIndexOneHTF = ta.valuewhen(slPriceHTF and not slPriceHTF[1], bar_index, 1)
+
+
+//////////// lines //////////// 
+
+
+resistanceLineColor = input(defval = color.blue, title = 'Resistance Line Color', group = "Line Coloring")
+supportLineColor = input(defval = color.blue, title = 'Support Line Color', group = "Line Coloring")
+
+var htfPeakTrendline = line.new(na, na, na, na, extend = extend.right, color = resistanceLineColor)
+var htfTroughTrendline = line.new(na, na, na, na, extend = extend.right, color = supportLineColor)
+
+if shPriceHTF and not shPriceHTF[1] 
+    lowerTimeFrameLookbackHighestHighBars = (bar_index - shOpenBarIndexHTF) 
+    highestHighPassThrough = high[1]
+    lowerTimeFrameLookbackHighestHighBars1 = (shCloseBarIndexOneHTF - shOpenBarIndexOneHTF) 
+    highestHighPassThrough1 = high[bar_index - shCloseBarIndexOneHTF] 
+    for i = 2 to lowerTimeFrameLookbackHighestHighBars by 1
+        if high[i] == shPriceHTF
+            highestHighPassThrough := high[i]
+            lowerTimeFrameLookbackHighestHighBars := i
+    for j = (bar_index - shCloseBarIndexOneHTF) to (bar_index - shOpenBarIndexOneHTF) by 1
+        if high[j] == shPriceOneHTF
+            highestHighPassThrough1 := high[j]
+            lowerTimeFrameLookbackHighestHighBars1 := j
+    line.set_xy1(htfPeakTrendline, bar_index - lowerTimeFrameLookbackHighestHighBars1, shPriceOneHTF)
+    line.set_xy2(htfPeakTrendline, bar_index - lowerTimeFrameLookbackHighestHighBars, shPriceHTF)
+    shOpenBarIndexOneHTF := shOpenBarIndexHTF
+
+if slPriceHTF and not slPriceHTF[1] 
+    lowerTimeFrameLookbackLowestLowBars = (bar_index - slOpenBarIndexHTF)
+    lowestLowPassThrough = low[1]
+    lowerTimeFrameLookbackLowestLowBars1 = (slCloseBarIndexOneHTF - slOpenBarIndexOneHTF)
+    lowestLowPassThrough1 = low[(bar_index - slCloseBarIndexOneHTF)]
+    for e = 2 to lowerTimeFrameLookbackLowestLowBars by 1
+        if low[e] == slPriceHTF
+            lowestLowPassThrough := low[e]
+            lowerTimeFrameLookbackLowestLowBars := e
+    for f = (bar_index - slCloseBarIndexOneHTF) to (bar_index - slOpenBarIndexOneHTF) by 1
+        if low[f] == slPriceOneHTF
+            lowestLowPassThrough1 := low[f]
+            lowerTimeFrameLookbackLowestLowBars1 := f 
+    line.set_xy1(htfTroughTrendline, bar_index - lowerTimeFrameLookbackLowestLowBars1, slPriceOneHTF)
+    line.set_xy2(htfTroughTrendline, bar_index - lowerTimeFrameLookbackLowestLowBars, slPriceHTF)
+    slOpenBarIndexOneHTF := slOpenBarIndexHTF

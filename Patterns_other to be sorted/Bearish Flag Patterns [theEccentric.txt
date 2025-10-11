@@ -1,0 +1,153 @@
+Bearish Flag Patterns [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Bearish Flag Patterns [theEccentricTrader]', overlay = true, max_lines_count = 500, max_labels_count = 350)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+peak = ta.valuewhen(shPrice, shPrice, 0)
+peakBarIndex = ta.valuewhen(shPrice, shPriceBarIndex, 0)
+shPriceOne = ta.valuewhen(shPrice, shPrice, 1)
+shPriceBarIndexOne = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 1)
+shPriceTwo = ta.valuewhen(shPrice, shPrice, 2)
+shPriceBarIndexTwo = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 2)
+
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+trough = ta.valuewhen(slPrice, slPrice, 0)
+troughBarIndex = ta.valuewhen(slPrice, slPriceBarIndex, 0)
+slPriceOne = ta.valuewhen(slPrice, slPrice, 1)
+slPriceBarIndexOne = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 1)
+slPriceTwo = ta.valuewhen(slPrice, slPrice, 2)
+slPriceBarIndexTwo = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 2)
+
+returnLineUptrend = ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1)
+uptrend = ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1)
+downtrend = ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1)
+returnLineDowntrend = ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1)
+
+addUnbrokenTrough = input(defval = false, title = 'Unbroken Troughs', group = 'Logic')
+unbrokenTrough = addUnbrokenTrough ? low > trough : true
+
+slRangeRatio = (peak - trough) / (peak - trough[1]) * 100
+shRangeRatio = (peak - trough) / (peak[1] - trough) * 100
+
+slRangeRatioZero = ta.valuewhen(slPrice, slRangeRatio, 0)
+slRangeRatioOne = ta.valuewhen(slPrice, slRangeRatio, 1)
+
+shRangeRatioZero = ta.valuewhen(shPrice, shRangeRatio, 0)
+shRangeRatioOne = ta.valuewhen(shPrice, shRangeRatio, 1)
+
+beRangeRatio = (peak - slPriceOne) / (shPriceTwo - slPriceOne) * 100
+
+abRatio = input(defval = 100, title = 'AB Minimum Ratio', group = 'Range Ratios')
+bcRatio = input(defval = 30, title = 'BC Maximum Ratio', group = 'Range Ratios')
+beRatio = input(defval = 40, title = 'BE Maximum Ratio', group = 'Range Ratios')
+
+bearishFlag = shPrice and returnLineUptrend and uptrend and downtrend[1] and unbrokenTrough
+ and slRangeRatioOne >= abRatio 
+ and shRangeRatioOne <= bcRatio
+ and beRangeRatio <= beRatio
+
+
+//////////// lines //////////// 
+
+
+poleColor = input(defval = color.blue, title = 'Pole Color', group = 'Pattern Lines')
+flagColor = input(defval = color.red, title = 'Flag Color', group = 'Pattern Lines')
+
+selectFlagExtend = input.string(title = 'Extend Current Flag Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Pattern Lines")
+extendFlagLines = selectFlagExtend == 'None' ? extend.none : selectFlagExtend == 'Right' ? extend.right : 
+ selectFlagExtend == 'Left' ? extend.left : selectFlagExtend == 'Both' ? extend.both : na
+
+showLabels = input(defval = true, title = 'Show Labels', group = 'Labels')
+labelColor = input(defval = color.blue, title = 'Label Color', group = 'Labels')
+
+showProjections = input(defval = true, title = 'Show Projections', group = 'Projection Lines')
+
+selectProjectionExtend = input.string(title = 'Extend Current Projection Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Projection Lines")
+extendProjectionLines = selectProjectionExtend == 'None' ? extend.none : selectProjectionExtend == 'Right' ? extend.right : 
+ selectProjectionExtend == 'Left' ? extend.left : selectProjectionExtend == 'Both' ? extend.both : na
+
+var currentResistanceLine = line.new(na, na, na, na, extend = extendFlagLines, color = flagColor, width = 2)
+var currentSupportLine = line.new(na, na, na, na, extend = extendFlagLines, color = flagColor, width = 2)
+
+var currentPatternPeak = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternTrough = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+var currentPatternUpperProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternLowerProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+
+if bearishFlag 
+    lineOne = line.new(shPriceBarIndexTwo, shPriceTwo, slPriceBarIndexOne, slPriceOne, color = poleColor, width = 2)
+    lineTwo = line.new(slPriceBarIndexOne, slPriceOne, troughBarIndex, trough, color = flagColor, width = 2)
+    lineThree = line.new(shPriceBarIndexOne, shPriceOne, shPriceBarIndex, shPrice, color = flagColor, width = 2)
+    patternPeak = line.new(showProjections ? peakBarIndex : na, showProjections ? peak : na, showProjections ? bar_index + 1  : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? troughBarIndex : na, showProjections ? trough : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? shPriceBarIndexTwo : na, showProjections ? shPriceTwo : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? shPriceTwo : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceTwo - slPriceOne) : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? trough - (shPriceTwo - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    line.set_xy1(currentResistanceLine, shPriceBarIndexOne, shPriceOne)
+    line.set_xy2(currentResistanceLine, peakBarIndex, peak)
+    line.set_xy1(currentSupportLine, slPriceBarIndexOne, slPriceOne)
+    line.set_xy2(currentSupportLine, troughBarIndex, trough)
+    line.set_xy1(currentPatternPeak, showProjections ? peakBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index + 1: na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? troughBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index + 1: na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? shPriceBarIndexTwo : na, showProjections ? shPriceTwo : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index + 1: na, showProjections ? shPriceTwo : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceTwo - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index + 1: na, showProjections ? trough - (shPriceTwo - slPriceOne) : na)
+    labelOne = label.new(showLabels ? shPriceBarIndexTwo : na, showLabels ? shPriceTwo : na, color = color.rgb(54, 58, 69, 100), style = label.style_label_up,
+     text = 'A', textcolor = labelColor)
+    labelTwo = label.new(showLabels ? slPriceBarIndexOne : na, showLabels ? slPriceOne : na, color = color.rgb(54, 58, 69, 100), style = label.style_label_up,
+     text = 'B (' + str.tostring(math.round(slRangeRatioOne, 2)) + ')', textcolor = labelColor)
+    labelThree = label.new(showLabels ? shPriceBarIndexOne : na, showLabels ? shPriceOne : na, color = color.rgb(54, 58, 69, 100), style = label.style_label_down,
+     text = 'C (' + str.tostring(math.round(shRangeRatioOne, 2)) + ')', textcolor = labelColor)
+    labelFour = label.new(showLabels ? troughBarIndex : na, showLabels ? trough : na, color = color.rgb(54, 58, 69, 100), style = label.style_label_up,
+     text = 'D (' + str.tostring(math.round(slRangeRatioZero, 2)) + ')', textcolor = labelColor)
+    labelFive = label.new(showLabels ? shPriceBarIndex : na, showLabels ? shPrice : na, color = color.rgb(54, 58, 69, 100), style = label.style_label_down,
+     text = 'E (' + str.tostring(math.round(beRangeRatio, 2)) + ')', textcolor = labelColor)
+    var myLineArray = array.new_line()
+    array.push(myLineArray, lineOne) 
+    array.push(myLineArray, lineTwo) 
+    array.push(myLineArray, lineThree) 
+    array.push(myLineArray, patternPeak)
+    array.push(myLineArray, patternTrough) 
+    array.push(myLineArray, patternUpperProjection)
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 500
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, labelOne)
+    array.push(myLabelArray, labelTwo)
+    array.push(myLabelArray, labelThree)
+    array.push(myLabelArray, labelFour)
+    array.push(myLabelArray, labelFive)
+    if array.size(myLabelArray) >= 350
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+    alert('Bearish Flag')
+
+    
+ 
+
+
+
+

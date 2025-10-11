@@ -1,0 +1,127 @@
+Wavemeter [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator("Wavemeter [theEccentricTrader]", overlay = true, max_lines_count = 500)
+
+
+//////////// sample period filter ////////////
+
+
+showSamplePeriod = input(defval = true, title = 'Show Sample Period', group = 'Sample Period')
+
+start = input.time(timestamp('1 Jan 1800 00:00'), title = 'Start Date', group = 'Sample Period')
+end = input.time(timestamp('1 Jan 3000 00:00'), title = 'End Date', group = 'Sample Period')
+samplePeriodFilter = time >= start and time <= end
+
+var barOneDate = time
+
+f_timeToString(_t) =>
+    str.tostring(dayofmonth(_t), '00') + '.' + str.tostring(month(_t), '00') + '.' + str.tostring(year(_t), '0000')
+
+startDateText = barOneDate > start ? f_timeToString(barOneDate) : f_timeToString(start)
+endDateText = time >= end ? '-' + f_timeToString(end) : '-' + f_timeToString(time)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index[1] : na
+
+peak = ta.valuewhen(shPrice,shPrice,0) 
+trough = ta.valuewhen(slPrice,slPrice,0) 
+
+shsl = shPrice or slPrice
+waveCycle = shsl and (ta.valuewhen(shsl, bar_index, 0) > ta.valuewhen(shsl, bar_index, 1))
+shslBarIndex = ta.valuewhen(shsl, bar_index, 1)
+
+symbolMintickIntegerConversion = syminfo.mintick >= 0.1 ? 1 : syminfo.mintick == 0.01 ? 10 : syminfo.mintick == 0.001 ? 100 : 
+ syminfo.mintick == 0.0001 ? 1000 : syminfo.mintick == 0.00001 ? 10000 : syminfo.mintick == 0.000001 ? 100000 : syminfo.mintick == 0.0000001 ? 1000000 : syminfo.mintick == 0.00000001 ? 10000000 : na
+
+
+//////////// table //////////// 
+
+
+candleTablePositionInput = input.string(title = 'Position', defval = 'Top Right', options = ['Top Right', 'Top Center', 'Top Left', 'Bottom Right', 'Bottom Center', 'Bottom Left', 
+ 'Middle Right', 'Middle Center', 'Middle Left'], group = 'Table Positioning')
+candleTablePosition = candleTablePositionInput == 'Top Right' ? position.top_right : candleTablePositionInput == 'Top Center' ? position.top_center : 
+ candleTablePositionInput == 'Top Left' ? position.top_left : candleTablePositionInput == 'Bottom Right' ? position.bottom_right : 
+ candleTablePositionInput == 'Bottom Center' ? position.bottom_center : candleTablePositionInput == 'Bottom Left' ? position.bottom_left : 
+ candleTablePositionInput == 'Middle Right' ? position.middle_right : candleTablePositionInput == 'Middle Center' ? position.middle_center : 
+ candleTablePositionInput == 'Middle Left' ? position.middle_left : na
+
+textSizeInput = input.string(title = 'Text Size', defval = 'Normal', options = ['Tiny', 'Small', 'Normal', 'Large'], group = 'Table Text Sizing')
+textSize = textSizeInput == 'Tiny' ? size.tiny : textSizeInput == 'Small' ? size.small : textSizeInput == 'Normal' ? size.normal : textSizeInput == 'Large' ? size.large : na
+
+showCurrent = input(defval = true, title = "Show Current", group = 'Current Wave Measurements')
+
+var candleCounter = 0.
+var waveCycleCounter = 0.
+var heightCounter = 0.
+var amplitudeCounter = 0. 
+
+var wavemeterTable =  table.new(candleTablePosition, 100, 100, border_width = 1)
+
+if close and barstate.isconfirmed
+    candleCounter += 1
+
+if waveCycle and samplePeriodFilter
+    waveCycleCounter += 1
+    heightCounter += (peak - trough) * symbolMintickIntegerConversion
+    amplitudeCounter += ((peak - trough) * symbolMintickIntegerConversion) / 2
+    table.cell(wavemeterTable, 0, 0, text = "Wave Cycles", bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 0, text = str.tostring(math.round(waveCycleCounter, 2)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 1, text = "Average Wave Length", bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 1, text = str.tostring(math.round(candleCounter / waveCycleCounter, 2)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 2, text = "Average Wave Height", bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 2, text = str.tostring(math.round(heightCounter / waveCycleCounter, 2)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 3, text = "Average Amplitude", bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 3, text = str.tostring(math.round(amplitudeCounter / waveCycleCounter, 2)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 4, text = "Average Frequency", bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 4, text = str.tostring(math.round(waveCycleCounter / (candleCounter * ((time[1] - time[2]) / 1000)), 10)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    
+if waveCycle and showCurrent and samplePeriodFilter
+    table.cell(wavemeterTable, 0, 5, text = "Current Wave Length", bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 5, text = str.tostring(math.round(bar_index - shslBarIndex + 1, 2)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 6, text = "Current Wave Height", bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 6, text = str.tostring(math.round((peak - trough) * symbolMintickIntegerConversion, 2)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 7, text = "Current Amplitude", bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 7, text = str.tostring(math.round(((peak - trough) * symbolMintickIntegerConversion) / 2, 2)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 0, 8, text = "Current Frequency", bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(wavemeterTable, 1, 8, text = str.tostring(math.round(((bar_index - shslBarIndex + 1) / ((time[1] - time[2]) / 1000)), 10)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+
+if showSamplePeriod 
+    table.cell(wavemeterTable, 0, 9, text = startDateText + endDateText, bgcolor = color.black, text_color = color.white, text_size = textSize)
+
+
+//////////// lines //////////// 
+
+
+showLines = input(defval = true, title = "Show Lines", group = 'Lines')
+line1 = line.new(na, na, na, na, width = 3)
+line2 = line.new(na, na, na, na, width = 3)
+
+if shsl and showLines
+    line.set_xy1(line1, ta.valuewhen(slPrice, slPriceBarIndex, 0), ta.valuewhen(slPrice, slPrice, 0))
+    line.set_xy2(line1, shPriceBarIndex, ta.valuewhen(shPrice, shPrice, 0))
+    line.set_xy1(line2, ta.valuewhen(shPrice, shPriceBarIndex, 0), ta.valuewhen(shPrice, shPrice, 0))
+    line.set_xy2(line2, slPriceBarIndex, ta.valuewhen(slPrice, slPrice, 0))
+    var myArray = array.new_line()
+    array.push(myArray, line1) 
+    array.push(myArray, line2) 
+    if array.size(myArray) > 500
+        firstLine = array.remove(myArray, 0) 
+        line.delete(firstLine)
+    
+

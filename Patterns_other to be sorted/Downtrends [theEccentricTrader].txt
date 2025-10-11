@@ -1,0 +1,87 @@
+Downtrends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Downtrends [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibSwing/3 as sw
+import theEccentricTrader/PubLibTrend/3 as tr
+
+///////////////////////////
+// CONDITIONAL VARIABLES //
+///////////////////////////
+
+sh = sw.sh()
+
+dt_1p = tr.dt_1p()
+dt_2p = tr.dt_2p()
+dt_3p = tr.dt_3p()
+dt_4p = tr.dt_4p()
+dt_5p = tr.dt_5p()
+dt_6p = tr.dt_6p()
+dt_7p = tr.dt_7p()
+dt_8p = tr.dt_8p()
+dt_9p = tr.dt_9p()
+dt_10p = tr.dt_10p()
+dt_11p = tr.dt_11p()
+dt_12p = tr.dt_12p()
+dt_13p = tr.dt_13p()
+dt_14p = tr.dt_14p()
+dt_15p = tr.dt_15p()
+dt_16p = tr.dt_16p()
+dt_17p = tr.dt_17p()
+dt_18p = tr.dt_18p()
+dt_19p = tr.dt_19p()
+dt_20p = tr.dt_20p()
+
+///////////
+// PLOTS //
+///////////
+
+plotshape(sh and dt_1p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '1', textcolor = color.red)
+plotshape(sh and dt_2p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '2', textcolor = color.red)
+plotshape(sh and dt_3p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '3', textcolor = color.red)
+plotshape(sh and dt_4p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '4', textcolor = color.red)
+plotshape(sh and dt_5p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '5', textcolor = color.red)
+plotshape(sh and dt_6p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '6', textcolor = color.red)
+plotshape(sh and dt_7p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '7', textcolor = color.red)
+plotshape(sh and dt_8p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '8', textcolor = color.red)
+plotshape(sh and dt_9p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '9', textcolor = color.red)
+plotshape(sh and dt_10p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '10', textcolor = color.red)
+plotshape(sh and dt_11p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '11', textcolor = color.red)
+plotshape(sh and dt_12p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '12', textcolor = color.red)
+plotshape(sh and dt_13p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '13', textcolor = color.red)
+plotshape(sh and dt_14p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '14', textcolor = color.red)
+plotshape(sh and dt_15p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '15', textcolor = color.red)
+plotshape(sh and dt_16p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '16', textcolor = color.red)
+plotshape(sh and dt_17p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '17', textcolor = color.red)
+plotshape(sh and dt_18p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '18', textcolor = color.red)
+plotshape(sh and dt_19p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '19', textcolor = color.red)
+plotshape(sh and dt_20p and high >= high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '20', textcolor = color.red)
+
+plotshape(sh and dt_1p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '1', textcolor = color.red, offset = -1)
+plotshape(sh and dt_2p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '2', textcolor = color.red, offset = -1)
+plotshape(sh and dt_3p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '3', textcolor = color.red, offset = -1)
+plotshape(sh and dt_4p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '4', textcolor = color.red, offset = -1)
+plotshape(sh and dt_5p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '5', textcolor = color.red, offset = -1)
+plotshape(sh and dt_6p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '6', textcolor = color.red, offset = -1)
+plotshape(sh and dt_7p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '7', textcolor = color.red, offset = -1)
+plotshape(sh and dt_8p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '8', textcolor = color.red, offset = -1)
+plotshape(sh and dt_9p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '9', textcolor = color.red, offset = -1)
+plotshape(sh and dt_10p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '10', textcolor = color.red, offset = -1)
+plotshape(sh and dt_11p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '11', textcolor = color.red, offset = -1)
+plotshape(sh and dt_12p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '12', textcolor = color.red, offset = -1)
+plotshape(sh and dt_13p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '13', textcolor = color.red, offset = -1)
+plotshape(sh and dt_14p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '14', textcolor = color.red, offset = -1)
+plotshape(sh and dt_15p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '15', textcolor = color.red, offset = -1)
+plotshape(sh and dt_16p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '16', textcolor = color.red, offset = -1)
+plotshape(sh and dt_17p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '17', textcolor = color.red, offset = -1)
+plotshape(sh and dt_18p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '18', textcolor = color.red, offset = -1)
+plotshape(sh and dt_19p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '19', textcolor = color.red, offset = -1)
+plotshape(sh and dt_20p and high < high[1] and barstate.isconfirmed, style = shape.triangledown, color = color.red, text = '20', textcolor = color.red, offset = -1)

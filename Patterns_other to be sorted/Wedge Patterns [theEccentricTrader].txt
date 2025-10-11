@@ -1,0 +1,149 @@
+Wedge Patterns [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Wedge Patterns [theEccentricTrader]', overlay = true, max_lines_count = 500, max_labels_count = 84)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+peak = ta.valuewhen(shPrice, shPrice, 0)
+peakBarIndex = ta.valuewhen(shPrice, shPriceBarIndex, 0)
+shPriceOne = ta.valuewhen(shPrice, shPrice, 1)
+shPriceBarIndexOne = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 1)
+
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+trough = ta.valuewhen(slPrice, slPrice, 0)
+troughBarIndex = ta.valuewhen(slPrice, slPriceBarIndex, 0)
+slPriceOne = ta.valuewhen(slPrice, slPrice, 1)
+slPriceBarIndexOne = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 1)
+
+uptrend = ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1)
+downtrend = ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1)
+
+wedge = downtrend and uptrend 
+ 
+
+//////////// lines //////////// 
+
+
+showHistoric = input(defval = true, title = 'Show Historic', group = 'Lines')
+showProjections = input(defval = true, title = 'Show Projections', group = 'Lines')
+
+patternColor = input(defval = color.blue, title = 'Pattern Color', group = 'Line Coloring')
+
+selectPatternExtend = input.string(title = 'Extend Current Pattern Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendPatternLines = selectPatternExtend == 'None' ? extend.none : selectPatternExtend == 'Right' ? extend.right : selectPatternExtend == 'Left' ? extend.left : 
+ selectPatternExtend == 'Both' ? extend.both : na
+
+selectProjectionExtend = input.string(title = 'Extend Current Projection Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendProjectionLines = selectProjectionExtend == 'None' ? extend.none : selectProjectionExtend == 'Right' ? extend.right : 
+ selectProjectionExtend == 'Left' ? extend.left : selectProjectionExtend == 'Both' ? extend.both : na
+
+var currentPatternResistanceLine = line.new(na, na, na, na, extend = extendPatternLines, color = patternColor)
+var currentPatternSupportLine = line.new(na, na, na, na, extend = extendPatternLines, color = patternColor)
+
+var currentPatternPeak = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternTrough = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+var currentPatternUpperProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternLowerProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+
+if shPrice and wedge and showHistoric
+    patternResistanceLine = line.new(slPriceBarIndexOne, slPriceOne, troughBarIndex, trough, color = patternColor)
+    patternSupportLine = line.new(shPriceBarIndexOne, shPriceOne, shPriceBarIndex, shPrice, color = patternColor)
+    peakLabel = label.new(shPriceBarIndex, shPrice, color = color.rgb(54, 58, 69, 100), 
+     text = "WEDGE", textcolor = patternColor, text_font_family = font.family_monospace)
+    patternPeak = line.new(showProjections ? troughBarIndex : na, showProjections ? peak : na, showProjections ? bar_index : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? troughBarIndex : na, showProjections ? trough : na, showProjections ? bar_index : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? peak + (shPriceOne - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? peak + (shPriceOne - slPriceOne) : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? trough - (shPriceOne - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    var myLineArray = array.new_line()
+    array.push(myLineArray, patternSupportLine) 
+    array.push(myLineArray, patternResistanceLine) 
+    array.push(myLineArray, patternPeak) 
+    array.push(myLineArray, patternTrough)
+    array.push(myLineArray, patternUpperProjection) 
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 250
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, peakLabel) 
+    if array.size(myLabelArray) >= 42
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+if slPrice and wedge and showHistoric
+    patternSupportLine = line.new(slPriceBarIndexOne, slPriceOne, slPriceBarIndex, slPrice, color = patternColor)
+    patternResistanceLine = line.new(shPriceBarIndexOne, shPriceOne, peakBarIndex, peak, color = patternColor)
+    troughLabel = label.new(slPriceBarIndex, slPrice, color = color.rgb(54, 58, 69, 100), style = label.style_label_up, 
+     text = "WEDGE", textcolor = patternColor, text_font_family = font.family_monospace)
+    patternPeak = line.new(showProjections ? peakBarIndex : na, showProjections ? peak : na, showProjections ? bar_index  : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? peakBarIndex : na, showProjections ? trough : na, showProjections ? bar_index  : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? peakBarIndex : na, showProjections ? peak + (shPriceOne - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? peak + (shPriceOne - slPriceOne) : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? peakBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? trough - (shPriceOne - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    var myLineArray = array.new_line()
+    array.push(myLineArray, patternSupportLine) 
+    array.push(myLineArray, patternResistanceLine) 
+    array.push(myLineArray, patternPeak) 
+    array.push(myLineArray, patternTrough)
+    array.push(myLineArray, patternUpperProjection) 
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 250
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, troughLabel) 
+    if array.size(myLabelArray) >= 42
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+if shPrice and wedge
+    line.set_xy1(currentPatternResistanceLine, slPriceBarIndexOne, slPriceOne)
+    line.set_xy2(currentPatternResistanceLine, troughBarIndex, trough)
+    line.set_xy1(currentPatternSupportLine, shPriceBarIndexOne, shPriceOne)
+    line.set_xy2(currentPatternSupportLine, shPriceBarIndex, shPrice)
+    line.set_xy1(currentPatternPeak, showProjections ? troughBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index : na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? troughBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index : na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? troughBarIndex : na, showProjections ? peak + (shPriceOne - slPriceOne) : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index : na, showProjections ? peak + (shPriceOne - slPriceOne) : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    alert('Wedge')
+    
+if slPrice and wedge
+    line.set_xy1(currentPatternResistanceLine, shPriceBarIndexOne, shPriceOne)
+    line.set_xy2(currentPatternResistanceLine, peakBarIndex, peak)
+    line.set_xy1(currentPatternSupportLine, slPriceBarIndexOne, slPriceOne)
+    line.set_xy2(currentPatternSupportLine, slPriceBarIndex, slPrice)
+    line.set_xy1(currentPatternPeak, showProjections ? peakBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index : na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? peakBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index : na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? peakBarIndex : na, showProjections ? peak + (shPriceOne - slPriceOne) : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index : na, showProjections ? peak + (shPriceOne - slPriceOne) : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? peakBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    alert('Wedge')
+

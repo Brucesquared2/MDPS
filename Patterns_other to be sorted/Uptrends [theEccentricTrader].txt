@@ -1,0 +1,87 @@
+Uptrends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Uptrends [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibSwing/3 as sw
+import theEccentricTrader/PubLibTrend/3 as tr
+
+///////////////////////////
+// CONDITIONAL VARIABLES //
+///////////////////////////
+
+sl = sw.sl()
+
+ut_1p = tr.ut_1p()
+ut_2p = tr.ut_2p()
+ut_3p = tr.ut_3p()
+ut_4p = tr.ut_4p()
+ut_5p = tr.ut_5p()
+ut_6p = tr.ut_6p()
+ut_7p = tr.ut_7p()
+ut_8p = tr.ut_8p()
+ut_9p = tr.ut_9p()
+ut_10p = tr.ut_10p()
+ut_11p = tr.ut_11p()
+ut_12p = tr.ut_12p()
+ut_13p = tr.ut_13p()
+ut_14p = tr.ut_14p()
+ut_15p = tr.ut_15p()
+ut_16p = tr.ut_16p()
+ut_17p = tr.ut_17p()
+ut_18p = tr.ut_18p()
+ut_19p = tr.ut_19p()
+ut_20p = tr.ut_20p()
+
+///////////
+// PLOTS //
+///////////
+
+plotshape(sl and ut_1p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '1', textcolor = color.green)
+plotshape(sl and ut_2p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '2', textcolor = color.green)
+plotshape(sl and ut_3p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '3', textcolor = color.green)
+plotshape(sl and ut_4p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '4', textcolor = color.green)
+plotshape(sl and ut_5p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '5', textcolor = color.green)
+plotshape(sl and ut_6p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '6', textcolor = color.green)
+plotshape(sl and ut_7p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '7', textcolor = color.green)
+plotshape(sl and ut_8p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '8', textcolor = color.green)
+plotshape(sl and ut_9p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '9', textcolor = color.green)
+plotshape(sl and ut_10p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '10', textcolor = color.green)
+plotshape(sl and ut_11p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '11', textcolor = color.green)
+plotshape(sl and ut_12p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '12', textcolor = color.green)
+plotshape(sl and ut_13p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '13', textcolor = color.green)
+plotshape(sl and ut_14p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '14', textcolor = color.green)
+plotshape(sl and ut_15p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '15', textcolor = color.green)
+plotshape(sl and ut_16p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '16', textcolor = color.green)
+plotshape(sl and ut_17p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '17', textcolor = color.green)
+plotshape(sl and ut_18p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '18', textcolor = color.green)
+plotshape(sl and ut_19p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '19', textcolor = color.green)
+plotshape(sl and ut_20p and low <= low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '20', textcolor = color.green)
+
+plotshape(sl and ut_1p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '1', textcolor = color.green, offset = -1)
+plotshape(sl and ut_2p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '2', textcolor = color.green, offset = -1)
+plotshape(sl and ut_3p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '3', textcolor = color.green, offset = -1)
+plotshape(sl and ut_4p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '4', textcolor = color.green, offset = -1)
+plotshape(sl and ut_5p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '5', textcolor = color.green, offset = -1)
+plotshape(sl and ut_6p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '6', textcolor = color.green, offset = -1)
+plotshape(sl and ut_7p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '7', textcolor = color.green, offset = -1)
+plotshape(sl and ut_8p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '8', textcolor = color.green, offset = -1)
+plotshape(sl and ut_9p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '9', textcolor = color.green, offset = -1)
+plotshape(sl and ut_10p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '10', textcolor = color.green, offset = -1)
+plotshape(sl and ut_11p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '11', textcolor = color.green, offset = -1)
+plotshape(sl and ut_12p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '12', textcolor = color.green, offset = -1)
+plotshape(sl and ut_13p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '13', textcolor = color.green, offset = -1)
+plotshape(sl and ut_14p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '14', textcolor = color.green, offset = -1)
+plotshape(sl and ut_15p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '15', textcolor = color.green, offset = -1)
+plotshape(sl and ut_16p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '16', textcolor = color.green, offset = -1)
+plotshape(sl and ut_17p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '17', textcolor = color.green, offset = -1)
+plotshape(sl and ut_18p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '18', textcolor = color.green, offset = -1)
+plotshape(sl and ut_19p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '19', textcolor = color.green, offset = -1)
+plotshape(sl and ut_20p and low > low[1] and barstate.isconfirmed, style = shape.triangleup, location = location.belowbar, color = color.green, text = '20', textcolor = color.green, offset = -1)

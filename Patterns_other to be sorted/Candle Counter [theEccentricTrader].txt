@@ -1,0 +1,220 @@
+Candle Counter [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Candle Counter [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibCandleTrend/2 as ct
+import theEccentricTrader/PubLibUtility/2 as ut
+
+//////////////////////////
+// SAMPLE PERIOD FILTER //
+//////////////////////////
+
+show_sp = input(defval = true, title = 'Show Sample Period', group = 'Sample Period')
+start = input.time(timestamp('2 Jan 1800 00:00'), title = 'Start Date', group = 'Sample Period')
+end = input.time(timestamp('1 Jan 3000 00:00'), title = 'End Date', group = 'Sample Period')
+sp_filt = time >= start and time <= end
+
+var first_candle = time
+
+start_date_text = first_candle > start ? ut.time_string(first_candle) : ut.time_string(start)
+end_date_text = time >= end ? '-' + ut.time_string(end) : '-' + ut.time_string(time)
+
+///////////////////////////
+// CANDLE TREND COUNTERS //
+///////////////////////////
+
+var cand_count = 0
+var chh_count = 0
+var chl_count = 0
+var clh_count = 0
+var cll_count = 0
+var cdt_count = 0
+var cdb_count = 0
+
+if (ct.gc() or ct.rc()) and sp_filt and barstate.isconfirmed
+    cand_count := cand_count + 1
+
+if ct.chh() and sp_filt and barstate.isconfirmed
+    chh_count := chh_count + 1
+
+if ct.chl() and sp_filt and barstate.isconfirmed
+    chl_count := chl_count + 1
+
+if ct.clh() and sp_filt and barstate.isconfirmed
+    clh_count := clh_count + 1
+
+if ct.cll() and sp_filt and barstate.isconfirmed
+    cll_count := cll_count + 1
+
+if ct.cdt() and sp_filt and barstate.isconfirmed
+    cdt_count := cdt_count + 1
+
+if ct.cdb() and sp_filt and barstate.isconfirmed
+    cdb_count := cdb_count + 1
+
+var green_count = 0
+var gchh_count = 0
+var gchl_count = 0
+var gclh_count = 0
+var gcll_count = 0
+var gcdt_count = 0
+var gcdb_count = 0
+
+if ct.gc() and sp_filt and barstate.isconfirmed
+    green_count := green_count + 1
+
+if ct.gchh() and sp_filt and barstate.isconfirmed
+    gchh_count := gchh_count + 1
+
+if ct.gchl() and sp_filt and barstate.isconfirmed
+    gchl_count := gchl_count + 1
+
+if ct.gclh() and sp_filt and barstate.isconfirmed
+    gclh_count := gclh_count + 1
+
+if ct.gcll() and sp_filt and barstate.isconfirmed
+    gcll_count := gcll_count + 1
+
+if ct.gcdt() and sp_filt and barstate.isconfirmed
+    gcdt_count := gcdt_count + 1
+
+if ct.gcdb() and sp_filt and barstate.isconfirmed
+    gcdb_count := gcdb_count + 1
+
+var red_count = 0
+var rchh_count = 0
+var rchl_count = 0
+var rclh_count = 0
+var rcll_count = 0
+var rcdt_count = 0
+var rcdb_count = 0
+
+if ct.rc() and sp_filt and barstate.isconfirmed
+    red_count := red_count + 1
+
+if ct.rchh() and sp_filt and barstate.isconfirmed
+    rchh_count := rchh_count + 1
+
+if ct.rchl() and sp_filt and barstate.isconfirmed
+    rchl_count := rchl_count + 1
+
+if ct.rclh() and sp_filt and barstate.isconfirmed
+    rclh_count := rclh_count + 1
+
+if ct.rcll() and sp_filt and barstate.isconfirmed
+    rcll_count := rcll_count + 1
+
+if ct.rcdt() and sp_filt and barstate.isconfirmed
+    rcdt_count := rcdt_count + 1
+
+if ct.rcdb() and sp_filt and barstate.isconfirmed
+    rcdb_count := rcdb_count + 1
+
+///////////
+// TABLE //
+///////////
+
+tab_pos = input.string(title = 'Position', defval = 'Top Right', options = ['Top Right', 'Top Center', 'Top Left', 'Bottom Right', 'Bottom Center', 'Bottom Left', 'Middle Right', 'Middle Center', 'Middle Left'], group = 'Table')
+
+text_size = input.string(title = 'Text Size', defval = 'Normal', options = ['Tiny', 'Small', 'Normal', 'Large', 'Huge', 'Auto'], group = 'Table')
+
+var tab_new = table.new(ut.tab_pos(tab_pos), 100, 100, border_width = 1)
+
+if barstate.islast
+
+    table.cell(tab_new, 0, 1, text = 'Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 2, text = 'Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 3, text = 'Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 4, text = 'Higher High Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 5, text = 'Higher Low Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 6, text = 'Lower High Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 7, text = 'Lower Low Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 8, text = 'Double Top Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 9, text = 'Double Bottom Candles', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 10, text = 'Higher High Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 11, text = 'Higher Low Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 12, text = 'Lower High Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 13, text = 'Lower Low Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 14, text = 'Double Top Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 15, text = 'Double Bottom Green Candles', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 16, text = 'Higher High Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 17, text = 'Higher Low Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 18, text = 'Lower High Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 19, text = 'Lower Low Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 20, text = 'Double Top Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 21, text = 'Double Bottom Red Candles', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+    table.cell(tab_new, 1, 1, text = str.tostring(cand_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 2, text = str.tostring(green_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 3, text = str.tostring(red_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 4, text = str.tostring(chh_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 5, text = str.tostring(chl_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 6, text = str.tostring(clh_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 7, text = str.tostring(cll_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 8, text = str.tostring(cdt_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 9, text = str.tostring(cdb_count), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 10, text = str.tostring(gchh_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 11, text = str.tostring(gchl_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 12, text = str.tostring(gclh_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 13, text = str.tostring(gcll_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 14, text = str.tostring(gcdt_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 15, text = str.tostring(gcdb_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 16, text = str.tostring(rchh_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 17, text = str.tostring(rchl_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 18, text = str.tostring(rclh_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 19, text = str.tostring(rcll_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 20, text = str.tostring(rcdt_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 21, text = str.tostring(rcdb_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+    table.cell(tab_new, 2, 1, text = '%', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 2, text = str.tostring(math.round(green_count / cand_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 3, text = str.tostring(math.round(red_count / cand_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 4, text = str.tostring(math.round(chh_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 5, text = str.tostring(math.round(chl_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 6, text = str.tostring(math.round(clh_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 7, text = str.tostring(math.round(cll_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 8, text = str.tostring(math.round(cdt_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 9, text = str.tostring(math.round(cdb_count / cand_count * 100, 2)), bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 10, text = str.tostring(math.round(gchh_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 11, text = str.tostring(math.round(gchl_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 12, text = str.tostring(math.round(gclh_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 13, text = str.tostring(math.round(gcll_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 14, text = str.tostring(math.round(gcdt_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 15, text = str.tostring(math.round(gcdb_count / green_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 16, text = str.tostring(math.round(rchh_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 17, text = str.tostring(math.round(rchl_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 18, text = str.tostring(math.round(rclh_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 19, text = str.tostring(math.round(rcll_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 20, text = str.tostring(math.round(rcdt_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 21, text = str.tostring(math.round(rcdb_count / red_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if show_sp and barstate.islast
+    table.cell(tab_new, 0, 22, text = start_date_text + end_date_text, bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+
+///////////
+// PLOTS //
+///////////
+
+show_plots = input(defval = true, title = 'Show Plots', group = 'Plots')
+
+plotshape(show_plots and ct.chh() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.triangleup, color = color.green)
+plotshape(show_plots and ct.chl() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.triangleup, color = color.green, location = location.belowbar)
+plotshape(show_plots and ct.clh() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.triangledown, color = color.red)
+plotshape(show_plots and ct.cll() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.triangledown, color = color.red, location = location.belowbar)
+plotshape(show_plots and ct.cdt() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.diamond, color = color.blue, textcolor = color.blue)
+plotshape(show_plots and ct.cdb() and ct.gc() and sp_filt and barstate.isconfirmed, style = shape.diamond, color = color.blue, textcolor = color.blue, location = location.belowbar)
+
+plotshape(show_plots and ct.chh() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.triangleup, color = color.green)
+plotshape(show_plots and ct.chl() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.triangleup, color = color.green, location = location.belowbar)
+plotshape(show_plots and ct.clh() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.triangledown, color = color.red)
+plotshape(show_plots and ct.cll() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.triangledown, color = color.red, location = location.belowbar)
+plotshape(show_plots and ct.cdt() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.diamond, color = color.blue)
+plotshape(show_plots and ct.cdb() and ct.rc() and sp_filt and barstate.isconfirmed, style = shape.diamond, color = color.blue, location = location.belowbar)

@@ -1,0 +1,58 @@
+Retracement and Extension Ratios [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator("Retracement and Extension Ratios [theEccentricTrader]", overlay = true, max_labels_count = 500)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+
+peak = ta.valuewhen(shPrice, shPrice, 0)
+trough = ta.valuewhen(slPrice, slPrice, 0)
+
+slRangeRatio = (peak - trough) / (peak - trough[1]) * 100
+shRangeRatio = (peak - trough) / (peak[1] - trough) * 100
+
+
+//////////// labels //////////// 
+
+
+labelColor = input(defval = color.blue, title = 'Label Color', group = 'Label Coloring')
+
+if shPrice
+    shRanegRatioLabel = label.new(shPriceBarIndex, shPrice, yloc = yloc.price, color = color.rgb(54, 58, 69, 100), style = label.style_label_down, 
+     textcolor = labelColor, text = str.tostring(math.round(shRangeRatio, 2)))
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, shRanegRatioLabel) 
+    if array.size(myLabelArray) >= 250
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+if slPrice
+    slRanegRatioLabel = label.new(slPriceBarIndex, slPrice, yloc = yloc.price, color = color.rgb(54, 58, 69, 100), style = label.style_label_up, 
+     textcolor = labelColor, text = str.tostring(math.round(slRangeRatio, 2)))
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, slRanegRatioLabel)
+    if array.size(myLabelArray) >= 250
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+
+
+
+
+

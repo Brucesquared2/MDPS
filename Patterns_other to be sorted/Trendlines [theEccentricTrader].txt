@@ -1,0 +1,67 @@
+Trendlines [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Trendlines [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibSwing/3 as sw
+
+///////////////////////////
+// CONDITIONAL VARIABLES //
+///////////////////////////
+
+sh = sw.sh()
+sl = sw.sl()
+
+shp_0 = sw.shp(0)
+shp_1 = sw.shp(1)
+shp_2 = sw.shp(2)
+
+slp_0 = sw.slp(0)
+slp_1 = sw.slp(1)
+slp_2 = sw.slp(2)
+
+shpbi_0 = sw.shpbi(0)
+shpbi_1 = sw.shpbi(1)
+shpbi_2 = sw.shpbi(2)
+
+slpbi_0 = sw.slpbi(0)
+slpbi_1 = sw.slpbi(1)
+slpbi_2 = sw.slpbi(2)
+
+///////////
+// LINES //
+///////////
+
+res_line_col = input(defval = color.red, title = 'Resistance Line Color', group = 'Line Coloring')
+sup_line_col = input(defval = color.green, title = 'Support Line Color', group = 'Line Coloring')
+prev_lines = input(defval = false, title = 'Previous Lines', group = 'Lines')
+
+var res_line_0 = line.new(na, na, na, na, color = res_line_col, extend = extend.right)
+var sup_line_0 = line.new(na, na, na, na, color = sup_line_col, extend = extend.right)
+var res_line_1 = line.new(na, na, na, na, color = res_line_col, extend = extend.right)
+var sup_line_1 = line.new(na, na, na, na, color = sup_line_col, extend = extend.right)
+
+if sh and barstate.isconfirmed
+    
+    line.set_xy1(res_line_0, shpbi_1, shp_1)
+    line.set_xy2(res_line_0, shpbi_0, shp_0)
+
+    if prev_lines
+        line.set_xy1(res_line_1, shpbi_2, shp_2)
+        line.set_xy2(res_line_1, shpbi_1, shp_1)
+
+if sl and barstate.isconfirmed
+    
+    line.set_xy1(sup_line_0, slpbi_1, slp_1)
+    line.set_xy2(sup_line_0, slpbi_0, slp_0)
+
+    if prev_lines
+        line.set_xy1(sup_line_1, slpbi_2, slp_2)
+        line.set_xy2(sup_line_1, slpbi_1, slp_1)

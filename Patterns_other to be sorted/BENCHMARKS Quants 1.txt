@@ -1,0 +1,115 @@
+BENCHMARKS
+
+🧮 Benchmarks & Numbers You Might Expect
+
+Based on the sources:
+
+Win rates typically range from 40-60% for strategies using a few indicators; combining more can push win rate higher in some studies, but often at cost of fewer trades or requiring precise conditions.
+
+Sharpe ratios in good studies might be 1.3-2.0, especially with good risk control.
+
+Outperformance vs baseline (buy and hold or single-indicator strategies) often in the range of 10-30% improvement in error metrics or returns (depending on market / timeframe).
+
+Returns like “> 50% annualized” are reported in some RL + sentiment + indicator studies, but you have to check if that includes realistic slippage, drawdown, etc. These are probably outliers.
+
+🧮 Example: How Your Ideal System Could Perform / Be Tested
+
+If you built a system that includes:
+
+Candlestick pattern detector
+
+Swing / wave counter (swing highs / lows / Elliott Wave)
+
+Trend indicators (MAs, ADX, trendlines)
+
+Fibonacci retracements / extensions
+
+Momentum indicators (RSI, MACD, etc.)
+
+Volume & volatility filters
+
+You’d want to test it like this:
+
+Clean historical data (preferably minute or hourly if you're trading shorter timeframes, or daily for longer).
+
+Automate detection of each pattern/indicator with clear rule sets (e.g. define “wave count” algorithmically rather than manually).
+
+Define entry and exit rules (which indicator combos needed for entry, stop loss, take profit).
+
+Backtest across multiple markets (stocks, commodities, forex) and multiple market regimes (bull, bear, range).
+
+Use walk-forward or rolling window test to avoid lookahead bias.
+
+Measure standard metrics: win rate, profit factor, max drawdown, Sharpe ratio, return over risk, etc.
+
+✅ What a more credible pattern of evidence might look like
+
+To get more reliable stats, you’d want something like:
+
+A study that defines exactly what counts as a valid Gartley, Bat, etc. (Fibonacci tolerances, price deviation, timeframe).
+
+Backtesting over many years of data, multiple stocks / markets, with both wins & losses recorded.
+
+Inclusion of realistic trading costs (commissions, spread, slippage).
+
+Reporting metrics like win rate, profit factor, drawdown, max loss, average gain / trade, expectancy (i.e. how much you make on average per trade accounting for win / loss frequency).
+
+A walk-forward or out-of-sample test (after the period used for developing/training the rules) to see how the pattern performs on fresh data.
+
+🔍 A More Rigorous Study
+
+One academic/independent backtest (“Trading with Harmonic Patterns” by Hong Kong University of Science & Technology) found that:
+
+Success / win rate for Gartley patterns falls as the deviation (how far price moves stray from ideal pattern) increases. 
+HKUST CSE
+
+In volatile markets (or large price swings), the hit rate is lower. 
+
+HKUST CSE
+
+✅ What These Studies Suggest in Relation to Your System
+
+These findings map well to your described system (dashboards, multiple indicators, macro + sentiment + technical toolboxes):
+
+Combining many signal sources + dynamically weighting them (QuantNet, Adaptive Alpha Weighting) tends to outperform static combinations.
+
+Including macro / market regime / sentiment / volatility helps mitigate drawdowns and improves adaptability when markets move from trending to ranging, or when volatility spikes.
+
+Using order flow / market microstructure data (as in Statistical Predictions …) gives predictive value beyond just classic technical indicators — can help improve “edge” especially in shorter timeframe trading.
+
+Out-of-sample testing / forward testing (as in several of these papers) is shown critical: backtests alone often mislead.
+
+Risk metrics like Sharpe, Calmar, drawdown, profit factor, expectancy are often more meaningful than raw win rates.
+
+🎯 Benchmarks You Could Aim For
+
+Based on the above, if you build a quant system with multiple modules + good risk management, here are realistic performance targets to aim for:
+
+Metric	Realistic Target Range (Well-Executed System)
+Annual Return (after fees)	10%-25% (for many systems); top quant/stat arb or multi-strategy could push 25-40% in good years
+Sharpe Ratio	1.0-2.5 depending on strategy type, volatility, frequency
+Max Drawdown	Usually 20-40% in worst periods; fewer if you have strong regime filters or hedging
+Win Rate	Hard to predict; strategy dependent. Many good systems have win rates 50-70% with good risk/reward and trade frequency
+Profit Factor	1.5-3+ is good; 3+ is very strong (if realistic costs considered)
+
+🎯 What You Can Use These For (Benchmarks & Targets)
+
+Based on these real numbers, here are some target ranges you might aim for (depending on strategy / risk):
+
+Goal Type	Realistic Target Range	Conditions / Strategy Notes
+Moderate quant / mixed-indicator approach	10-15% annually (if you control costs, good signal filtering)	Probably with moderate turnover, solid risk management, possibly hybrid strategy (macro + technical + sentiment)
+Higher-risk / more specialized quant niche (stat arb, EMN, macro quant)	15-25%+ in strong periods, possibly more in trending/volatile regimes	Will need sophisticated models, resources, good execution, minimal operational friction
+Downside / drawdown control	Limit drawdowns to 20-30% (ideally less) for equity-focused quant; worse for CTAs or macro in trending reversals	Use regime filters, stop-loss, hedge where possible
+
+🎯 Benchmarks You Can Aim For
+
+Based on those, here are some “goals / target zones” you might set for your system, to be competitive and realistic:
+
+Metric	Good Target (for your level, with moderate risk)	Stretch Target (if optimized, good data, great execution)
+Annualized return (live, after costs)	10-20%	20-30%+ (or more in high volatility / favorable regime)
+Sharpe Ratio (net of costs)	~1.2-1.8	2.0+ (hard, but achievable in some quant/stat arb niches)
+Max Drawdown in a bad year / crisis period	20-30%	15-25% with good regime filters
+Win Rate	Depends on strategy; for stat arb maybe ~40-60%, for trend-following maybe ~50-70% with fewer trades	
+Correlation vs Market (Beta)	Keeping low or modest beta helps risk; ideally <0.5 if market neutral-ish strategies	
+
+https://docs.google.com/spreadsheets/d/1Xj0JY3Fq5g5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5

@@ -1,0 +1,140 @@
+Lower Candle Trends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Lower Candle Trends [theEccentricTrader]', overlay = true)
+
+
+//////////// upper and lower candle trends //////////// 
+
+
+oneHL = low[1] <= low[2] and low > low[1] and barstate.isconfirmed
+twoHL = oneHL[1] and low > low[1] and barstate.isconfirmed
+threeHL = twoHL[1] and low > low[1] and barstate.isconfirmed
+fourHL = threeHL[1] and low > low[1] and barstate.isconfirmed
+fiveHL = fourHL[1] and low > low[1] and barstate.isconfirmed
+sixHL = fiveHL[1] and low > low[1] and barstate.isconfirmed
+sevenHL = sixHL[1] and low > low[1] and barstate.isconfirmed
+eightHL = sevenHL[1] and low > low[1] and barstate.isconfirmed
+nineHL = eightHL[1] and low > low[1] and barstate.isconfirmed
+tenHL = nineHL[1] and low > low[1] and barstate.isconfirmed
+elevenHL = tenHL[1] and low > low[1] and barstate.isconfirmed
+twelveHL = elevenHL[1] and low > low[1] and barstate.isconfirmed
+thirteenHL = twelveHL[1] and low > low[1] and barstate.isconfirmed
+fourteenHL = thirteenHL[1] and low > low[1] and barstate.isconfirmed
+fifteenHL = fourteenHL[1] and low > low[1] and barstate.isconfirmed
+sixteenHL = fifteenHL[1] and low > low[1] and barstate.isconfirmed
+seventeenHL = sixteenHL[1] and low > low[1] and barstate.isconfirmed
+eighteenHL = seventeenHL[1] and low > low[1] and barstate.isconfirmed
+nineteenHL = eighteenHL[1] and low > low[1] and barstate.isconfirmed
+twentyHL = nineteenHL[1] and low > low[1] and barstate.isconfirmed
+twentyoneHL = twentyHL[1] and low > low[1] and barstate.isconfirmed
+twentytwoHL = twentyoneHL[1] and low > low[1] and barstate.isconfirmed
+twentythreeHL = twentytwoHL[1] and low > low[1] and barstate.isconfirmed
+twentyfourHL = twentythreeHL[1] and low > low[1] and barstate.isconfirmed
+twentyfiveHL = twentyfourHL[1] and low > low[1] and barstate.isconfirmed
+twentysixHL = twentyfiveHL[1] and low > low[1] and barstate.isconfirmed
+twentysevenHL = twentysixHL[1] and low > low[1] and barstate.isconfirmed
+twentyeightHL = twentysevenHL[1] and low > low[1] and barstate.isconfirmed
+twentynineHL = twentyeightHL[1] and low > low[1] and barstate.isconfirmed
+thirtyHL = twentynineHL[1] and low > low[1] and barstate.isconfirmed
+
+oneLL = low[1] >= low[2] and low < low[1] and barstate.isconfirmed
+twoLL = oneLL[1] and low < low[1] and barstate.isconfirmed
+threeLL = twoLL[1] and low < low[1] and barstate.isconfirmed
+fourLL = threeLL[1] and low < low[1] and barstate.isconfirmed
+fiveLL = fourLL[1] and low < low[1] and barstate.isconfirmed
+sixLL = fiveLL[1] and low < low[1] and barstate.isconfirmed
+sevenLL = sixLL[1] and low < low[1] and barstate.isconfirmed
+eightLL = sevenLL[1] and low < low[1] and barstate.isconfirmed
+nineLL = eightLL[1] and low < low[1] and barstate.isconfirmed
+tenLL = nineLL[1] and low < low[1] and barstate.isconfirmed
+elevenLL = tenLL[1] and low < low[1] and barstate.isconfirmed
+twelveLL = elevenLL[1] and low < low[1] and barstate.isconfirmed
+thirteenLL = twelveLL[1] and low < low[1] and barstate.isconfirmed
+fourteenLL = thirteenLL[1] and low < low[1] and barstate.isconfirmed
+fifteenLL = fourteenLL[1] and low < low[1] and barstate.isconfirmed
+sixteenLL = fifteenLL[1] and low < low[1] and barstate.isconfirmed
+seventeenLL = sixteenLL[1] and low < low[1] and barstate.isconfirmed
+eighteenLL = seventeenLL[1] and low < low[1] and barstate.isconfirmed
+nineteenLL = eighteenLL[1] and low < low[1] and barstate.isconfirmed
+twentyLL = nineteenLL[1] and low < low[1] and barstate.isconfirmed
+twentyoneLL = twentyLL[1] and low < low[1] and barstate.isconfirmed
+twentytwoLL = twentyoneLL[1] and low < low[1] and barstate.isconfirmed
+twentythreeLL = twentytwoLL[1] and low < low[1] and barstate.isconfirmed
+twentyfourLL = twentythreeLL[1] and low < low[1] and barstate.isconfirmed
+twentyfiveLL = twentyfourLL[1] and low < low[1] and barstate.isconfirmed
+twentysixLL = twentyfiveLL[1] and low < low[1] and barstate.isconfirmed
+twentysevenLL = twentysixLL[1] and low < low[1] and barstate.isconfirmed
+twentyeightLL = twentysevenLL[1] and low < low[1] and barstate.isconfirmed
+twentynineLL = twentyeightLL[1] and low < low[1] and barstate.isconfirmed
+thirtyLL = twentynineLL[1] and low < low[1] and barstate.isconfirmed
+
+
+//////////// plots ////////////
+
+
+plotshape(oneHL, style = shape.triangleup, color = color.green, text = '1', textcolor = color.green, location = location.belowbar) 
+plotshape(twoHL, style = shape.triangleup, color = color.green, text = '2', textcolor = color.green, location = location.belowbar) 
+plotshape(threeHL, style = shape.triangleup, color = color.green, text = '3', textcolor = color.green, location = location.belowbar)
+plotshape(fourHL, style = shape.triangleup, color = color.green, text = '4', textcolor = color.green, location = location.belowbar)
+plotshape(fiveHL, style = shape.triangleup, color = color.green, text = '5', textcolor = color.green, location = location.belowbar)
+plotshape(sixHL, style = shape.triangleup, color = color.green, text = '6', textcolor = color.green, location = location.belowbar)
+plotshape(sevenHL, style = shape.triangleup, color = color.green, text = '7', textcolor = color.green, location = location.belowbar)
+plotshape(eightHL, style = shape.triangleup, color = color.green, text = '8', textcolor = color.green, location = location.belowbar)
+plotshape(nineHL, style = shape.triangleup, color = color.green, text = '9', textcolor = color.green, location = location.belowbar)
+plotshape(tenHL, style = shape.triangleup, color = color.green, text = '10', textcolor = color.green, location = location.belowbar)
+plotshape(elevenHL, style = shape.triangleup, color = color.green, text = '11', textcolor = color.green, location = location.belowbar)
+plotshape(twelveHL, style = shape.triangleup, color = color.green, text = '12', textcolor = color.green, location = location.belowbar)
+plotshape(thirteenHL, style = shape.triangleup, color = color.green, text = '13', textcolor = color.green, location = location.belowbar)
+plotshape(fourteenHL, style = shape.triangleup, color = color.green, text = '14', textcolor = color.green, location = location.belowbar)
+plotshape(fifteenHL, style = shape.triangleup, color = color.green, text = '15', textcolor = color.green, location = location.belowbar)
+plotshape(sixteenHL, style = shape.triangleup, color = color.green, text = '16', textcolor = color.green, location = location.belowbar)
+plotshape(seventeenHL, style = shape.triangleup, color = color.green, text = '17', textcolor = color.green, location = location.belowbar)
+plotshape(eighteenHL, style = shape.triangleup, color = color.green, text = '18', textcolor = color.green, location = location.belowbar)
+plotshape(nineteenHL, style = shape.triangleup, color = color.green, text = '19', textcolor = color.green, location = location.belowbar)
+plotshape(twentyHL, style = shape.triangleup, color = color.green, text = '20', textcolor = color.green, location = location.belowbar)
+plotshape(twentyoneHL, style = shape.triangleup, color = color.green, text = '21', textcolor = color.green, location = location.belowbar)
+plotshape(twentytwoHL, style = shape.triangleup, color = color.green, text = '22', textcolor = color.green, location = location.belowbar)
+plotshape(twentythreeHL, style = shape.triangleup, color = color.green, text = '23', textcolor = color.green, location = location.belowbar)
+plotshape(twentyfourHL, style = shape.triangleup, color = color.green, text = '24', textcolor = color.green, location = location.belowbar)
+plotshape(twentyfiveHL, style = shape.triangleup, color = color.green, text = '25', textcolor = color.green, location = location.belowbar)
+plotshape(twentysixHL, style = shape.triangleup, color = color.green, text = '26', textcolor = color.green, location = location.belowbar)
+plotshape(twentysevenHL, style = shape.triangleup, color = color.green, text = '27', textcolor = color.green, location = location.belowbar)
+plotshape(twentyeightHL, style = shape.triangleup, color = color.green, text = '28', textcolor = color.green, location = location.belowbar)
+plotshape(twentynineHL, style = shape.triangleup, color = color.green, text = '29', textcolor = color.green, location = location.belowbar)
+plotshape(thirtyHL, style = shape.triangleup, color = color.green, text = '30', textcolor = color.green, location = location.belowbar)
+
+plotshape(oneLL, style = shape.triangledown, color = color.red, text = '1', textcolor = color.red, location = location.belowbar) 
+plotshape(twoLL, style = shape.triangledown, color = color.red, text = '2', textcolor = color.red, location = location.belowbar) 
+plotshape(threeLL, style = shape.triangledown, color = color.red, text = '3', textcolor = color.red, location = location.belowbar)
+plotshape(fourLL, style = shape.triangledown, color = color.red, text = '4', textcolor = color.red, location = location.belowbar)
+plotshape(fiveLL, style = shape.triangledown, color = color.red, text = '5', textcolor = color.red, location = location.belowbar)
+plotshape(sixLL, style = shape.triangledown, color = color.red, text = '6', textcolor = color.red, location = location.belowbar)
+plotshape(sevenLL, style = shape.triangledown, color = color.red, text = '7', textcolor = color.red, location = location.belowbar)
+plotshape(eightLL, style = shape.triangledown, color = color.red, text = '8', textcolor = color.red, location = location.belowbar)
+plotshape(nineLL, style = shape.triangledown, color = color.red, text = '9', textcolor = color.red, location = location.belowbar)
+plotshape(tenLL, style = shape.triangledown, color = color.red, text = '10', textcolor = color.red, location = location.belowbar)
+plotshape(elevenLL, style = shape.triangledown, color = color.red, text = '11', textcolor = color.red, location = location.belowbar)
+plotshape(twelveLL, style = shape.triangledown, color = color.red, text = '12', textcolor = color.red, location = location.belowbar)
+plotshape(thirteenLL, style = shape.triangledown, color = color.red, text = '13', textcolor = color.red, location = location.belowbar)
+plotshape(fourteenLL, style = shape.triangledown, color = color.red, text = '14', textcolor = color.red, location = location.belowbar)
+plotshape(fifteenLL, style = shape.triangledown, color = color.red, text = '15', textcolor = color.red, location = location.belowbar)
+plotshape(sixteenLL, style = shape.triangledown, color = color.red, text = '16', textcolor = color.red, location = location.belowbar)
+plotshape(seventeenLL, style = shape.triangledown, color = color.red, text = '17', textcolor = color.red, location = location.belowbar)
+plotshape(eighteenLL, style = shape.triangledown, color = color.red, text = '18', textcolor = color.red, location = location.belowbar)
+plotshape(nineteenLL, style = shape.triangledown, color = color.red, text = '19', textcolor = color.red, location = location.belowbar)
+plotshape(twentyLL, style = shape.triangledown, color = color.red, text = '20', textcolor = color.red, location = location.belowbar)
+plotshape(twentyoneLL, style = shape.triangledown, color = color.red, text = '21', textcolor = color.red, location = location.belowbar)
+plotshape(twentytwoLL, style = shape.triangledown, color = color.red, text = '22', textcolor = color.red, location = location.belowbar)
+plotshape(twentythreeLL, style = shape.triangledown, color = color.red, text = '23', textcolor = color.red, location = location.belowbar)
+plotshape(twentyfourLL, style = shape.triangledown, color = color.red, text = '24', textcolor = color.red, location = location.belowbar)
+plotshape(twentyfiveLL, style = shape.triangledown, color = color.red, text = '25', textcolor = color.red, location = location.belowbar)
+plotshape(twentysixLL, style = shape.triangledown, color = color.red, text = '26', textcolor = color.red, location = location.belowbar)
+plotshape(twentysevenLL, style = shape.triangledown, color = color.red, text = '27', textcolor = color.red, location = location.belowbar)
+plotshape(twentyeightLL, style = shape.triangledown, color = color.red, text = '28', textcolor = color.red, location = location.belowbar)
+plotshape(twentynineLL, style = shape.triangledown, color = color.red, text = '29', textcolor = color.red, location = location.belowbar)
+plotshape(thirtyLL, style = shape.triangledown, color = color.red, text = '30', textcolor = color.red, location = location.belowbar)

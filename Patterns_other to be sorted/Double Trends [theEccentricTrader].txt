@@ -1,0 +1,314 @@
+Double Trends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Double Trends [theEccentricTrader]', overlay = true)
+
+
+//////////// double trends ////////////
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+
+onePartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1)
+twoPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2)
+threePartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3)
+fourPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4)
+fivePartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5)
+sixPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6)
+sevenPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) 
+ and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7)
+eightPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8)
+ninePartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) > ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) 
+ and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) 
+ and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8) and ta.valuewhen(shPrice, shPrice, 8) > ta.valuewhen(shPrice, shPrice, 9)
+tenPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) > ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) > ta.valuewhen(slPrice, slPrice, 10) 
+ and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) > ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) > ta.valuewhen(shPrice, shPrice, 10)
+elevenPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) > ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) > ta.valuewhen(slPrice, slPrice, 10) 
+ and ta.valuewhen(slPrice, slPrice, 10) > ta.valuewhen(slPrice, slPrice, 11) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) 
+ and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) 
+ and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8) and ta.valuewhen(shPrice, shPrice, 8) > ta.valuewhen(shPrice, shPrice, 9) 
+ and ta.valuewhen(shPrice, shPrice, 9) > ta.valuewhen(shPrice, shPrice, 10) and ta.valuewhen(shPrice, shPrice, 10) > ta.valuewhen(shPrice, shPrice, 11)
+twelvePartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) > ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) > ta.valuewhen(slPrice, slPrice, 10) 
+ and ta.valuewhen(slPrice, slPrice, 10) > ta.valuewhen(slPrice, slPrice, 11) and ta.valuewhen(slPrice, slPrice, 11) > ta.valuewhen(slPrice, slPrice, 12) 
+ and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) > ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) > ta.valuewhen(shPrice, shPrice, 10) 
+ and ta.valuewhen(shPrice, shPrice, 10) > ta.valuewhen(shPrice, shPrice, 11) and ta.valuewhen(shPrice, shPrice, 11) > ta.valuewhen(shPrice, shPrice, 12)
+thirteenPartPeakTroughDoubleUptrend = slPrice and ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) > ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) > ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) > ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) > ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) > ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) > ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) > ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) > ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) > ta.valuewhen(slPrice, slPrice, 10) 
+ and ta.valuewhen(slPrice, slPrice, 10) > ta.valuewhen(slPrice, slPrice, 11) and ta.valuewhen(slPrice, slPrice, 11) > ta.valuewhen(slPrice, slPrice, 12) 
+ and ta.valuewhen(slPrice, slPrice, 12) > ta.valuewhen(slPrice, slPrice, 13) and ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1) 
+ and ta.valuewhen(shPrice, shPrice, 1) > ta.valuewhen(shPrice, shPrice, 2) and ta.valuewhen(shPrice, shPrice, 2) > ta.valuewhen(shPrice, shPrice, 3) 
+ and ta.valuewhen(shPrice, shPrice, 3) > ta.valuewhen(shPrice, shPrice, 4) and ta.valuewhen(shPrice, shPrice, 4) > ta.valuewhen(shPrice, shPrice, 5) 
+ and ta.valuewhen(shPrice, shPrice, 5) > ta.valuewhen(shPrice, shPrice, 6) and ta.valuewhen(shPrice, shPrice, 6) > ta.valuewhen(shPrice, shPrice, 7) 
+ and ta.valuewhen(shPrice, shPrice, 7) > ta.valuewhen(shPrice, shPrice, 8) and ta.valuewhen(shPrice, shPrice, 8) > ta.valuewhen(shPrice, shPrice, 9) 
+ and ta.valuewhen(shPrice, shPrice, 9) > ta.valuewhen(shPrice, shPrice, 10) and ta.valuewhen(shPrice, shPrice, 10) > ta.valuewhen(shPrice, shPrice, 11) 
+ and ta.valuewhen(shPrice, shPrice, 11) > ta.valuewhen(shPrice, shPrice, 12) and ta.valuewhen(shPrice, shPrice, 12) > ta.valuewhen(shPrice, shPrice, 13)
+
+onePartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1)
+twoPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2)
+threePartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3)
+fourPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4)
+fivePartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5)
+sixPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6)
+sevenPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) 
+ and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7)
+eightPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8)
+ninePartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) < ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) 
+ and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) 
+ and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8) and ta.valuewhen(slPrice, slPrice, 8) < ta.valuewhen(slPrice, slPrice, 9)
+tenPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) < ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) < ta.valuewhen(shPrice, shPrice, 10) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) < ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) < ta.valuewhen(slPrice, slPrice, 10)
+elevenPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) < ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) < ta.valuewhen(shPrice, shPrice, 10) 
+ and ta.valuewhen(shPrice, shPrice, 10) < ta.valuewhen(shPrice, shPrice, 11) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) 
+ and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) 
+ and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8) and ta.valuewhen(slPrice, slPrice, 8) < ta.valuewhen(slPrice, slPrice, 9) 
+ and ta.valuewhen(slPrice, slPrice, 9) < ta.valuewhen(slPrice, slPrice, 10) and ta.valuewhen(slPrice, slPrice, 10) < ta.valuewhen(slPrice, slPrice, 11)
+twelvePartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) < ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) < ta.valuewhen(shPrice, shPrice, 10) 
+ and ta.valuewhen(shPrice, shPrice, 10) < ta.valuewhen(shPrice, shPrice, 11) and ta.valuewhen(shPrice, shPrice, 11) < ta.valuewhen(shPrice, shPrice, 12) 
+ and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) 
+ and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) 
+ and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) 
+ and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8) 
+ and ta.valuewhen(slPrice, slPrice, 8) < ta.valuewhen(slPrice, slPrice, 9) and ta.valuewhen(slPrice, slPrice, 9) < ta.valuewhen(slPrice, slPrice, 10) 
+ and ta.valuewhen(slPrice, slPrice, 10) < ta.valuewhen(slPrice, slPrice, 11) and ta.valuewhen(slPrice, slPrice, 11) < ta.valuewhen(slPrice, slPrice, 12)
+thirteenPartTroughPeakDoubleDowntrend = shPrice and ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1) and ta.valuewhen(shPrice, shPrice, 1) < ta.valuewhen(shPrice, shPrice, 2) 
+ and ta.valuewhen(shPrice, shPrice, 2) < ta.valuewhen(shPrice, shPrice, 3) and ta.valuewhen(shPrice, shPrice, 3) < ta.valuewhen(shPrice, shPrice, 4) 
+ and ta.valuewhen(shPrice, shPrice, 4) < ta.valuewhen(shPrice, shPrice, 5) and ta.valuewhen(shPrice, shPrice, 5) < ta.valuewhen(shPrice, shPrice, 6) 
+ and ta.valuewhen(shPrice, shPrice, 6) < ta.valuewhen(shPrice, shPrice, 7) and ta.valuewhen(shPrice, shPrice, 7) < ta.valuewhen(shPrice, shPrice, 8) 
+ and ta.valuewhen(shPrice, shPrice, 8) < ta.valuewhen(shPrice, shPrice, 9) and ta.valuewhen(shPrice, shPrice, 9) < ta.valuewhen(shPrice, shPrice, 10) 
+ and ta.valuewhen(shPrice, shPrice, 10) < ta.valuewhen(shPrice, shPrice, 11) and ta.valuewhen(shPrice, shPrice, 11) < ta.valuewhen(shPrice, shPrice, 12) 
+ and ta.valuewhen(shPrice, shPrice, 12) < ta.valuewhen(shPrice, shPrice, 13) and ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1) 
+ and ta.valuewhen(slPrice, slPrice, 1) < ta.valuewhen(slPrice, slPrice, 2) and ta.valuewhen(slPrice, slPrice, 2) < ta.valuewhen(slPrice, slPrice, 3) 
+ and ta.valuewhen(slPrice, slPrice, 3) < ta.valuewhen(slPrice, slPrice, 4) and ta.valuewhen(slPrice, slPrice, 4) < ta.valuewhen(slPrice, slPrice, 5) 
+ and ta.valuewhen(slPrice, slPrice, 5) < ta.valuewhen(slPrice, slPrice, 6) and ta.valuewhen(slPrice, slPrice, 6) < ta.valuewhen(slPrice, slPrice, 7) 
+ and ta.valuewhen(slPrice, slPrice, 7) < ta.valuewhen(slPrice, slPrice, 8) and ta.valuewhen(slPrice, slPrice, 8) < ta.valuewhen(slPrice, slPrice, 9) 
+ and ta.valuewhen(slPrice, slPrice, 9) < ta.valuewhen(slPrice, slPrice, 10) and ta.valuewhen(slPrice, slPrice, 10) < ta.valuewhen(slPrice, slPrice, 11)
+ and ta.valuewhen(slPrice, slPrice, 11) < ta.valuewhen(slPrice, slPrice, 12) and ta.valuewhen(slPrice, slPrice, 12) < ta.valuewhen(slPrice, slPrice, 13)
+
+
+//////////// plots ////////////
+
+
+plotshape(slPrice and onePartPeakTroughDoubleUptrend and not twoPartPeakTroughDoubleUptrend and low <= low[1] ? onePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '1', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and twoPartPeakTroughDoubleUptrend and not threePartPeakTroughDoubleUptrend and low <= low[1] ? twoPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '2', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and threePartPeakTroughDoubleUptrend and not fourPartPeakTroughDoubleUptrend and low <= low[1] ? threePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '3', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and fourPartPeakTroughDoubleUptrend and not fivePartPeakTroughDoubleUptrend and low <= low[1] ? fourPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '4', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and fivePartPeakTroughDoubleUptrend and not sixPartPeakTroughDoubleUptrend and low <= low[1] ? fivePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '5', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and sixPartPeakTroughDoubleUptrend and not sevenPartPeakTroughDoubleUptrend and low <= low[1] ? sixPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '6', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and sevenPartPeakTroughDoubleUptrend and not eightPartPeakTroughDoubleUptrend and low <= low[1] ? sevenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '7', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and eightPartPeakTroughDoubleUptrend and not ninePartPeakTroughDoubleUptrend and low <= low[1] ? eightPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '8', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and ninePartPeakTroughDoubleUptrend and not tenPartPeakTroughDoubleUptrend and low <= low[1] ? ninePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '9', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and tenPartPeakTroughDoubleUptrend and not elevenPartPeakTroughDoubleUptrend and low <= low[1] ? tenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '10', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and elevenPartPeakTroughDoubleUptrend and not twelvePartPeakTroughDoubleUptrend and low <= low[1] ? elevenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '11', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and twelvePartPeakTroughDoubleUptrend and not thirteenPartPeakTroughDoubleUptrend and low <= low[1] ? twelvePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '12', textcolor = color.green, location = location.belowbar)
+plotshape(slPrice and thirteenPartPeakTroughDoubleUptrend and low <= low[1] ? thirteenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '13', textcolor = color.green, location = location.belowbar)
+
+plotshape(slPrice and onePartPeakTroughDoubleUptrend and not twoPartPeakTroughDoubleUptrend and low > low[1] ? onePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '1', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and twoPartPeakTroughDoubleUptrend and not threePartPeakTroughDoubleUptrend and low > low[1] ? twoPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '2', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and threePartPeakTroughDoubleUptrend and not fourPartPeakTroughDoubleUptrend and low > low[1] ? threePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '3', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and fourPartPeakTroughDoubleUptrend and not fivePartPeakTroughDoubleUptrend and low > low[1] ? fourPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '4', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and fivePartPeakTroughDoubleUptrend and not sixPartPeakTroughDoubleUptrend and low > low[1] ? fivePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '5', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and sixPartPeakTroughDoubleUptrend and not sevenPartPeakTroughDoubleUptrend and low > low[1] ? sixPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '6', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and sevenPartPeakTroughDoubleUptrend and not eightPartPeakTroughDoubleUptrend and low > low[1] ? sevenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '7', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and eightPartPeakTroughDoubleUptrend and not ninePartPeakTroughDoubleUptrend and low > low[1] ? eightPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '8', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and ninePartPeakTroughDoubleUptrend and not tenPartPeakTroughDoubleUptrend and low > low[1] ? ninePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '9', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and tenPartPeakTroughDoubleUptrend and not elevenPartPeakTroughDoubleUptrend and low > low[1] ? tenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '10', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and elevenPartPeakTroughDoubleUptrend and not twelvePartPeakTroughDoubleUptrend and low > low[1] ? elevenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '11', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and twelvePartPeakTroughDoubleUptrend and not thirteenPartPeakTroughDoubleUptrend and low > low[1] ? twelvePartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '12', textcolor = color.green, location = location.belowbar, offset = -1)
+plotshape(slPrice and thirteenPartPeakTroughDoubleUptrend and low > low[1] ? thirteenPartPeakTroughDoubleUptrend : na, 
+ style = shape.triangleup, color = color.green, text = '13', textcolor = color.green, location = location.belowbar, offset = -1)
+
+plotshape(shPrice and onePartTroughPeakDoubleDowntrend and not twoPartTroughPeakDoubleDowntrend and high >= high[1] ? onePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '1', textcolor = color.red)
+plotshape(shPrice and twoPartTroughPeakDoubleDowntrend and not threePartTroughPeakDoubleDowntrend and high >= high[1] ? twoPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '2', textcolor = color.red)
+plotshape(shPrice and threePartTroughPeakDoubleDowntrend and not fourPartTroughPeakDoubleDowntrend and high >= high[1] ? threePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '3', textcolor = color.red)
+plotshape(shPrice and fourPartTroughPeakDoubleDowntrend and not fivePartTroughPeakDoubleDowntrend and high >= high[1] ? fourPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '4', textcolor = color.red)
+plotshape(shPrice and fivePartTroughPeakDoubleDowntrend and not sixPartTroughPeakDoubleDowntrend and high >= high[1] ? fivePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '5', textcolor = color.red)
+plotshape(shPrice and sixPartTroughPeakDoubleDowntrend and not sevenPartTroughPeakDoubleDowntrend and high >= high[1] ? sixPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '6', textcolor = color.red)
+plotshape(shPrice and sevenPartTroughPeakDoubleDowntrend and not eightPartTroughPeakDoubleDowntrend and high >= high[1] ? sevenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '7', textcolor = color.red)
+plotshape(shPrice and eightPartTroughPeakDoubleDowntrend and not ninePartTroughPeakDoubleDowntrend and high >= high[1] ? eightPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '8', textcolor = color.red)
+plotshape(shPrice and ninePartTroughPeakDoubleDowntrend and not tenPartTroughPeakDoubleDowntrend and high >= high[1] ? ninePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '9', textcolor = color.red)
+plotshape(shPrice and tenPartTroughPeakDoubleDowntrend and not elevenPartTroughPeakDoubleDowntrend and high >= high[1] ? tenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '10', textcolor = color.red)
+plotshape(shPrice and elevenPartTroughPeakDoubleDowntrend and not twelvePartTroughPeakDoubleDowntrend and high >= high[1] ? elevenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '11', textcolor = color.red)
+plotshape(shPrice and twelvePartTroughPeakDoubleDowntrend and not thirteenPartTroughPeakDoubleDowntrend and high >= high[1] ? twelvePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '12', textcolor = color.red)
+plotshape(shPrice and thirteenPartTroughPeakDoubleDowntrend and high >= high[1] ? thirteenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '13', textcolor = color.red)
+
+plotshape(shPrice and onePartTroughPeakDoubleDowntrend and not twoPartTroughPeakDoubleDowntrend and high < high[1] ? onePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '1', textcolor = color.red, offset = -1)
+plotshape(shPrice and twoPartTroughPeakDoubleDowntrend and not threePartTroughPeakDoubleDowntrend and high < high[1] ? twoPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '2', textcolor = color.red, offset = -1)
+plotshape(shPrice and threePartTroughPeakDoubleDowntrend and not fourPartTroughPeakDoubleDowntrend and high < high[1] ? threePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '3', textcolor = color.red, offset = -1)
+plotshape(shPrice and fourPartTroughPeakDoubleDowntrend and not fivePartTroughPeakDoubleDowntrend and high < high[1] ? fourPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '4', textcolor = color.red, offset = -1)
+plotshape(shPrice and fivePartTroughPeakDoubleDowntrend and not sixPartTroughPeakDoubleDowntrend and high < high[1] ? fivePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '5', textcolor = color.red, offset = -1)
+plotshape(shPrice and sixPartTroughPeakDoubleDowntrend and not sevenPartTroughPeakDoubleDowntrend and high < high[1] ? sixPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '6', textcolor = color.red, offset = -1)
+plotshape(shPrice and sevenPartTroughPeakDoubleDowntrend and not eightPartTroughPeakDoubleDowntrend and high < high[1] ? sevenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '7', textcolor = color.red, offset = -1)
+plotshape(shPrice and eightPartTroughPeakDoubleDowntrend and not ninePartTroughPeakDoubleDowntrend and high < high[1] ? eightPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '8', textcolor = color.red, offset = -1)
+plotshape(shPrice and ninePartTroughPeakDoubleDowntrend and not tenPartTroughPeakDoubleDowntrend and high < high[1] ? ninePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '9', textcolor = color.red, offset = -1)
+plotshape(shPrice and tenPartTroughPeakDoubleDowntrend and not elevenPartTroughPeakDoubleDowntrend and high < high[1] ? tenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '10', textcolor = color.red, offset = -1)
+plotshape(shPrice and elevenPartTroughPeakDoubleDowntrend and not twelvePartTroughPeakDoubleDowntrend and high < high[1] ? elevenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '11', textcolor = color.red, offset = -1)
+plotshape(shPrice and twelvePartTroughPeakDoubleDowntrend and not thirteenPartTroughPeakDoubleDowntrend and high < high[1] ? twelvePartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '12', textcolor = color.red, offset = -1)
+plotshape(shPrice and thirteenPartTroughPeakDoubleDowntrend and high < high[1] ? thirteenPartTroughPeakDoubleDowntrend : na, 
+ style = shape.triangledown, color = color.red, text = '13', textcolor = color.red, offset = -1)

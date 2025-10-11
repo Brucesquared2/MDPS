@@ -1,0 +1,131 @@
+Ascending Head and Shoulders Patterns [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Ascending Head and Shoulders Patterns [theEccentricTrader]', overlay = true, max_lines_count = 500, max_labels_count = 84)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+peak = ta.valuewhen(shPrice, shPrice, 0)
+peakBarIndex = ta.valuewhen(shPrice, shPriceBarIndex, 0)
+shPriceOne = ta.valuewhen(shPrice, shPrice, 1)
+shPriceBarIndexOne = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 1)
+shPriceTwo = ta.valuewhen(shPrice, shPrice, 2)
+shPriceBarIndexTwo = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 2)
+
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+trough = ta.valuewhen(slPrice, slPrice, 0)
+troughBarIndex = ta.valuewhen(slPrice, slPriceBarIndex, 0)
+slPriceOne = ta.valuewhen(slPrice, slPrice, 1)
+slPriceBarIndexOne = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 1)
+slPriceTwo = ta.valuewhen(slPrice, slPrice, 2)
+slPriceBarIndexTwo = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 2)
+
+downtrend = ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1)
+returnLineUptrend = ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1)
+uptrend = ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1)
+returnLineDowntrend = ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1)
+
+ascendingHeadShoulders = downtrend and returnLineUptrend[1] and uptrend and shPrice > shPriceTwo
+
+
+//////////// lines //////////// 
+
+
+showHistoric = input(defval = true, title = 'Show Historic', group = 'Lines')
+showNecklines = input(defval = false, title = 'Show Necklines', group = 'Lines')
+showDyanmicNecklines = input(defval = false, title = 'Show Dynamic Necklines', group = 'Lines')
+showProjections = input(defval = true, title = 'Show Projections', group = 'Lines')
+
+patternColor = input(defval = color.blue, title = 'Pattern Color', group = 'Line Coloring')
+necklineColor = input(defval = color.yellow, title = 'Pattern Neckline Color', group = 'Line Coloring')
+
+selectPatternExtend = input.string(title = 'Extend Current Pattern Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendPatternLines = selectPatternExtend == 'None' ? extend.none : selectPatternExtend == 'Right' ? extend.right : selectPatternExtend == 'Left' ? extend.left : 
+ selectPatternExtend == 'Both' ? extend.both : na
+
+selectNecklineExtend = input.string(title = 'Extend Current Pattern Necklines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendNecklineLines = selectNecklineExtend == 'None' ? extend.none : selectNecklineExtend == 'Right' ? extend.right : 
+ selectNecklineExtend == 'Left' ? extend.left : selectNecklineExtend == 'Both' ? extend.both : na
+
+selectProjectionExtend = input.string(title = 'Extend Current Projection Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendProjectionLines = selectProjectionExtend == 'None' ? extend.none : selectProjectionExtend == 'Right' ? extend.right : 
+ selectProjectionExtend == 'Left' ? extend.left : selectProjectionExtend == 'Both' ? extend.both : na
+
+var currentPatternLineOne = line.new(na, na, na, na, extend = extendPatternLines, color = patternColor)
+var currentPatternLineTwo = line.new(na, na, na, na, extend = extendPatternLines, color = patternColor)
+
+var currentPatternNeckline = line.new(na, na, na, na, extend = extendNecklineLines, color = necklineColor)
+var currentPatternDynamicNeckline = line.new(na, na, na, na, extend = extendNecklineLines, color = necklineColor)
+
+var currentPatternPeak = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternTrough = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+var currentPatternUpperProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternLowerProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+
+if shPrice and ascendingHeadShoulders and showHistoric
+    lineOne = line.new(shPriceBarIndexOne, shPriceOne, shPriceBarIndex, shPrice, color = patternColor, extend = extend.none)
+    lineTwo = line.new(shPriceBarIndexTwo, shPriceTwo, shPriceBarIndexOne, shPriceOne, color = patternColor, extend = extend.none)
+    neckline = line.new(showNecklines ? troughBarIndex : na, showNecklines ? trough : na, showNecklines ? bar_index : na, showNecklines ? trough : na, 
+     color = necklineColor, extend = extend.none)
+    dynamicNeckline = line.new(showDyanmicNecklines ? slPriceBarIndexOne : na, showDyanmicNecklines ? slPriceOne : na, showDyanmicNecklines ? troughBarIndex : na, 
+     showDyanmicNecklines ? trough : na, color = necklineColor, extend = extend.none)    
+    peakLabel = label.new(shPriceBarIndexOne, shPriceOne, color = color.rgb(54, 58, 69, 100), 
+     text = "ASC. HEAD AND SHOULDERS", textcolor = patternColor)
+    patternPeak = line.new(showProjections ? troughBarIndex : na, showProjections ? peak : na, showProjections ? bar_index : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? troughBarIndex : na, showProjections ? trough : na, showProjections ? bar_index : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? shPriceOne : na, showProjections ? bar_index : na, 
+     showProjections ? shPriceOne : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? trough - (shPriceOne - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    var myLineArray = array.new_line()
+    var myArray = array.new_line()
+    array.push(myLineArray, lineOne) 
+    array.push(myLineArray, lineTwo)
+    array.push(myArray, neckline)
+    array.push(myArray, dynamicNeckline) 
+    array.push(myLineArray, patternPeak) 
+    array.push(myLineArray, patternTrough) 
+    array.push(myLineArray, patternUpperProjection) 
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 500
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, peakLabel) 
+    if array.size(myLabelArray) >= 84
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+if shPrice and ascendingHeadShoulders 
+    line.set_xy1(currentPatternLineOne, shPriceBarIndexOne, shPriceOne)
+    line.set_xy2(currentPatternLineOne, shPriceBarIndex, shPrice)
+    line.set_xy1(currentPatternLineTwo, shPriceBarIndexTwo, shPriceTwo)
+    line.set_xy2(currentPatternLineTwo, shPriceBarIndexOne, shPriceOne)
+    line.set_xy1(currentPatternNeckline, showNecklines ? troughBarIndex : na, showNecklines ? trough : na)
+    line.set_xy2(currentPatternNeckline, showNecklines ? bar_index : na, showNecklines ? trough : na)
+    line.set_xy1(currentPatternDynamicNeckline, showDyanmicNecklines ? slPriceBarIndexOne : na, showDyanmicNecklines ? slPriceOne : na)
+    line.set_xy2(currentPatternDynamicNeckline, showDyanmicNecklines ? troughBarIndex : na, showDyanmicNecklines ? trough : na)
+    line.set_xy1(currentPatternPeak, showProjections ? troughBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index : na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? troughBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index : na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? troughBarIndex : na, showProjections ? shPriceOne : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index : na, showProjections ? shPriceOne : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index : na, showProjections ? trough - (shPriceOne - slPriceOne) : na)
+    alert('Ascending Head and Shoulders')

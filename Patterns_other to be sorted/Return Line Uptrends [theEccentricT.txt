@@ -1,0 +1,87 @@
+Return Line Uptrends [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Return Line Uptrends [theEccentricTrader]', overlay = true)
+
+/////////////
+// IMPORTS //
+/////////////
+
+import theEccentricTrader/PubLibSwing/3 as sw
+import theEccentricTrader/PubLibTrend/3 as tr
+
+///////////////////////////
+// CONDITIONAL VARIABLES //
+///////////////////////////
+
+sh = sw.sh()
+
+rlut_1p = tr.rlut_1p()
+rlut_2p = tr.rlut_2p()
+rlut_3p = tr.rlut_3p()
+rlut_4p = tr.rlut_4p()
+rlut_5p = tr.rlut_5p()
+rlut_6p = tr.rlut_6p()
+rlut_7p = tr.rlut_7p()
+rlut_8p = tr.rlut_8p()
+rlut_9p = tr.rlut_9p()
+rlut_10p = tr.rlut_10p()
+rlut_11p = tr.rlut_11p()
+rlut_12p = tr.rlut_12p()
+rlut_13p = tr.rlut_13p()
+rlut_14p = tr.rlut_14p()
+rlut_15p = tr.rlut_15p()
+rlut_16p = tr.rlut_16p()
+rlut_17p = tr.rlut_17p()
+rlut_18p = tr.rlut_18p()
+rlut_19p = tr.rlut_19p()
+rlut_20p = tr.rlut_20p()
+
+///////////
+// PLOTS //
+///////////
+
+plotshape(sh and rlut_1p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '1', textcolor = color.green)
+plotshape(sh and rlut_2p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '2', textcolor = color.green)
+plotshape(sh and rlut_3p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '3', textcolor = color.green)
+plotshape(sh and rlut_4p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '4', textcolor = color.green)
+plotshape(sh and rlut_5p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '5', textcolor = color.green)
+plotshape(sh and rlut_6p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '6', textcolor = color.green)
+plotshape(sh and rlut_7p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '7', textcolor = color.green)
+plotshape(sh and rlut_8p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '8', textcolor = color.green)
+plotshape(sh and rlut_9p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '9', textcolor = color.green)
+plotshape(sh and rlut_10p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '10', textcolor = color.green)
+plotshape(sh and rlut_11p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '11', textcolor = color.green)
+plotshape(sh and rlut_12p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '12', textcolor = color.green)
+plotshape(sh and rlut_13p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '13', textcolor = color.green)
+plotshape(sh and rlut_14p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '14', textcolor = color.green)
+plotshape(sh and rlut_15p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '15', textcolor = color.green)
+plotshape(sh and rlut_16p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '16', textcolor = color.green)
+plotshape(sh and rlut_17p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '17', textcolor = color.green)
+plotshape(sh and rlut_18p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '18', textcolor = color.green)
+plotshape(sh and rlut_19p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '19', textcolor = color.green)
+plotshape(sh and rlut_20p and high >= high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '20', textcolor = color.green)
+
+plotshape(sh and rlut_1p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '1', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_2p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '2', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_3p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '3', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_4p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '4', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_5p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '5', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_6p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '6', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_7p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '7', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_8p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '8', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_9p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '9', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_10p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '10', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_11p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '11', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_12p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '12', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_13p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '13', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_14p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '14', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_15p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '15', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_16p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '16', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_17p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '17', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_18p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '18', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_19p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '19', textcolor = color.green, offset = -1)
+plotshape(sh and rlut_20p and high < high[1] and barstate.isconfirmed, style = shape.triangleup, color = color.green, text = '20', textcolor = color.green, offset = -1)

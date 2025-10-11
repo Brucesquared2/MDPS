@@ -1,0 +1,154 @@
+Bearish Gartley Harmonic Patterns [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Bearish Gartley Harmonic Patterns [theEccentricTrader]', overlay = true, max_lines_count = 500, max_labels_count = 250)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+peak = ta.valuewhen(shPrice, shPrice, 0)
+peakBarIndex = ta.valuewhen(shPrice, shPriceBarIndex, 0)
+shPriceOne = ta.valuewhen(shPrice, shPrice, 1)
+shPriceBarIndexOne = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 1)
+shPriceTwo = ta.valuewhen(shPrice, shPrice, 2)
+shPriceBarIndexTwo = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 2)
+
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+trough = ta.valuewhen(slPrice, slPrice, 0)
+troughBarIndex = ta.valuewhen(slPrice, slPriceBarIndex, 0)
+slPriceOne = ta.valuewhen(slPrice, slPrice, 1)
+slPriceBarIndexOne = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 1)
+slPriceTwo = ta.valuewhen(slPrice, slPrice, 2)
+slPriceBarIndexTwo = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 2)
+
+returnLineUptrend = ta.valuewhen(shPrice, shPrice, 0) > ta.valuewhen(shPrice, shPrice, 1)
+uptrend = ta.valuewhen(slPrice, slPrice, 0) > ta.valuewhen(slPrice, slPrice, 1)
+downtrend = ta.valuewhen(shPrice, shPrice, 0) < ta.valuewhen(shPrice, shPrice, 1)
+returnLineDowntrend = ta.valuewhen(slPrice, slPrice, 0) < ta.valuewhen(slPrice, slPrice, 1)
+
+slRangeRatio = (peak - trough) / (peak - trough[1]) * 100
+shRangeRatio = (peak - trough) / (peak[1] - trough) * 100
+
+slRangeRatioZero = ta.valuewhen(slPrice, slRangeRatio, 0)
+slRangeRatioOne = ta.valuewhen(slPrice, slRangeRatio, 1)
+
+shRangeRatioZero = ta.valuewhen(shPrice, shRangeRatio, 0)
+shRangeRatioOne = ta.valuewhen(shPrice, shRangeRatio, 1)
+
+adRangeRatio = (shPrice - slPriceOne) / (shPriceTwo - slPriceOne) * 100
+
+abLowerTolerance = input(defval = 10, title = 'AB Lower Tolerance (%)', group = 'Tolerances')
+abUpperTolerance = input(defval = 10, title = 'AB Upper Tolerance (%)', group = 'Tolerances')
+bcLowerTolerance = input(defval = 10, title = 'BC Lower Tolerance (%)', group = 'Tolerances')
+bcUpperTolerance = input(defval = 10, title = 'BC Upper Tolerance (%)', group = 'Tolerances')
+cdLowerTolerance = input(defval = 10, title = 'CD Lower Tolerance (%)', group = 'Tolerances')
+cdUpperTolerance = input(defval = 10, title = 'CD Upper Tolerance (%)', group = 'Tolerances')
+adLowerTolerance = input(defval = 10, title = 'AD Lower Tolerance (%)', group = 'Tolerances')
+adUpperTolerance = input(defval = 10, title = 'AD Upper Tolerance (%)', group = 'Tolerances')
+
+bearishGartley = shPrice and returnLineUptrend and downtrend[1] and uptrend
+ and shRangeRatioOne >= 61.8 - abLowerTolerance and shRangeRatioOne <= 61.8 + abUpperTolerance
+ and slRangeRatioZero >= 38.2 - bcLowerTolerance and slRangeRatioZero <= 88.6 + bcUpperTolerance
+ and shRangeRatio >= 127.2 - cdLowerTolerance and shRangeRatio <= 161.8 + cdUpperTolerance
+ and adRangeRatio >= 78.6 - adLowerTolerance and adRangeRatio <= 78.6 + adUpperTolerance
+
+
+//////////// lines //////////// 
+
+
+patternColor = input(defval = color.blue, title = 'Pattern Color', group = 'Line Coloring')
+
+labelColor = input(defval = color.blue, title = 'Label Color', group = 'Label Coloring')
+
+showProjections = input(defval = true, title = 'Show Projections', group = 'Lines')
+
+selectProjectionExtend = input.string(title = 'Extend Current Projection Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendProjectionLines = selectProjectionExtend == 'None' ? extend.none : selectProjectionExtend == 'Right' ? extend.right : 
+ selectProjectionExtend == 'Left' ? extend.left : selectProjectionExtend == 'Both' ? extend.both : na
+
+var currentPatternPeak = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternTrough = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+var currentPatternUpperProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternLowerProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+
+if bearishGartley 
+    lineOne = line.new(shPriceBarIndexTwo, shPriceTwo, slPriceBarIndexOne, slPriceOne, color = patternColor, width = 2)
+    lineTwo = line.new(slPriceBarIndexOne, slPriceOne, shPriceBarIndexOne, shPriceOne, color = patternColor, width = 2)
+    lineThree = line.new(shPriceBarIndexOne, shPriceOne, troughBarIndex, trough, color = patternColor, width = 2)
+    lineFour = line.new(troughBarIndex, trough, shPriceBarIndex, shPrice, color = patternColor, width = 2)
+    lineFive = line.new(shPriceBarIndexTwo, shPriceTwo, shPriceBarIndexOne, shPriceOne, color = patternColor, style = line.style_dashed)
+    lineSix = line.new(shPriceBarIndexTwo, shPriceTwo, shPriceBarIndex, shPrice, color = patternColor, style = line.style_dashed)
+    lineSeven = line.new(shPriceBarIndexOne, shPriceOne, shPriceBarIndex, shPrice, color = patternColor, style = line.style_dashed)
+    lineEight = line.new(slPriceBarIndexOne, slPriceOne, troughBarIndex, trough, color = patternColor, style = line.style_dashed)
+    labelOne = label.new(shPriceBarIndexTwo, shPriceTwo, color = color.rgb(54, 58, 69, 100), style = label.style_label_down,
+     text = 'X', textcolor = labelColor)
+    labelTwo = label.new(slPriceBarIndexOne, slPriceOne, color = color.rgb(54, 58, 69, 100), style = label.style_label_up,
+     text = 'A', textcolor = labelColor)
+    labelThree = label.new(shPriceBarIndexOne, shPriceOne, color = color.rgb(54, 58, 69, 100), style = label.style_label_down,
+     text = 'B (' + str.tostring(math.round(shRangeRatioOne, 2)) + ')', textcolor = labelColor)
+    labelFour = label.new(troughBarIndex, trough, color = color.rgb(54, 58, 69, 100), style = label.style_label_up,
+     text = 'C (' + str.tostring(math.round(slRangeRatioZero, 2)) + ')', textcolor = labelColor)
+    labelFive = label.new(shPriceBarIndex, shPrice, color = color.rgb(54, 58, 69, 100), style = label.style_label_down,
+     text = 'D (' + str.tostring(math.round(shRangeRatio, 2)) + ')\n(' + str.tostring(math.round(adRangeRatio, 2)) + ')', textcolor = labelColor)
+    patternPeak = line.new(showProjections ? troughBarIndex : na, showProjections ? peak : na, showProjections ? bar_index : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? troughBarIndex : na, showProjections ? trough : na, showProjections ? bar_index : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? peak + (shPriceTwo - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? peak + (shPriceTwo - slPriceOne) : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceTwo - slPriceOne) : na, showProjections ? bar_index : na, 
+     showProjections ? trough - (shPriceTwo - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    var myLineArray = array.new_line()
+    array.push(myLineArray, lineOne) 
+    array.push(myLineArray, lineTwo) 
+    array.push(myLineArray, lineThree) 
+    array.push(myLineArray, lineFour)
+    array.push(myLineArray, lineFive) 
+    array.push(myLineArray, lineSix) 
+    array.push(myLineArray, lineSeven)
+    array.push(myLineArray, lineEight)
+    array.push(myLineArray, patternPeak)
+    array.push(myLineArray, patternTrough) 
+    array.push(myLineArray, patternUpperProjection)
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 500
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, labelOne)
+    array.push(myLabelArray, labelTwo)
+    array.push(myLabelArray, labelThree)
+    array.push(myLabelArray, labelFour) 
+    array.push(myLabelArray, labelFive)
+    if array.size(myLabelArray) >= 250
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+
+if bearishGartley  
+    line.set_xy1(currentPatternPeak, showProjections ? troughBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index : na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? troughBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index : na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? troughBarIndex : na, showProjections ? peak + (shPriceTwo - slPriceOne) : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index : na, showProjections ? peak + (shPriceTwo - slPriceOne) : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? troughBarIndex : na, showProjections ? trough - (shPriceTwo - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index : na, showProjections ? trough - (shPriceTwo - slPriceOne) : na)
+    alert('Bearish Gartley')
+
+    
+ 
+
+
+

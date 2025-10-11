@@ -1,0 +1,123 @@
+Double Bottom Patterns [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Double Bottom Patterns [theEccentricTrader]', overlay = true, max_lines_count = 500, max_labels_count = 63)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+peak = ta.valuewhen(shPrice, shPrice, 0)
+peakBarIndex = ta.valuewhen(shPrice, shPriceBarIndex, 0)
+shPriceOne = ta.valuewhen(shPrice, shPrice, 1)
+shPriceBarIndexOne = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 1)
+shPriceTwo = ta.valuewhen(shPrice, shPrice, 2)
+shPriceBarIndexTwo = ta.valuewhen(shPriceBarIndex, shPriceBarIndex, 2)
+
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+trough = ta.valuewhen(slPrice, slPrice, 0)
+troughBarIndex = ta.valuewhen(slPrice, slPriceBarIndex, 0)
+slPriceOne = ta.valuewhen(slPrice, slPrice, 1)
+slPriceBarIndexOne = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 1)
+slPriceTwo = ta.valuewhen(slPrice, slPrice, 2)
+slPriceBarIndexTwo = ta.valuewhen(slPriceBarIndex, slPriceBarIndex, 2)
+
+addUnbrokenPeak = input(defval = false, title = 'Unbroken Peaks', group = 'Logic')
+unbrokenPeak = addUnbrokenPeak ? high < peak : true
+
+slRangeRatio = (peak - trough) / (peak - trough[1]) * 100
+shRangeRatio = (peak - trough) / (peak[1] - trough) * 100
+
+lowerTolerance = input(defval = 10, title = 'Lower Tolerance (%)', group = 'Tolerances')
+upperTolerance = input(defval = 10, title = 'Upper Tolerance (%)', group = 'Tolerances')
+
+doubleBottom = slPrice and unbrokenPeak
+ and slRangeRatio >= 100 - lowerTolerance 
+ and slRangeRatio <= 100 + upperTolerance
+
+
+//////////// lines //////////// 
+
+
+patternColor = input(defval = color.blue, title = 'Pattern Color', group = 'Pattern Lines')
+necklineColor = input(defval = color.yellow, title = 'Neckline Color', group = 'Pattern Lines')
+
+selectNecklineExtend = input.string(title = 'Extend Current Neckline Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Pattern Lines")
+extendNeckLine = selectNecklineExtend == 'None' ? extend.none : selectNecklineExtend == 'Right' ? extend.right : 
+ selectNecklineExtend == 'Left' ? extend.left : selectNecklineExtend == 'Both' ? extend.both : na
+
+showLabels = input(defval = true, title = 'Show Labels', group = 'Labels')
+labelColor = input(defval = color.blue, title = 'Label Color', group = 'Labels')
+
+showProjections = input(defval = true, title = 'Show Projections', group = 'Projection Lines')
+
+selectProjectionExtend = input.string(title = 'Extend Current Projection Lines', defval = 'None', options = ['None', 'Right', 'Left', 'Both'], group = "Projection Lines")
+extendProjectionLines = selectProjectionExtend == 'None' ? extend.none : selectProjectionExtend == 'Right' ? extend.right : 
+ selectProjectionExtend == 'Left' ? extend.left : selectProjectionExtend == 'Both' ? extend.both : na
+
+var currentNeckLine = line.new(na, na, na, na, extend = extendNeckLine, color = necklineColor, width = 2)
+
+var currentPatternPeak = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternTrough = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+var currentPatternUpperProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.green, style = line.style_dashed)
+var currentPatternLowerProjection = line.new(na, na, na, na, extend = extendProjectionLines, color = color.red, style = line.style_dashed)
+
+if doubleBottom 
+    lineOne = line.new(slPriceBarIndexOne, slPriceOne, peakBarIndex, peak, color = patternColor, width = 2)
+    lineTwo = line.new(peakBarIndex, peak, troughBarIndex, trough, color = patternColor, width = 2)
+    lineThree = line.new(slPriceBarIndexOne, slPriceOne, bar_index, slPriceOne, color = patternColor, width = 2)
+    lineFour = line.new(peakBarIndex, peak, bar_index, peak, color = necklineColor, width = 2)
+    patternPeak = line.new(showProjections ? peakBarIndex : na, showProjections ? peak : na, showProjections ? bar_index + 1  : na, 
+     showProjections ? peak : na, color = color.green, style = line.style_dashed)
+    patternTrough = line.new(showProjections ? troughBarIndex : na, showProjections ? trough : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? trough : na, color = color.red, style = line.style_dashed)
+    patternUpperProjection = line.new(showProjections ? peakBarIndex : na, showProjections ? peak + (peak - slPriceOne) : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? peak + (peak - slPriceOne) : na, color = color.green, style = line.style_dashed)
+    patternLowerProjection = line.new(showProjections ? troughBarIndex : na, showProjections ? trough - (peak - slPriceOne) : na, showProjections ? bar_index + 1 : na, 
+     showProjections ? trough - (peak - slPriceOne) : na, color = color.red, style = line.style_dashed)
+    labelOne = label.new(showLabels ? troughBarIndex : na, showLabels ? trough : na, 'DOUBLE BOTTOM', color = color.rgb(54, 58, 69, 100), style = label.style_label_up, textcolor = labelColor)
+    line.set_xy1(currentNeckLine, peakBarIndex, peak)
+    line.set_xy2(currentNeckLine, bar_index, peak)
+    line.set_xy1(currentPatternPeak, showProjections ? peakBarIndex : na, showProjections ? peak : na)
+    line.set_xy2(currentPatternPeak, showProjections ? bar_index + 1 : na, showProjections ? peak : na)
+    line.set_xy1(currentPatternTrough, showProjections ? troughBarIndex : na, showProjections ? trough : na)
+    line.set_xy2(currentPatternTrough, showProjections ? bar_index + 1 : na, showProjections ? trough : na)
+    line.set_xy1(currentPatternUpperProjection, showProjections ? peakBarIndex : na, showProjections ? peak + (peak - slPriceOne) : na)
+    line.set_xy2(currentPatternUpperProjection, showProjections ? bar_index + 1 : na, showProjections ? peak + (peak - slPriceOne) : na)
+    line.set_xy1(currentPatternLowerProjection, showProjections ? troughBarIndex : na, showProjections ? trough - (peak - slPriceOne) : na)
+    line.set_xy2(currentPatternLowerProjection, showProjections ? bar_index + 1 : na, showProjections ? trough - (peak - slPriceOne) : na)
+    var myLineArray = array.new_line()
+    array.push(myLineArray, lineOne) 
+    array.push(myLineArray, lineTwo) 
+    array.push(myLineArray, lineThree) 
+    array.push(myLineArray, lineFour)
+    array.push(myLineArray, patternPeak) 
+    array.push(myLineArray, patternTrough) 
+    array.push(myLineArray, patternUpperProjection) 
+    array.push(myLineArray, patternLowerProjection)
+    if array.size(myLineArray) >= 500
+        firstLine = array.remove(myLineArray, 0) 
+        line.delete(firstLine)
+    var myLabelArray = array.new_label()
+    array.push(myLabelArray, labelOne)
+    if array.size(myLabelArray) >= 63
+        firstLabel = array.remove(myLabelArray, 0) 
+        label.delete(firstLabel)
+    alert('Double Bottom')
+ 
+
+
+
+
+

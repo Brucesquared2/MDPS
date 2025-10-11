@@ -1,0 +1,99 @@
+Fan Projections [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator('Fan Projections [theEccentricTrader]', overlay = true, max_bars_back = 5000, max_lines_count = 500)
+
+
+//////////// anchor points ////////////
+
+
+selectAnchor = input.string(title = 'Anchor Point Type', defval = 'Swing High', options = ['Swing High', 'Swing Low', 'Swing High (HTF)', 'Swing Low (HTF)', 
+ 'Highest High', 'Lowest Low', 'Intraday Highest High', 'Intraday Lowest Low'], group = 'Anchor Points')
+shslOccurrence = input(title = 'Swing High/Low Occurrence (Current Timeframe)', defval = 0, group = 'Anchor Points')
+htf = input.timeframe(title = 'Higher Timeframe Resolution', defval = '1D', group = 'Anchor Points')
+lookbackHHLL = input(title = 'Lookback for Highest High/Lowest Low', defval = 100, group = 'Anchor Points')
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+shPriceBarIndex = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? bar_index : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? bar_index - 1 : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+slPriceBarIndex = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? bar_index : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? bar_index - 1 : na
+
+shPricePassThrough = close[1] >= open[1] and close < open and high >= high[1] ? high : close[1] >= open[1] and close < open and high <= high[1] ? high[1] : na
+slPricePassThrough = close[1] < open[1] and close >= open and low <= low[1] ? low : close[1] < open[1] and close >= open and low >= low[1] ? low[1] : na
+[shPriceHTF, slPriceHTF, closeHTF] = request.security(syminfo.tickerid, htf, [shPricePassThrough[1], slPricePassThrough[1], close[1]], lookahead = barmerge.lookahead_on)
+shOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+shCloseBarIndexHTF = ta.valuewhen(shPriceHTF and not shPriceHTF[1], bar_index, 0)
+slOpenBarIndexHTF = ta.valuewhen(ta.change(closeHTF), bar_index, 2)
+slCloseBarIndexHTF = ta.valuewhen(slPriceHTF and not slPriceHTF[1], bar_index, 0)
+htfLookback = shPriceHTF ? bar_index - shOpenBarIndexHTF : slPriceHTF ? bar_index - slOpenBarIndexHTF : na
+
+highestHigh = ta.highest(high, lookbackHHLL)
+highestHighBarIndex = bar_index + ta.highestbars(high, lookbackHHLL)
+lowestLow = ta.lowest(low, lookbackHHLL)
+lowestLowBarIndex = bar_index + ta.lowestbars(low, lookbackHHLL)
+
+dailyClose = request.security(syminfo.tickerid, 'D', close[1], lookahead = barmerge.lookahead_on)
+dailyStartBarIndex = ta.valuewhen(ta.change(dailyClose), bar_index, 0)
+intradayHighestHigh = ta.highest(high, nz(bar_index - dailyStartBarIndex) + 1)
+intradayLowestLow = ta.lowest(low, nz(bar_index - dailyStartBarIndex) + 1)
+intradayHighestHighBarIndexcalc = high == intradayHighestHigh
+intradayHighestHighBarIndex = ta.valuewhen(intradayHighestHighBarIndexcalc, bar_index, 0)
+intradayLowestLowBarIndexcalc = low == intradayLowestLow
+intradayLowestLowBarIndex = ta.valuewhen(intradayLowestLowBarIndexcalc, bar_index, 0)
+
+anchorPointHTF = selectAnchor == 'Swing High (HTF)' ? shPriceHTF : selectAnchor == 'Swing Low (HTF)' ? slPriceHTF : na
+variableAnchorBarIndexHTF = selectAnchor == 'Swing High (HTF)' ? shCloseBarIndexHTF : selectAnchor == 'Swing Low (HTF)' ? slCloseBarIndexHTF : na
+variableAnchorSourceHTF = selectAnchor == 'Swing High (HTF)' ? high : selectAnchor == 'Swing Low (HTF)' ? low : na
+variableAnchorSourcePassThroughHTF = variableAnchorSourceHTF[1]
+
+anchorPoint = selectAnchor == 'Swing High' ? shPrice : selectAnchor == 'Swing Low' ? slPrice : selectAnchor == 'Highest High' ? highestHigh : selectAnchor == 'Lowest Low' ? lowestLow : 
+ selectAnchor == 'Intraday Highest High' ? intradayHighestHigh : selectAnchor == 'Intraday Lowest Low' ? intradayLowestLow : 
+ selectAnchor == 'Swing High (HTF)' or selectAnchor == 'Swing Low (HTF)' ? anchorPointHTF and not anchorPointHTF[1] : na
+variableAnchorPrice = selectAnchor == 'Swing High' ? ta.valuewhen(shPrice, shPrice, shslOccurrence) : selectAnchor == 'Swing Low' ? ta.valuewhen(slPrice, slPrice, shslOccurrence) : 
+ selectAnchor == 'Highest High' ? highestHigh : selectAnchor == 'Lowest Low' ? lowestLow : selectAnchor == 'Intraday Highest High' ? intradayHighestHigh : 
+ selectAnchor == 'Intraday Lowest Low' ? intradayLowestLow : selectAnchor == 'Swing High (HTF)' or selectAnchor == 'Swing Low (HTF)' ? anchorPointHTF : na
+variableAnchorBarIndex = selectAnchor == 'Swing High' ? ta.valuewhen(shPriceBarIndex, shPriceBarIndex, shslOccurrence) : selectAnchor == 'Swing Low' ? ta.valuewhen(slPriceBarIndex, slPriceBarIndex, shslOccurrence) : 
+ selectAnchor == 'Highest High' ? highestHighBarIndex : selectAnchor == 'Lowest Low' ? lowestLowBarIndex : selectAnchor == 'Intraday Highest High' ? intradayHighestHighBarIndex : 
+ selectAnchor == 'Intraday Lowest Low' ? intradayLowestLowBarIndex : selectAnchor == 'Swing High (HTF)' or selectAnchor == 'Swing Low (HTF)' ? variableAnchorBarIndexHTF : na
+
+symbolMintickIntegerConversion = syminfo.mintick >= 0.1 ? 1 : syminfo.mintick == 0.01 ? 10 : syminfo.mintick == 0.001 ? 100 : syminfo.mintick == 0.0001 ? 1000 : 
+ syminfo.mintick == 0.00001 ? 10000 : syminfo.mintick == 0.000001 ? 100000 : syminfo.mintick == 0.0000001 ? 1000000 : syminfo.mintick == 0.00000001 ? 10000000 : na
+
+
+//////////// lines ////////////
+
+
+angleInput = input.float(title = 'Angle Degree', defval = 1, group = 'Lines')
+numberLines = input.int(title = 'Number of Lines', defval = 2, minval = 1, maxval = 500, group = 'Lines')
+
+lineColour = input(title = 'Line Colour', defval = color.blue, group = 'Line Coloring')
+
+selectExtend = input.string(title = 'Extend Line Type', defval = 'Right', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendLines = selectExtend == 'None' ? extend.none : selectExtend == 'Right' ? extend.right : selectExtend == 'Left' ? extend.left : selectExtend == 'Both' ? extend.both : na
+
+angle = angleInput / symbolMintickIntegerConversion
+
+if anchorPoint 
+    for y = 1 to numberLines by 1
+        for i = 2 to htfLookback by 1
+            highLowPassThroughHTF = selectAnchor == 'Swing High (HTF)' ? variableAnchorSourceHTF[i] > variableAnchorSourcePassThroughHTF : variableAnchorSourceHTF[i] < variableAnchorSourcePassThroughHTF
+            if highLowPassThroughHTF
+                variableAnchorSourcePassThroughHTF := variableAnchorSourceHTF[i]
+                htfLookback := i
+        line1 = line.new(not(selectAnchor == 'Swing High (HTF)' or selectAnchor == 'Swing Low (HTF)') ? variableAnchorBarIndex : variableAnchorBarIndex - htfLookback, variableAnchorPrice,
+         bar_index + 100, variableAnchorPrice + math.todegrees((y - 1) * angle), extend = extendLines, color = lineColour)
+        var myArray = array.new_line()
+        array.push(myArray, line1) 
+
+        if array.size(myArray) > numberLines
+            firstLine = array.remove(myArray, 0) 
+            line.delete(firstLine)
+

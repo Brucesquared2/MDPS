@@ -1,0 +1,877 @@
+Trend Counter [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=6
+
+indicator('Candle Trend Counter [theEccentricTrader]', overlay = true)
+
+//////////////
+//  IMPORTS //
+//////////////
+
+import theEccentricTrader/PubLibCandleTrend/2 as ct
+import theEccentricTrader/PubLibUtility/2 as ut
+
+///////////////////////////
+//  SAMPLE PERIOD FILTER //
+///////////////////////////
+
+show_sp = input(defval = true, title = 'Show Sample Period', group = 'Sample Period')
+start = input.time(timestamp('2 Jan 1800 00:00'), title = 'Start Date', group = 'Sample Period')
+end = input.time(timestamp('1 Jan 3000 00:00'), title = 'End Date', group = 'Sample Period')
+sp_filt = time >= start and time <= end
+
+var first_candle = time
+
+start_date_text = first_candle > start ? ut.time_string(first_candle) : ut.time_string(start)
+end_date_text = time >= end ? '-' + ut.time_string(end) : '-' + ut.time_string(time)
+
+///////////////////////////
+// CANDLE TREND COUNTERS // 
+///////////////////////////
+
+var gc_1p_count = 0
+var gc_2p_count = 0
+var gc_3p_count = 0
+var gc_4p_count = 0
+var gc_5p_count = 0
+var gc_6p_count = 0
+var gc_7p_count = 0
+var gc_8p_count = 0
+var gc_9p_count = 0
+var gc_10p_count = 0
+var gc_11p_count = 0
+var gc_12p_count = 0
+var gc_13p_count = 0
+var gc_14p_count = 0
+var gc_15p_count = 0
+var gc_16p_count = 0
+var gc_17p_count = 0
+var gc_18p_count = 0
+var gc_19p_count = 0
+var gc_20p_count = 0
+var gc_21p_count = 0
+var gc_22p_count = 0
+var gc_23p_count = 0
+var gc_24p_count = 0
+var gc_25p_count = 0
+var gc_26p_count = 0
+var gc_27p_count = 0
+var gc_28p_count = 0
+var gc_29p_count = 0
+var gc_30p_count = 0
+
+if ct.gc_1p() and sp_filt and barstate.isconfirmed
+    gc_1p_count := gc_1p_count + 1
+
+if ct.gc_2p() and sp_filt and barstate.isconfirmed
+    gc_2p_count := gc_2p_count + 1
+
+if ct.gc_3p() and sp_filt and barstate.isconfirmed
+    gc_3p_count := gc_3p_count + 1
+
+if ct.gc_4p() and sp_filt and barstate.isconfirmed
+    gc_4p_count := gc_4p_count + 1
+
+if ct.gc_5p() and sp_filt and barstate.isconfirmed
+    gc_5p_count := gc_5p_count + 1
+
+if ct.gc_6p() and sp_filt and barstate.isconfirmed
+    gc_6p_count := gc_6p_count + 1
+
+if ct.gc_7p() and sp_filt and barstate.isconfirmed
+    gc_7p_count := gc_7p_count + 1
+
+if ct.gc_8p() and sp_filt and barstate.isconfirmed
+    gc_8p_count := gc_8p_count + 1
+
+if ct.gc_9p() and sp_filt and barstate.isconfirmed
+    gc_9p_count := gc_9p_count + 1
+
+if ct.gc_10p() and sp_filt and barstate.isconfirmed
+    gc_10p_count := gc_10p_count + 1
+
+if ct.gc_11p() and sp_filt and barstate.isconfirmed
+    gc_11p_count := gc_11p_count + 1
+
+if ct.gc_12p() and sp_filt and barstate.isconfirmed
+    gc_12p_count := gc_12p_count + 1
+
+if ct.gc_13p() and sp_filt and barstate.isconfirmed
+    gc_13p_count := gc_13p_count + 1
+
+if ct.gc_14p() and sp_filt and barstate.isconfirmed
+    gc_14p_count := gc_14p_count + 1
+
+if ct.gc_15p() and sp_filt and barstate.isconfirmed
+    gc_15p_count := gc_15p_count + 1
+
+if ct.gc_16p() and sp_filt and barstate.isconfirmed
+    gc_16p_count := gc_16p_count + 1
+
+if ct.gc_17p() and sp_filt and barstate.isconfirmed
+    gc_17p_count := gc_17p_count + 1
+
+if ct.gc_18p() and sp_filt and barstate.isconfirmed
+    gc_18p_count := gc_18p_count + 1
+
+if ct.gc_19p() and sp_filt and barstate.isconfirmed
+    gc_19p_count := gc_19p_count + 1
+
+if ct.gc_20p() and sp_filt and barstate.isconfirmed
+    gc_20p_count := gc_20p_count + 1
+
+if ct.gc_21p() and sp_filt and barstate.isconfirmed
+    gc_21p_count := gc_21p_count + 1
+
+if ct.gc_22p() and sp_filt and barstate.isconfirmed
+    gc_22p_count := gc_22p_count + 1
+
+if ct.gc_23p() and sp_filt and barstate.isconfirmed
+    gc_23p_count := gc_23p_count + 1
+
+if ct.gc_24p() and sp_filt and barstate.isconfirmed
+    gc_24p_count := gc_24p_count + 1
+
+if ct.gc_25p() and sp_filt and barstate.isconfirmed
+    gc_25p_count := gc_25p_count + 1
+
+if ct.gc_26p() and sp_filt and barstate.isconfirmed
+    gc_26p_count := gc_26p_count + 1
+
+if ct.gc_27p() and sp_filt and barstate.isconfirmed
+    gc_27p_count := gc_27p_count + 1
+
+if ct.gc_28p() and sp_filt and barstate.isconfirmed
+    gc_28p_count := gc_28p_count + 1
+
+if ct.gc_29p() and sp_filt and barstate.isconfirmed
+    gc_29p_count := gc_29p_count + 1
+
+if ct.gc_30p() and sp_filt and barstate.isconfirmed
+    gc_30p_count := gc_30p_count + 1
+
+var rc_1p_count = 0
+var rc_2p_count = 0
+var rc_3p_count = 0
+var rc_4p_count = 0
+var rc_5p_count = 0
+var rc_6p_count = 0
+var rc_7p_count = 0
+var rc_8p_count = 0
+var rc_9p_count = 0
+var rc_10p_count = 0
+var rc_11p_count = 0
+var rc_12p_count = 0
+var rc_13p_count = 0
+var rc_14p_count = 0
+var rc_15p_count = 0
+var rc_16p_count = 0
+var rc_17p_count = 0
+var rc_18p_count = 0
+var rc_19p_count = 0
+var rc_20p_count = 0
+var rc_21p_count = 0
+var rc_22p_count = 0
+var rc_23p_count = 0
+var rc_24p_count = 0
+var rc_25p_count = 0
+var rc_26p_count = 0
+var rc_27p_count = 0
+var rc_28p_count = 0
+var rc_29p_count = 0
+var rc_30p_count = 0
+
+if ct.rc_1p() and sp_filt and barstate.isconfirmed
+    rc_1p_count := rc_1p_count + 1
+
+if ct.rc_2p() and sp_filt and barstate.isconfirmed
+    rc_2p_count := rc_2p_count + 1
+
+if ct.rc_3p() and sp_filt and barstate.isconfirmed
+    rc_3p_count := rc_3p_count + 1
+
+if ct.rc_4p() and sp_filt and barstate.isconfirmed
+    rc_4p_count := rc_4p_count + 1
+
+if ct.rc_5p() and sp_filt and barstate.isconfirmed
+    rc_5p_count := rc_5p_count + 1
+
+if ct.rc_6p() and sp_filt and barstate.isconfirmed
+    rc_6p_count := rc_6p_count + 1
+
+if ct.rc_7p() and sp_filt and barstate.isconfirmed
+    rc_7p_count := rc_7p_count + 1
+
+if ct.rc_8p() and sp_filt and barstate.isconfirmed
+    rc_8p_count := rc_8p_count + 1
+
+if ct.rc_9p() and sp_filt and barstate.isconfirmed
+    rc_9p_count := rc_9p_count + 1
+
+if ct.rc_10p() and sp_filt and barstate.isconfirmed
+    rc_10p_count := rc_10p_count + 1
+
+if ct.rc_11p() and sp_filt and barstate.isconfirmed
+    rc_11p_count := rc_11p_count + 1
+
+if ct.rc_12p() and sp_filt and barstate.isconfirmed
+    rc_12p_count := rc_12p_count + 1
+
+if ct.rc_13p() and sp_filt and barstate.isconfirmed
+    rc_13p_count := rc_13p_count + 1
+
+if ct.rc_14p() and sp_filt and barstate.isconfirmed
+    rc_14p_count := rc_14p_count + 1
+
+if ct.rc_15p() and sp_filt and barstate.isconfirmed
+    rc_15p_count := rc_15p_count + 1
+
+if ct.rc_16p() and sp_filt and barstate.isconfirmed
+    rc_16p_count := rc_16p_count + 1
+
+if ct.rc_17p() and sp_filt and barstate.isconfirmed
+    rc_17p_count := rc_17p_count + 1
+
+if ct.rc_18p() and sp_filt and barstate.isconfirmed
+    rc_18p_count := rc_18p_count + 1
+
+if ct.rc_19p() and sp_filt and barstate.isconfirmed
+    rc_19p_count := rc_19p_count + 1
+
+if ct.rc_20p() and sp_filt and barstate.isconfirmed
+    rc_20p_count := rc_20p_count + 1
+
+if ct.rc_21p() and sp_filt and barstate.isconfirmed
+    rc_21p_count := rc_21p_count + 1
+
+if ct.rc_22p() and sp_filt and barstate.isconfirmed
+    rc_22p_count := rc_22p_count + 1
+
+if ct.rc_23p() and sp_filt and barstate.isconfirmed
+    rc_23p_count := rc_23p_count + 1
+
+if ct.rc_24p() and sp_filt and barstate.isconfirmed
+    rc_24p_count := rc_24p_count + 1
+
+if ct.rc_25p() and sp_filt and barstate.isconfirmed
+    rc_25p_count := rc_25p_count + 1
+
+if ct.rc_26p() and sp_filt and barstate.isconfirmed
+    rc_26p_count := rc_26p_count + 1
+
+if ct.rc_27p() and sp_filt and barstate.isconfirmed
+    rc_27p_count := rc_27p_count + 1
+
+if ct.rc_28p() and sp_filt and barstate.isconfirmed
+    rc_28p_count := rc_28p_count + 1
+
+if ct.rc_29p() and sp_filt and barstate.isconfirmed
+    rc_29p_count := rc_29p_count + 1
+
+if ct.rc_30p() and sp_filt and barstate.isconfirmed
+    rc_30p_count := rc_30p_count + 1
+
+/////////// 
+// PLOTS //
+///////////
+
+show_plots = input(defval = true, title = 'Show Plots', group = 'Plots')
+
+plotshape(ct.gc_1p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '1', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_2p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '2', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_3p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '3', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_4p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '4', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_5p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '5', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_6p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '6', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_7p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '7', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_8p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '8', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_9p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '9', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_10p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '10', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_11p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '11', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_12p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '12', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_13p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '13', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_14p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '14', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_15p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '15', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_16p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '16', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_17p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '17', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_18p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '18', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_19p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '19', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_20p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '20', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_21p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '21', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_22p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '22', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_23p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '23', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_24p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '24', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_25p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '25', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_26p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '26', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_27p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '27', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_28p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '28', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_29p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '29', textcolor = color.green, location = location.belowbar)
+plotshape(ct.gc_30p() and show_plots and barstate.isconfirmed, style = shape.arrowup, color = color.green, text = '30', textcolor = color.green, location = location.belowbar)
+
+plotshape(ct.rc_1p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '1', textcolor = color.red)
+plotshape(ct.rc_2p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '2', textcolor = color.red)
+plotshape(ct.rc_3p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '3', textcolor = color.red)
+plotshape(ct.rc_4p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '4', textcolor = color.red)
+plotshape(ct.rc_5p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '5', textcolor = color.red)
+plotshape(ct.rc_6p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '6', textcolor = color.red)
+plotshape(ct.rc_7p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '7', textcolor = color.red)
+plotshape(ct.rc_8p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '8', textcolor = color.red)
+plotshape(ct.rc_9p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '9', textcolor = color.red)
+plotshape(ct.rc_10p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '10', textcolor = color.red)
+plotshape(ct.rc_11p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '11', textcolor = color.red)
+plotshape(ct.rc_12p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '12', textcolor = color.red)
+plotshape(ct.rc_13p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '13', textcolor = color.red)
+plotshape(ct.rc_14p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '14', textcolor = color.red)
+plotshape(ct.rc_15p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '15', textcolor = color.red)
+plotshape(ct.rc_16p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '16', textcolor = color.red)
+plotshape(ct.rc_17p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '17', textcolor = color.red)
+plotshape(ct.rc_18p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '18', textcolor = color.red)
+plotshape(ct.rc_19p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '19', textcolor = color.red)
+plotshape(ct.rc_20p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '20', textcolor = color.red)
+plotshape(ct.rc_21p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '21', textcolor = color.red)
+plotshape(ct.rc_22p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '22', textcolor = color.red)
+plotshape(ct.rc_23p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '23', textcolor = color.red)
+plotshape(ct.rc_24p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '24', textcolor = color.red)
+plotshape(ct.rc_25p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '25', textcolor = color.red)
+plotshape(ct.rc_26p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '26', textcolor = color.red)
+plotshape(ct.rc_27p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '27', textcolor = color.red)
+plotshape(ct.rc_28p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '28', textcolor = color.red)
+plotshape(ct.rc_29p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '29', textcolor = color.red)
+plotshape(ct.rc_30p() and show_plots and barstate.isconfirmed, style = shape.arrowdown, color = color.red, text = '30', textcolor = color.red)
+
+/////////// 
+// TABLE //
+///////////
+
+tab_pos = input.string(title = 'Position', defval = 'Top Right', options = ['Top Right', 'Top Center', 'Top Left', 'Bottom Right', 'Bottom Center', 'Bottom Left', 'Middle Right', 'Middle Center', 'Middle Left'], group = 'Table')
+
+text_size = input.string(title = 'Text Size', defval = 'Normal', options = ['Tiny', 'Small', 'Normal', 'Large'], group = 'Table')
+
+var tab_new = table.new(ut.tab_pos(tab_pos), 100, 100, border_width = 1)
+
+if barstate.islast
+    table.cell(tab_new, 1, 0, text = 'Green', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 0, text = '% Total', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 0, text = '% Previous', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 0, 1, text = '1-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 1, text = str.tostring(gc_1p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 1, text = '-', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 1, text = '-', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 0, text = 'Red', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 0, text = '% Total', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 0, text = '% Previous', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 1, text = str.tostring(rc_1p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 1, text = '-', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 1, text = '-', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_2p_count >= 1 or rc_2p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 2, text = '2-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 2, text = str.tostring(gc_2p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 2, text = str.tostring(math.round(gc_2p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 2, text = '-', bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 2, text = str.tostring(rc_2p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 2, text = str.tostring(math.round(rc_2p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 2, text = '-', bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_3p_count >= 1 or rc_3p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 3, text = '3-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 3, text = str.tostring(gc_3p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 3, text = str.tostring(math.round(gc_3p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 3, text = str.tostring(math.round(gc_3p_count / gc_2p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 3, text = str.tostring(rc_3p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 3, text = str.tostring(math.round(rc_3p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 3, text = str.tostring(math.round(rc_3p_count / rc_2p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_4p_count >= 1 or rc_4p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 4, text = '4-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 4, text = str.tostring(gc_4p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 4, text = str.tostring(math.round(gc_4p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 4, text = str.tostring(math.round(gc_4p_count / gc_3p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 4, text = str.tostring(rc_4p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 4, text = str.tostring(math.round(rc_4p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 4, text = str.tostring(math.round(rc_4p_count / rc_3p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_5p_count >= 1 or rc_5p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 5, text = '5-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 5, text = str.tostring(gc_5p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 5, text = str.tostring(math.round(gc_5p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 5, text = str.tostring(math.round(gc_5p_count / gc_4p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 5, text = str.tostring(rc_5p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 5, text = str.tostring(math.round(rc_5p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 5, text = str.tostring(math.round(rc_5p_count / rc_4p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_6p_count >= 1 or rc_6p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 6, text = '6-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 6, text = str.tostring(gc_6p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 6, text = str.tostring(math.round(gc_6p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 6, text = str.tostring(math.round(gc_6p_count / gc_5p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 6, text = str.tostring(rc_6p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 6, text = str.tostring(math.round(rc_6p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 6, text = str.tostring(math.round(rc_6p_count / rc_5p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_7p_count >= 1 or rc_7p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 7, text = '7-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 7, text = str.tostring(gc_7p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 7, text = str.tostring(math.round(gc_7p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 7, text = str.tostring(math.round(gc_7p_count / gc_6p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 7, text = str.tostring(rc_7p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 7, text = str.tostring(math.round(rc_7p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 7, text = str.tostring(math.round(rc_7p_count / rc_6p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_8p_count >= 1 or rc_8p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 8, text = '8-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 8, text = str.tostring(gc_8p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 8, text = str.tostring(math.round(gc_8p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 8, text = str.tostring(math.round(gc_8p_count / gc_7p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 8, text = str.tostring(rc_8p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 8, text = str.tostring(math.round(rc_8p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 8, text = str.tostring(math.round(rc_8p_count / rc_7p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_9p_count >= 1 or rc_9p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 9, text = '9-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 9, text = str.tostring(gc_9p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 9, text = str.tostring(math.round(gc_9p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 9, text = str.tostring(math.round(gc_9p_count / gc_8p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 9, text = str.tostring(rc_9p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 9, text = str.tostring(math.round(rc_9p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 9, text = str.tostring(math.round(rc_9p_count / rc_8p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_10p_count >= 1 or rc_10p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 10, text = '10-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 10, text = str.tostring(gc_10p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 10, text = str.tostring(math.round(gc_10p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 10, text = str.tostring(math.round(gc_10p_count / gc_9p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 10, text = str.tostring(rc_10p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 10, text = str.tostring(math.round(rc_10p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 10, text = str.tostring(math.round(rc_10p_count / rc_9p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_11p_count >= 1 or rc_11p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 11, text = '11-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 11, text = str.tostring(gc_11p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 11, text = str.tostring(math.round(gc_11p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 11, text = str.tostring(math.round(gc_11p_count / gc_10p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 11, text = str.tostring(rc_11p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 11, text = str.tostring(math.round(rc_11p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 11, text = str.tostring(math.round(rc_11p_count / rc_10p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_12p_count >= 1 or rc_12p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 12, text = '12-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 12, text = str.tostring(gc_12p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 12, text = str.tostring(math.round(gc_12p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 12, text = str.tostring(math.round(gc_12p_count / gc_11p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 12, text = str.tostring(rc_12p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 12, text = str.tostring(math.round(rc_12p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 12, text = str.tostring(math.round(rc_12p_count / rc_11p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_13p_count >= 1 or rc_13p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 13, text = '13-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 13, text = str.tostring(gc_13p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 13, text = str.tostring(math.round(gc_13p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 13, text = str.tostring(math.round(gc_13p_count / gc_12p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 13, text = str.tostring(rc_13p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 13, text = str.tostring(math.round(rc_13p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 13, text = str.tostring(math.round(rc_13p_count / rc_12p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_14p_count >= 1 or rc_14p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 14, text = '14-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 14, text = str.tostring(gc_14p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 14, text = str.tostring(math.round(gc_14p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 14, text = str.tostring(math.round(gc_14p_count / gc_13p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 14, text = str.tostring(rc_14p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 14, text = str.tostring(math.round(rc_14p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 14, text = str.tostring(math.round(rc_14p_count / rc_13p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_15p_count >= 1 or rc_15p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 15, text = '15-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 15, text = str.tostring(gc_15p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 15, text = str.tostring(math.round(gc_15p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 15, text = str.tostring(math.round(gc_15p_count / gc_14p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 15, text = str.tostring(rc_15p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 15, text = str.tostring(math.round(rc_15p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 15, text = str.tostring(math.round(rc_15p_count / rc_14p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_16p_count >= 1 or rc_16p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 16, text = '16-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 16, text = str.tostring(gc_16p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 16, text = str.tostring(math.round(gc_16p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 16, text = str.tostring(math.round(gc_16p_count / gc_15p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 16, text = str.tostring(rc_16p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 16, text = str.tostring(math.round(rc_16p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 16, text = str.tostring(math.round(rc_16p_count / rc_15p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_17p_count >= 1 or rc_17p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 17, text = '17-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 17, text = str.tostring(gc_17p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 17, text = str.tostring(math.round(gc_17p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 17, text = str.tostring(math.round(gc_17p_count / gc_16p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 17, text = str.tostring(rc_17p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 17, text = str.tostring(math.round(rc_17p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 17, text = str.tostring(math.round(rc_17p_count / rc_16p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_18p_count >= 1 or rc_18p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 18, text = '18-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 18, text = str.tostring(gc_18p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 18, text = str.tostring(math.round(gc_18p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 18, text = str.tostring(math.round(gc_18p_count / gc_17p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 18, text = str.tostring(rc_18p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 18, text = str.tostring(math.round(rc_18p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 18, text = str.tostring(math.round(rc_18p_count / rc_17p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_19p_count >= 1 or rc_19p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 19, text = '19-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 19, text = str.tostring(gc_19p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 19, text = str.tostring(math.round(gc_19p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 19, text = str.tostring(math.round(gc_19p_count / gc_18p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 19, text = str.tostring(rc_19p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 19, text = str.tostring(math.round(rc_19p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 19, text = str.tostring(math.round(rc_19p_count / rc_18p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_20p_count >= 1 or rc_20p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 20, text = '20-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 20, text = str.tostring(gc_20p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 20, text = str.tostring(math.round(gc_20p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 20, text = str.tostring(math.round(gc_20p_count / gc_19p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 20, text = str.tostring(rc_20p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 20, text = str.tostring(math.round(rc_20p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 20, text = str.tostring(math.round(rc_20p_count / rc_19p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_21p_count >= 1 or rc_21p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 21, text = '21-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 21, text = str.tostring(gc_21p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 21, text = str.tostring(math.round(gc_21p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 21, text = str.tostring(math.round(gc_21p_count / gc_20p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 21, text = str.tostring(rc_21p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 21, text = str.tostring(math.round(rc_21p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 21, text = str.tostring(math.round(rc_21p_count / rc_20p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_22p_count >= 1 or rc_22p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 22, text = '22-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 22, text = str.tostring(gc_22p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 22, text = str.tostring(math.round(gc_22p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 22, text = str.tostring(math.round(gc_22p_count / gc_21p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 22, text = str.tostring(rc_22p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 22, text = str.tostring(math.round(rc_22p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 22, text = str.tostring(math.round(rc_22p_count / rc_21p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_23p_count >= 1 or rc_23p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 23, text = '23-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 23, text = str.tostring(gc_23p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 23, text = str.tostring(math.round(gc_23p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 23, text = str.tostring(math.round(gc_23p_count / gc_22p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 23, text = str.tostring(rc_23p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 23, text = str.tostring(math.round(rc_23p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 23, text = str.tostring(math.round(rc_23p_count / rc_22p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_24p_count >= 1 or rc_24p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 24, text = '24-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 24, text = str.tostring(gc_24p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 24, text = str.tostring(math.round(gc_24p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 24, text = str.tostring(math.round(gc_24p_count / gc_23p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 24, text = str.tostring(rc_24p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 24, text = str.tostring(math.round(rc_24p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 24, text = str.tostring(math.round(rc_24p_count / rc_23p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_25p_count >= 1 or rc_25p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 25, text = '25-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 25, text = str.tostring(gc_25p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 25, text = str.tostring(math.round(gc_25p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 25, text = str.tostring(math.round(gc_25p_count / gc_24p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 25, text = str.tostring(rc_25p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 25, text = str.tostring(math.round(rc_25p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 25, text = str.tostring(math.round(rc_25p_count / rc_24p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_26p_count >= 1 or rc_26p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 26, text = '26-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 26, text = str.tostring(gc_26p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 26, text = str.tostring(math.round(gc_26p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 26, text = str.tostring(math.round(gc_26p_count / gc_25p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 26, text = str.tostring(rc_26p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 26, text = str.tostring(math.round(rc_26p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 26, text = str.tostring(math.round(rc_26p_count / rc_25p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_27p_count >= 1 or rc_27p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 27, text = '27-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 27, text = str.tostring(gc_27p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 27, text = str.tostring(math.round(gc_27p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 27, text = str.tostring(math.round(gc_27p_count / gc_26p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 27, text = str.tostring(rc_27p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 27, text = str.tostring(math.round(rc_27p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 27, text = str.tostring(math.round(rc_27p_count / rc_26p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_28p_count >= 1 or rc_28p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 28, text = '28-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 28, text = str.tostring(gc_28p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 28, text = str.tostring(math.round(gc_28p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 28, text = str.tostring(math.round(gc_28p_count / gc_27p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 28, text = str.tostring(rc_28p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 28, text = str.tostring(math.round(rc_28p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 28, text = str.tostring(math.round(rc_28p_count / rc_27p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_29p_count >= 1 or rc_29p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 29, text = '29-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 29, text = str.tostring(gc_29p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 29, text = str.tostring(math.round(gc_29p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 29, text = str.tostring(math.round(gc_29p_count / gc_28p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 29, text = str.tostring(rc_29p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 29, text = str.tostring(math.round(rc_29p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 29, text = str.tostring(math.round(rc_29p_count / rc_28p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if (gc_30p_count >= 1 or rc_30p_count >= 1) and barstate.islast
+    table.cell(tab_new, 0, 30, text = '30-Candle', bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 1, 30, text = str.tostring(gc_30p_count), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 2, 30, text = str.tostring(math.round(gc_30p_count / gc_1p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 3, 30, text = str.tostring(math.round(gc_30p_count / gc_29p_count * 100, 2)), bgcolor = color.green, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 4, 30, text = str.tostring(rc_30p_count), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 5, 30, text = str.tostring(math.round(rc_30p_count / rc_1p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+    table.cell(tab_new, 6, 30, text = str.tostring(math.round(rc_30p_count / rc_29p_count * 100, 2)), bgcolor = color.red, text_color = color.white, text_size = ut.size(text_size))
+
+if show_sp and barstate.islast
+    table.cell(tab_new, 0, 31, text = start_date_text + end_date_text, bgcolor = color.blue, text_color = color.white, text_size = ut.size(text_size))
+
+////////////
+// ALERTS //
+////////////
+
+add_gc_1p = input(defval = false, title = 'One Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_2p = input(defval = false, title = 'Two Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_3p = input(defval = false, title = 'Three Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_4p = input(defval = false, title = 'Four Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_5p = input(defval = false, title = 'Five Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_6p = input(defval = false, title = 'Six Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_7p = input(defval = false, title = 'Seven Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_8p = input(defval = false, title = 'Eight Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_9p = input(defval = false, title = 'Nine Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_10p = input(defval = false, title = 'Ten Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_11p = input(defval = false, title = 'Eleven Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_12p = input(defval = false, title = 'Twelve Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_13p = input(defval = false, title = 'Thirteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_14p = input(defval = false, title = 'Fourteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_15p = input(defval = false, title = 'Fifteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_16p = input(defval = false, title = 'Sixteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_17p = input(defval = false, title = 'Seventeen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_18p = input(defval = false, title = 'Eighteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_19p = input(defval = false, title = 'Nineteen Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_20p = input(defval = false, title = 'Twenty Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_21p = input(defval = false, title = 'Twenty-One Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_22p = input(defval = false, title = 'Twenty-Two Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_23p = input(defval = false, title = 'Twenty-Three Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_24p = input(defval = false, title = 'Twenty-Four Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_25p = input(defval = false, title = 'Twenty-Five Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_26p = input(defval = false, title = 'Twenty-Six Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_27p = input(defval = false, title = 'Twenty-Seven Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_28p = input(defval = false, title = 'Twenty-Eight Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_29p = input(defval = false, title = 'Twenty-Nine Green Alert', group = 'Green Candle Trend Alerts')
+add_gc_30p = input(defval = false, title = 'Thirty Green Alert', group = 'Green Candle Trend Alerts')
+
+if ct.gc_1p() and add_gc_1p and barstate.isconfirmed
+    alert('One Green')
+
+if ct.gc_2p() and add_gc_2p and barstate.isconfirmed
+    alert('Two Green')
+
+if ct.gc_3p() and add_gc_3p and barstate.isconfirmed
+    alert('Three Green')
+
+if ct.gc_4p() and add_gc_4p and barstate.isconfirmed
+    alert('Four Green')
+
+if ct.gc_5p() and add_gc_5p and barstate.isconfirmed
+    alert('Five Green')
+
+if ct.gc_6p() and add_gc_6p and barstate.isconfirmed
+    alert('Six Green')
+
+if ct.gc_7p() and add_gc_7p and barstate.isconfirmed
+    alert('Seven Green')
+
+if ct.gc_8p() and add_gc_8p and barstate.isconfirmed
+    alert('Eight Green')
+
+if ct.gc_9p() and add_gc_9p and barstate.isconfirmed
+    alert('Nine Green')
+
+if ct.gc_10p() and add_gc_10p and barstate.isconfirmed
+    alert('Ten Green')
+
+if ct.gc_11p() and add_gc_11p and barstate.isconfirmed
+    alert('Eleven Green')
+
+if ct.gc_12p() and add_gc_12p and barstate.isconfirmed
+    alert('Twleve Green')
+
+if ct.gc_13p() and add_gc_13p and barstate.isconfirmed
+    alert('Thirteen Green')
+
+if ct.gc_14p() and add_gc_14p and barstate.isconfirmed
+    alert('Fourteen Green')
+
+if ct.gc_15p() and add_gc_15p and barstate.isconfirmed
+    alert('Fifteen Green')
+
+if ct.gc_16p() and add_gc_16p and barstate.isconfirmed
+    alert('Sixteen Green')
+
+if ct.gc_17p() and add_gc_17p and barstate.isconfirmed
+    alert('Seventeen Green')
+
+if ct.gc_18p() and add_gc_18p and barstate.isconfirmed
+    alert('Eighteen Green')
+
+if ct.gc_19p() and add_gc_19p and barstate.isconfirmed
+    alert('Nineteen Green')
+
+if ct.gc_20p() and add_gc_20p and barstate.isconfirmed
+    alert('Twenty Green')
+
+if ct.gc_21p() and add_gc_21p and barstate.isconfirmed
+    alert('Twenty-One Green')
+
+if ct.gc_22p() and add_gc_22p and barstate.isconfirmed
+    alert('Twenty-Two Green')
+
+if ct.gc_23p() and add_gc_23p and barstate.isconfirmed
+    alert('Twenty-Three Green')
+
+if ct.gc_24p() and add_gc_24p and barstate.isconfirmed
+    alert('Twenty-Four Green')
+
+if ct.gc_25p() and add_gc_25p and barstate.isconfirmed
+    alert('Twenty-Five Green')
+
+if ct.gc_26p() and add_gc_26p and barstate.isconfirmed
+    alert('Twenty-Six Green')
+
+if ct.gc_27p() and add_gc_27p and barstate.isconfirmed
+    alert('Twenty-Seven Green')
+
+if ct.gc_28p() and add_gc_28p and barstate.isconfirmed
+    alert('Twenty-Eight Green')
+
+if ct.gc_29p() and add_gc_29p and barstate.isconfirmed
+    alert('Twenty-Nine Green')
+
+if ct.gc_30p() and add_gc_30p and barstate.isconfirmed
+    alert('Thirty Green')
+
+add_rc_1p = input(defval = false, title = 'One Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_2p = input(defval = false, title = 'Two Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_3p = input(defval = false, title = 'Three Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_4p = input(defval = false, title = 'Four Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_5p = input(defval = false, title = 'Five Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_6p = input(defval = false, title = 'Six Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_7p = input(defval = false, title = 'Seven Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_8p = input(defval = false, title = 'Eight Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_9p = input(defval = false, title = 'Nine Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_10p = input(defval = false, title = 'Ten Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_11p = input(defval = false, title = 'Eleven Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_12p = input(defval = false, title = 'Twelve Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_13p = input(defval = false, title = 'Thirteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_14p = input(defval = false, title = 'Fourteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_15p = input(defval = false, title = 'Fifteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_16p = input(defval = false, title = 'Sixteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_17p = input(defval = false, title = 'Seventeen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_18p = input(defval = false, title = 'Eighteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_19p = input(defval = false, title = 'Nineteen Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_20p = input(defval = false, title = 'Twenty Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_21p = input(defval = false, title = 'Twenty-One Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_22p = input(defval = false, title = 'Twenty-Two Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_23p = input(defval = false, title = 'Twenty-Three Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_24p = input(defval = false, title = 'Twenty-Four Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_25p = input(defval = false, title = 'Twenty-Five Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_26p = input(defval = false, title = 'Twenty-Six Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_27p = input(defval = false, title = 'Twenty-Seven Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_28p = input(defval = false, title = 'Twenty-Eight Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_29p = input(defval = false, title = 'Twenty-Nine Red Alert', group = 'Red Candle Trend Alerts')
+add_rc_30p = input(defval = false, title = 'Thirty Red Alert', group = 'Red Candle Trend Alerts')
+
+if ct.rc_1p() and add_rc_1p and barstate.isconfirmed
+    alert('One Red')
+
+if ct.rc_2p() and add_rc_2p and barstate.isconfirmed
+    alert('Two Red')
+
+if ct.rc_3p() and add_rc_3p and barstate.isconfirmed
+    alert('Three Red')
+
+if ct.rc_4p() and add_rc_4p and barstate.isconfirmed
+    alert('Four Red')
+
+if ct.rc_5p() and add_rc_5p and barstate.isconfirmed
+    alert('Five Red')
+
+if ct.rc_6p() and add_rc_6p and barstate.isconfirmed
+    alert('Six Red')
+
+if ct.rc_7p() and add_rc_7p and barstate.isconfirmed
+    alert('Seven Red')
+
+if ct.rc_8p() and add_rc_8p and barstate.isconfirmed
+    alert('Eight Red')
+
+if ct.rc_9p() and add_rc_9p and barstate.isconfirmed
+    alert('Nine Red')
+
+if ct.rc_10p() and add_rc_10p and barstate.isconfirmed
+    alert('Ten Red')
+
+if ct.rc_11p() and add_rc_11p and barstate.isconfirmed
+    alert('Eleven Red')
+
+if ct.rc_12p() and add_rc_12p and barstate.isconfirmed
+    alert('Twleve Red')
+
+if ct.rc_13p() and add_rc_13p and barstate.isconfirmed
+    alert('Thirteen Red')
+
+if ct.rc_14p() and add_rc_14p and barstate.isconfirmed
+    alert('Fourteen Red')
+
+if ct.rc_15p() and add_rc_15p and barstate.isconfirmed
+    alert('Fifteen Red')
+
+if ct.rc_16p() and add_rc_16p and barstate.isconfirmed
+    alert('Sixteen Red')
+
+if ct.rc_17p() and add_rc_17p and barstate.isconfirmed
+    alert('Seventeen Red')
+
+if ct.rc_18p() and add_rc_18p and barstate.isconfirmed
+    alert('Eighteen Red')
+
+if ct.rc_19p() and add_rc_19p and barstate.isconfirmed
+    alert('Nineteen Red')
+
+if ct.rc_20p() and add_rc_20p and barstate.isconfirmed
+    alert('Twenty Red')
+
+if ct.rc_21p() and add_rc_21p and barstate.isconfirmed
+    alert('Twenty-One Red')
+
+if ct.rc_22p() and add_rc_22p and barstate.isconfirmed
+    alert('Twenty-Two Red')
+
+if ct.rc_23p() and add_rc_23p and barstate.isconfirmed
+    alert('Twenty-Three Red')
+
+if ct.rc_24p() and add_rc_24p and barstate.isconfirmed
+    alert('Twenty-Four Red')
+
+if ct.rc_25p() and add_rc_25p and barstate.isconfirmed
+    alert('Twenty-Five Red')
+
+if ct.rc_26p() and add_rc_26p and barstate.isconfirmed
+    alert('Twenty-Six Red')
+
+if ct.rc_27p() and add_rc_27p and barstate.isconfirmed
+    alert('Twenty-Seven Red')
+
+if ct.rc_28p() and add_rc_28p and barstate.isconfirmed
+    alert('Twenty-Eight Red')
+
+if ct.rc_29p() and add_rc_29p and barstate.isconfirmed
+    alert('Twenty-Nine Red')
+
+if ct.rc_30p() and add_rc_30p and barstate.isconfirmed
+    alert('Thirty Red')

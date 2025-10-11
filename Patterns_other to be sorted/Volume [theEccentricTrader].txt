@@ -1,0 +1,22 @@
+Volume [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator("Volume [theEccentricTrader]")
+
+
+//////////// volume ////////////
+
+
+volumeSymbol = input.symbol(defval = 'CURRENCYCOM:US500', title = 'Volume Symbol')
+myVolumePassthrough = volume
+myVolume = request.security(volumeSymbol, timeframe.period, myVolumePassthrough)
+
+
+//////////// plots ////////////
+
+
+plot(myVolume, style = plot.style_histogram)

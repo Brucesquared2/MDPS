@@ -1,0 +1,95 @@
+Rangemeter [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theexotictrader
+//@version=5
+
+
+indicator('Rangemeter [theEccentricTrader]', overlay = true)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+
+peak = ta.valuewhen(shPrice, shPrice, 0)
+trough = ta.valuewhen(slPrice, slPrice, 0)
+
+shPriceUnconfirmed = close[1] >= open[1] and close < open and high >= high[1] ? high : close[1] >= open[1] and close < open and high <= high[1] ? high[1] : na
+slPriceUnconfirmed = close[1] < open[1] and close >= open and low <= low[1] ? low : close[1] < open[1] and close >= open and low >= low[1] ? low[1] : na
+
+openPeak = ta.valuewhen(shPriceUnconfirmed, shPriceUnconfirmed, 0)
+openTrough = ta.valuewhen(slPriceUnconfirmed, slPriceUnconfirmed, 0)
+
+
+//////////// ranges //////////// 
+
+
+symbolMintickIntegerConversion = syminfo.mintick >= 0.1 ? 1 : syminfo.mintick == 0.01 ? 10 : syminfo.mintick == 0.001 ? 100 : syminfo.mintick == 0.0001 ? 1000 : 
+ syminfo.mintick == 0.00001 ? 10000 : syminfo.mintick == 0.000001 ? 100000 : syminfo.mintick == 0.0000001 ? 1000000 : syminfo.mintick == 0.00000001 ? 10000000 : na
+
+showACR = input(defval = true, title = 'Show Average Candle Range', group = 'Candle Ranges')
+showBiggestSmallestCandles = input(defval = true, title = 'Show Largest and Smallest Candle Ranges', group = 'Candle Ranges')
+showRange = input(defval = true, title = 'Show Range', group = 'Ranges')
+showBiggestSmallestRanges = input(defval = true, title = 'Show Largest and Smallest Ranges', group = 'Ranges')
+
+ACRlookback = input(title = 'Average Candle Range Lookback', defval = 10, group = 'Candle Ranges')
+ARlookback = input(title = 'Average Range Lookback', defval = 10, group = 'Ranges')
+
+averageCandleRange = ta.sma(high - low, ACRlookback) * symbolMintickIntegerConversion
+openCandleRange = (high - low) * symbolMintickIntegerConversion
+
+smallestCandleRange = ta.lowest(high - low, ACRlookback) * symbolMintickIntegerConversion
+largestCandleRange = ta.highest(high - low, ACRlookback) * symbolMintickIntegerConversion
+
+averageRange = ta.sma(peak - trough, ARlookback) * symbolMintickIntegerConversion
+range_1 = (peak - trough) * symbolMintickIntegerConversion
+openRange = (openPeak - openTrough) * symbolMintickIntegerConversion
+smallestRange = ta.lowest(peak - trough, ARlookback) * symbolMintickIntegerConversion
+largestRange = ta.highest(peak - trough, ARlookback) * symbolMintickIntegerConversion
+
+
+//////////// table //////////// 
+
+
+tablePositionInput = input.string(title = 'Position', defval = 'Top Right', options = ['Top Right', 'Top Center', 'Top Left', 'Bottom Right', 'Bottom Center', 'Bottom Left', 
+ 'Middle Right', 'Middle Center', 'Middle Left'], group = 'Table Positioning')
+tablePosition = tablePositionInput == 'Top Right' ? position.top_right : tablePositionInput == 'Top Center' ? position.top_center : tablePositionInput == 'Top Left' ? position.top_left : 
+ tablePositionInput == 'Bottom Right' ? position.bottom_right : tablePositionInput == 'Bottom Center' ? position.bottom_center : tablePositionInput == 'Bottom Left' ? position.bottom_left : 
+ tablePositionInput == 'Middle Right' ? position.middle_right : tablePositionInput == 'Middle Center' ? position.middle_center : tablePositionInput == 'Middle Left' ? position.middle_left : na
+
+textSizeInput = input.string(title = 'Text Size', defval = 'Normal', options = ['Small', 'Normal', 'Large'], group = 'Table Text Sizing')
+textSize = textSizeInput == 'Normal' ? size.normal : textSizeInput == 'Small' ? size.small : textSizeInput == 'Large' ? size.large : na
+
+var rangemeterTable = table.new(tablePosition, 100, 100, border_width = 1)
+
+if showACR
+    table.cell(rangemeterTable, 0, 0, text = 'Average Candle Range', bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 1, text = 'Previous Candle Range', bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 2, text = 'Open Candle Range', bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 0, text = str.tostring(math.round(averageCandleRange[1], 1)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 1, text = str.tostring(math.round(openCandleRange[1], 1)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 2, text = str.tostring(math.round(openCandleRange, 1)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+
+if showBiggestSmallestCandles
+    table.cell(rangemeterTable, 0, 3, text = 'Smallest Candle Range', bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 4, text = 'Largest Candle Range', bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 3, text = str.tostring(math.round(smallestCandleRange, 1)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 4, text = str.tostring(math.round(largestCandleRange, 1)), bgcolor = color.blue, text_color = color.white, text_size = textSize)
+
+if showRange
+    table.cell(rangemeterTable, 0, 5, text = 'Average Range', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 6, text = 'Previous Range', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 7, text = 'Open Range', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 5, text = str.tostring(math.round(averageRange[1], 1)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 6, text = str.tostring(math.round(range_1, 1)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 7, text = str.tostring(math.round(openRange, 1)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+
+if showBiggestSmallestRanges
+    table.cell(rangemeterTable, 0, 8, text = 'Smallest Range', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 0, 9, text = 'Largest Range', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 8, text = str.tostring(math.round(smallestRange, 1)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(rangemeterTable, 1, 9, text = str.tostring(math.round(largestRange, 1)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+

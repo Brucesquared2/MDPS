@@ -1,0 +1,127 @@
+OUTLIERS
+
+⚠️ What the Statistics Imply & What They Don't Tell You
+
+From those studies, here are what tends to hold and what remains uncertain:
+
+What works:
+
+Combos outperform simple single-indicator strategies: Using several indicators, especially from different styles (technical + macro + sentiment) tends to reduce false signals and improve overall robustness.
+
+Signal filtering helps: You see better results when you filter entries (or avoid trades) based on regime (volatility, trend/no-trend), rather than blindly entering all signals.
+
+Machine learning / hybrid methods (CNN, GRU, reinforcement learning) have been used successfully to weight and combine signals, detect features non-linearly.
+
+Risk control matters: Those that report good performance pay attention to risk-adjusted metrics (Sharpe, max drawdowns), not just raw return or win rate.
+
+What is less certain / problematic:
+
+Generalization to new periods / markets: Many systems perform well in backtests, but degrade in out-of-sample periods or when markets shift.
+
+Overfitting: Many models that report very high returns are vulnerable to overfitting because they use many indicators, many parameters, or “tweak until it works” approaches.
+
+Cost & slippage ignored: Several studies either ignore or understate transaction costs, execution delays, spreads, which reduce real‐world profitability.
+
+Correlation between indicators: Some indicators are redundant or highly correlated; combining lots of similar ones doesn't necessarily add value and might just amplify noise.
+
+⚠️ Pitfalls & What Studies Warn About
+
+Overfitting risk: The more indicators, the more parameters. Without careful validation / out-of-sample testing, you may get a system that worked historically but fails live.
+
+Subjectivity: Especially for Elliott Wave, trendlines, swing counting — definitions can vary, results depend heavily on the person coding/drawing them. That subjectivity can reduce reproducibility / statistical confidence.
+
+Complexity vs clarity: Too many indicators or conflicting signals can lead to missed opportunities (if you wait for all confirmations) or confusion.
+
+Signal frequency reduction: More confirmation usually means fewer trade signals. That can hurt if you need more volume or scaling to make returns meaningful.
+
+Cost, latency, slippage: Real execution issues tend to degrade results compared to backtest.
+
+⚠️ Why you should be skeptical / what to watch out for
+
+The term “success” or “hit rate” usually means “price reaches a certain target,” not net profitability (after losses, commissions, etc.). Many traders don’t report average loss, maximum drawdown, or risk vs reward.
+
+Backtest bias: often patterns are selected after knowing outcomes (“data mining”). They also often exclude trades that didn’t follow rules exactly.
+
+Market differences: what works in Forex doesn’t always translate to stocks, commodities, or indices. And results depend heavily on timeframe (daily vs hourly vs minute charts).
+
+Slippage, spread, execution delays: real performance tends to be worse than backtests.
+
+Low sample size: some patterns don’t occur very often, so the data may not be statistically strong.
+
+⚠️ Caveats & Why Stats Vary Widely
+
+Definition fidelity: Many studies/trader reports don’t strictly enforce the exact Fibonacci ratios or “perfect” geometry. Slight deviations degrade performance.
+
+Market & timeframe differences: Daily or weekly charts tend to give more reliable outcomes vs very short intraday frames.
+
+Risk Management: How you set stop-loss, take profit, position sizing makes a huge difference. A pattern with a 70% raw hit rate might still be unprofitable if your losers are much bigger than your winners or you trade too large.
+
+Confirmation needed: Volume, divergence, candlestick confirmation or other indicators improve results materially. Patterns alone do less well.
+
+Backtest vs live trading: Backtests often ignore slippage, commissions, latency. Live trading tends to underperform backtest numbers.
+
+Psychology & execution: Getting the timing right (entering at “D” zone, not earlier), avoiding false signals, and discipline matter a lot.
+
+⚠️ Why be cautious
+
+Backtest bias: Just because a pattern could have worked in historical data doesn’t mean it works in future or under real‐market conditions (slippage, spread, commission all eat returns).
+
+Survivorship / selection bias: Patterns that are named or hyped are often those that “looked good” in the past; that doesn’t mean they are robust.
+
+Ambiguity in definitions: “Harmonic pattern” could mean different things to different people; without precise definitions (exact ratios, timeframe, entry/exit rules) the statistics are not useful.
+
+Overfitting danger: High success claims often come from tuning a strategy very much to historical data, which may not generalize.
+
+⚠️ Limitations & What These Studies Don’t Fully Cover
+
+Many are academic or partial implementations; few are large scale live-trading systems with large capital, real slippage, transaction costs, latency, etc.
+
+Some studies use mostly data that might be cleaner / less “noisy” than real life, or have production frictions ignored.
+
+Many focus on equities or highly liquid instruments; applicability to less liquid assets or very small timeframes may be lower.
+
+Overfitting remains a risk, especially where models are complex (deep learning / large feature sets).
+
+⚠️ Important Caveats & What to Watch
+
+Backtest vs Live: Almost all high performance numbers come from backtests. Real live trading always degrades returns because of slippage, latency, market impact, fees, etc.
+
+Universe Selection / Survivorship Bias: Studies that limit to current constituents (e.g. current S&P 500) tend to overestimate returns vs ones that include delisted firms or changing composition. The better studies adjust for this.
+
+Risk / Drawdown: Many “good” strategies still have large drawdowns. If you're uncomfortable during drawdowns, you might abandon strategy before recovery.
+
+High Frequency / High Turnover: More trading often gives more opportunities, but also more costs and more risks. Must account for transaction costs, friction.
+
+Regime Sensitivity: Many strategies perform well in certain market regimes (trending, volatile, etc.) and perform poorly in others. System that adapts or filters by regime tends to do better.
+
+Scalability / Capacity Limits: As AUM grows, some strategies lose performance because trade sizes affect market, or because there is not enough volume for the smaller signals.
+
+⚠️ Things to Note / Caveats
+
+Asset-weighted vs equal-weighted: Some returns are skewed by large funds. Big quant funds with large AUM moving the needle make “asset-weighted” numbers higher. If they underperform, that drags. Don’t assume you can replicate the large fund scale return easily. 
+Aurum
++1
+
+Substrategy variation: Quant is not one thing. Macro quant, stat arb, EMN, risk premia, and CTAs all behave differently. Some are doing great, others are struggling. Your system will likely perform differently depending on which niche you target. 
+Aurum
++1
+
+Recent vs older data: Performance in more recent quarters or halves can be volatile; what worked 2022-2023 might not work now. For example, CTAs had a rough patch in H1 2025. 
+LinkedIn
+
+Costs, fees, slippage are typically not fully accounted in many public reports. Real performance in live trading tends to be lower. So treat these benchmarks as somewhat optimistic ceilings.
+
+Market regime matters: Periods of trending markets benefit certain quant macro or CTA strategies; range, high interest rate, inflation, volatility regimes may favor others. Your system’s adaptive/regime component matters a lot.
+
+⚠️ What These Benchmarks Teach Us (Plus Pitfalls)
+
+These stats are great to orient yourself. But there are pitfalls and caveats to keep in mind. If your system is optimized to avoid these, you’ll be ahead of many.
+
+What to Watch Out For	Why It Matters
+Asset-weighted vs Equal-weighted returns	Big funds (large AUM) can dominate “asset-weighted” stats; they often have different constraints, trade sizes, less agility. Your system may behave more like an “equal-weighted” or smaller fund scenario.
+Volatility regime & macro environment	A strategy that did +20% in a commodity-inflation environment might underperform badly when rates shift or inflation falls. The regime matters heavily.
+Drawdowns & risk	Many strategies with high returns suffer large drawdowns. If you can’t handle the draw (capital, mindset), the return might not feel “good.”
+Cost, slippage, turnover	High frequency or many trades might look great in backtests but lose edge after fees/slippage. Real execution costs can kill edge.
+Overfitting	Using too many indicators, tweaking to past data, etc. If not validated out-of-sample, you’ll get surprises when live.
+Signal decay / capacity limits	A strategy that works well with small capital doesn’t always scale cleanly; market impact or saturation may eat returns.
+

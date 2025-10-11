@@ -1,0 +1,183 @@
+Traffic Lights [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theexotictrader
+//@version=5
+
+
+indicator('Traffic Lights [theEccentricTrader]', overlay = true, max_bars_back = 5000)
+
+
+//////////// shsl //////////// 
+
+
+sh = close < open and close[1] >= open[1]
+sl = close >= open and close[1] < open[1]
+
+shCloseBarIndex = ta.valuewhen(sh, bar_index, 0)
+slCloseBarIndex = ta.valuewhen(sl, bar_index, 0)
+
+barsBetweenSHSL = shCloseBarIndex > slCloseBarIndex ? shCloseBarIndex - slCloseBarIndex : slCloseBarIndex - shCloseBarIndex
+
+basicPeakBarIndexCalc = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sh, ta.highestbars(high, 2), 0) : na
+basicTroughBarIndexCalc = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sl, ta.lowestbars(low, 2), 0) : na
+basicPeakBarIndex = shCloseBarIndex + basicPeakBarIndexCalc
+basicTroughBarIndex = slCloseBarIndex + basicTroughBarIndexCalc
+barsBetweenBasicPeakTrough = basicPeakBarIndex > basicTroughBarIndex ? basicPeakBarIndex - basicTroughBarIndex : basicTroughBarIndex - basicPeakBarIndex
+basicPeak = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sh, ta.highest(high, 2), 0) : na
+basicTrough = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sl, ta.lowest(low, 2), 0) : na
+
+advancedPeakBarIndexCalc = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sh, ta.highestbars(high, barsBetweenSHSL + 1), 0) : na
+advancedTroughBarIndexCalc = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sl, ta.lowestbars(low, barsBetweenSHSL + 1), 0) : na
+advancedPeakBarIndex = shCloseBarIndex + advancedPeakBarIndexCalc
+advancedTroughBarIndex = slCloseBarIndex + advancedTroughBarIndexCalc
+barsBetweenAdvancedPeakTrough = advancedPeakBarIndex > advancedTroughBarIndex ? advancedPeakBarIndex - advancedTroughBarIndex : 
+ advancedPeakBarIndex < advancedTroughBarIndex ? advancedTroughBarIndex - advancedPeakBarIndex : na
+advancedPeak = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sh, ta.highest(high, barsBetweenSHSL + 1), 0) : na
+advancedTrough = shCloseBarIndex and slCloseBarIndex ? ta.valuewhen(sl, ta.lowest(low, barsBetweenSHSL + 1), 0) : na
+
+advancedPeakTrough = input(defval = false, title = 'Advanced Peak and Trough Logic', group = 'Peak and Trough Price Logic')
+
+peak = advancedPeakTrough ? advancedPeak : basicPeak
+trough = advancedPeakTrough ? advancedTrough : basicTrough
+
+
+//////////// lines ////////////
+
+
+showMinor = input(defval = true, title = 'Show Minor', group = 'Lines')
+showMajor = input(defval = true, title = 'Show Major', group = 'Lines')
+
+selectExtend = input.string(title = 'Extend Line Type', defval = 'Both', options = ['None', 'Right', 'Left', 'Both'], group = "Line Extension")
+extendLines = selectExtend == 'None' ? extend.none : selectExtend == 'Right' ? extend.right : selectExtend == 'Left' ? extend.left : selectExtend == 'Both' ? extend.both : na
+
+fifteenMinuteLineCondition = timeframe.period == '15' or timeframe.period == '14' or timeframe.period == '13' or timeframe.period == '12' or timeframe.period == '11' 
+ or timeframe.period == '10' or timeframe.period == '9' or timeframe.period == '8' or timeframe.period == '7' or timeframe.period == '6' or timeframe.period == '5' or 
+ timeframe.period == '4' or timeframe.period == '3' or timeframe.period == '2' or timeframe.period == '1'
+oneHourLineCondition = fifteenMinuteLineCondition or timeframe.period == '60' or timeframe.period == '45' or timeframe.period == '30' or timeframe.period == '29' or 
+ timeframe.period == '28' or timeframe.period == '27' or timeframe.period == '26' or timeframe.period == '25' or timeframe.period == '24' or timeframe.period == '23' or timeframe.period == '22' or 
+ timeframe.period == '21' or timeframe.period == '20' or timeframe.period == '19' or timeframe.period == '18' or timeframe.period == '17' or timeframe.period == '16'
+fourHourLineCondition = oneHourLineCondition or timeframe.period == '240' or timeframe.period == '180' or timeframe.period == '120'
+dailyLineCondition = not(timeframe.period == '12M' or timeframe.period == '3M' or timeframe.period == 'M' or timeframe.period == 'W')
+weeklyLineCondition = not(timeframe.period == '12M' or timeframe.period == '3M' or timeframe.period == 'M')
+monthlyLineCondition = not(timeframe.period == '12M' or timeframe.period == '3M')
+
+var fifteenMinutePeakLine = line.new(na, na, na, na, color = color.green, style = line.style_dashed, extend = extendLines)
+var oneHourPeakLine = line.new(na, na, na, na, color = color.orange, style = line.style_dashed, extend = extendLines)
+var fourHourPeakLine = line.new(na, na, na, na, color = color.red, style = line.style_dashed, extend = extendLines)
+var dailyPeakLine = line.new(na, na, na, na, color = color.green, style = line.style_solid, extend = extendLines)
+var weeklyPeakLine = line.new(na, na, na, na, color = color.orange, style = line.style_solid, extend = extendLines)
+var monthlyPeakLine = line.new(na, na, na, na, color = color.red, style = line.style_solid, extend = extendLines)
+var fifteenMinuteTroughLine = line.new(na, na, na, na, color = color.green, style = line.style_dashed, extend = extendLines)
+var oneHourTroughLine = line.new(na, na, na, na, color = color.orange, style = line.style_dashed, extend = extendLines)
+var fourHourTroughLine = line.new(na, na, na, na, color = color.red, style = line.style_dashed, extend = extendLines)
+var dailyTroughLine = line.new(na, na, na, na, color = color.green, style = line.style_solid, extend = extendLines)
+var weeklyTroughLine = line.new(na, na, na, na, color = color.orange, style = line.style_solid, extend = extendLines)
+var monthlyTroughLine = line.new(na, na, na, na, color = color.red, style = line.style_solid, extend = extendLines)
+
+fifteenMinutePeak = request.security(syminfo.tickerid, '15', peak[1], lookahead = barmerge.lookahead_on)
+oneHourPeak = request.security(syminfo.tickerid, '60', peak[1], lookahead = barmerge.lookahead_on)
+fourHourPeak = request.security(syminfo.tickerid, '240', peak[1], lookahead = barmerge.lookahead_on)
+dailyPeak = request.security(syminfo.tickerid, 'D', peak[1], lookahead = barmerge.lookahead_on)
+weeklyPeak = request.security(syminfo.tickerid, 'W', peak[1], lookahead = barmerge.lookahead_on)
+monthlyPeak = request.security(syminfo.tickerid, 'M', peak[1], lookahead = barmerge.lookahead_on)
+fifteenMinuteTrough = request.security(syminfo.tickerid, '15', trough[1], lookahead = barmerge.lookahead_on)
+oneHourTrough = request.security(syminfo.tickerid, '60', trough[1], lookahead = barmerge.lookahead_on)
+fourHourTrough = request.security(syminfo.tickerid, '240', trough[1], lookahead = barmerge.lookahead_on)
+dailyTrough = request.security(syminfo.tickerid, 'D', trough[1], lookahead = barmerge.lookahead_on)
+weeklyTrough = request.security(syminfo.tickerid, 'W', trough[1], lookahead = barmerge.lookahead_on)
+monthlyTrough = request.security(syminfo.tickerid, 'M', trough[1], lookahead = barmerge.lookahead_on)
+
+if fifteenMinutePeak and fifteenMinuteLineCondition and showMinor
+    line.set_xy1(fifteenMinutePeakLine, bar_index, fifteenMinutePeak)
+    line.set_xy2(fifteenMinutePeakLine, bar_index + 1, fifteenMinutePeak)
+if oneHourPeak and oneHourLineCondition and showMinor
+    line.set_xy1(oneHourPeakLine, bar_index, oneHourPeak)
+    line.set_xy2(oneHourPeakLine, bar_index + 1, oneHourPeak)
+if fourHourPeak and fourHourLineCondition and showMinor
+    line.set_xy1(fourHourPeakLine, bar_index, fourHourPeak)
+    line.set_xy2(fourHourPeakLine, bar_index + 1, fourHourPeak)
+if dailyPeak and dailyLineCondition and showMajor
+    line.set_xy1(dailyPeakLine, bar_index, dailyPeak)
+    line.set_xy2(dailyPeakLine, bar_index + 1, dailyPeak)
+if weeklyPeak and weeklyLineCondition and showMajor
+    line.set_xy1(weeklyPeakLine, bar_index, weeklyPeak)
+    line.set_xy2(weeklyPeakLine, bar_index + 1, weeklyPeak)
+if monthlyPeak and monthlyLineCondition and showMajor
+    line.set_xy1(monthlyPeakLine, bar_index, monthlyPeak)
+    line.set_xy2(monthlyPeakLine, bar_index + 1, monthlyPeak)
+if fifteenMinuteTrough and fifteenMinuteLineCondition and showMinor
+    line.set_xy1(fifteenMinuteTroughLine, bar_index, fifteenMinuteTrough)
+    line.set_xy2(fifteenMinuteTroughLine, bar_index + 1, fifteenMinuteTrough)
+if oneHourTrough and oneHourLineCondition and showMinor
+    line.set_xy1(oneHourTroughLine, bar_index, oneHourTrough)
+    line.set_xy2(oneHourTroughLine, bar_index + 1, oneHourTrough)
+if fourHourTrough and fourHourLineCondition and showMinor
+    line.set_xy1(fourHourTroughLine, bar_index, fourHourTrough)
+    line.set_xy2(fourHourTroughLine, bar_index + 1, fourHourTrough)
+if dailyTrough and dailyLineCondition and showMajor
+    line.set_xy1(dailyTroughLine, bar_index, dailyTrough)
+    line.set_xy2(dailyTroughLine, bar_index + 1, dailyTrough)
+if weeklyTrough and weeklyLineCondition and showMajor
+    line.set_xy1(weeklyTroughLine, bar_index, weeklyTrough)
+    line.set_xy2(weeklyTroughLine, bar_index + 1, weeklyTrough)
+if monthlyTrough and monthlyLineCondition and showMajor
+    line.set_xy1(monthlyTroughLine, bar_index, monthlyTrough)
+    line.set_xy2(monthlyTroughLine, bar_index + 1, monthlyTrough)
+
+
+//////////// table ////////////
+
+
+showTable = input(defval = true, title = 'Show Table', group = 'Table')
+
+trafficLightsTablePositionInput = input.string(title = 'Position', defval = 'Top Right', options = ['Top Right', 'Top Center', 'Top Left', 'Bottom Right', 'Bottom Center', 'Bottom Left', 
+ 'Middle Right', 'Middle Center', 'Middle Left'], group = 'Table Positioning')
+trafficLightsTablePosition = trafficLightsTablePositionInput == 'Top Right' ? position.top_right : trafficLightsTablePositionInput == 'Top Center' ? position.top_center : 
+ trafficLightsTablePositionInput == 'Top Left' ? position.top_left : trafficLightsTablePositionInput == 'Bottom Right' ? position.bottom_right : 
+ trafficLightsTablePositionInput == 'Bottom Center' ? position.bottom_center : trafficLightsTablePositionInput == 'Bottom Left' ? position.bottom_left : 
+ trafficLightsTablePositionInput == 'Middle Right' ? position.middle_right : trafficLightsTablePositionInput == 'Middle Center' ? position.middle_center : 
+ trafficLightsTablePositionInput == 'Middle Left' ? position.middle_left : na
+
+textSizeInput = input.string(title = 'Text Size', defval = 'Normal', options = ['Tiny', 'Small', 'Normal', 'Large'], group = 'Table Text Sizing')
+textSize = textSizeInput == 'Tiny' ? size.tiny : textSizeInput == 'Small' ? size.small : textSizeInput == 'Normal' ? size.normal : textSizeInput == 'Large' ? size.large : na
+
+var trafficLightsTable = table.new(trafficLightsTablePosition, 100, 100, border_width = 1)
+
+if showTable and fifteenMinuteLineCondition and showMinor
+    table.cell(trafficLightsTable, 0, 0, text = '15M Resistance', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 0, text = str.tostring(line.get_price(fifteenMinutePeakLine, bar_index)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 1, text = '15M Support', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 1, text = str.tostring(line.get_price(fifteenMinuteTroughLine, bar_index)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+if showTable and oneHourLineCondition and showMinor    
+    table.cell(trafficLightsTable, 0, 2, text = '1H Resistance', bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 2, text = str.tostring(line.get_price(oneHourPeakLine, bar_index)), bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 3, text = '1H Support', bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 3, text = str.tostring(line.get_price(oneHourTroughLine, bar_index)), bgcolor = color.orange, text_color = color.white, text_size = textSize)
+if showTable and fourHourLineCondition and showMinor    
+    table.cell(trafficLightsTable, 0, 4, text = '4H Resistance', bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 4, text = str.tostring(line.get_price(fourHourPeakLine, bar_index)), bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 5, text = '4H Support', bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 5, text = str.tostring(line.get_price(fourHourTroughLine, bar_index)), bgcolor = color.red, text_color = color.white, text_size = textSize)
+if showTable and dailyLineCondition and showMinor
+    table.cell(trafficLightsTable, 0, 6, text = 'Daily Resistance', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 6, text = str.tostring(line.get_price(dailyPeakLine, bar_index)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 7, text = 'Daily Support', bgcolor = color.green, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 7, text = str.tostring(line.get_price(dailyTroughLine, bar_index)), bgcolor = color.green, text_color = color.white, text_size = textSize)
+if showTable and weeklyLineCondition and showMinor    
+    table.cell(trafficLightsTable, 0, 8, text = 'Weekly Resistance', bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 8, text = str.tostring(line.get_price(weeklyPeakLine, bar_index)), bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 9, text = 'Weekly Support', bgcolor = color.orange, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 9, text = str.tostring(line.get_price(weeklyTroughLine, bar_index)), bgcolor = color.orange, text_color = color.white, text_size = textSize)
+if showTable and monthlyLineCondition and showMinor    
+    table.cell(trafficLightsTable, 0, 10, text = 'Monthly Resistance', bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 10, text = str.tostring(line.get_price(monthlyPeakLine, bar_index)), bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 0, 11, text = 'Monthly Support', bgcolor = color.red, text_color = color.white, text_size = textSize)
+    table.cell(trafficLightsTable, 1, 11, text = str.tostring(line.get_price(monthlyTroughLine, bar_index)), bgcolor = color.red, text_color = color.white, text_size = textSize)
+
+
+
+
+
+
+

@@ -1,0 +1,56 @@
+Moving Average Resting Point [theEccentricTrader]
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © theEccentricTrader
+//@version=5
+
+
+indicator("Moving Average Resting Point [theEccentricTrader]", shorttitle = 'MARP [theEccentricTrader]', overlay = true)
+
+
+//////////// shsl //////////// 
+
+
+shPrice = close[1] >= open[1] and close < open and high >= high[1] and barstate.isconfirmed ? high : 
+ close[1] >= open[1] and close < open and high <= high[1] and barstate.isconfirmed ? high[1] : na
+slPrice = close[1] < open[1] and close >= open and low <= low[1] and barstate.isconfirmed ? low : 
+ close[1] < open[1] and close >= open and low >= low[1] and barstate.isconfirmed ? low[1] : na
+
+peak = ta.valuewhen(shPrice, shPrice, 0) 
+trough = ta.valuewhen(slPrice, slPrice, 0) 
+
+
+//////////// moving average resting points //////////// 
+
+
+showMARP1 = input(defval = true, title = "Show MARP 1", group = 'MARP Plots')
+showMARP2 = input(defval = false, title = "Show MARP 2", group = 'MARP Plots')
+showMARP3 = input(defval = false, title = "Show MARP 3", group = 'MARP Plots')
+
+marp1Length = input(defval = 10, title = "MARP 1 Length", group = 'MARP Lengths')
+marp2Length = input(defval = 20, title = "MARP 2 Length", group = 'MARP Lengths')
+marp3Length = input(defval = 30, title = "MARP 3 Length", group = 'MARP Lengths')
+
+marp1Color = input(defval = color.green, title = "MARP 1 Color", group = 'MARP Coloring')
+marp2Color = input(defval = color.orange, title = "MARP 2 Color", group = 'MARP Coloring')
+marp3Color = input(defval = color.red, title = "MARP 3 Color", group = 'MARP Coloring')
+
+marp1High = ta.sma(peak, marp1Length)
+marp1Low = ta.sma(trough, marp1Length)
+marp1 = marp1Low + ((marp1High - marp1Low) / 2)
+
+marp2High = ta.sma(peak, marp2Length)
+marp2Low = ta.sma(trough, marp2Length)
+marp2 = marp2Low + ((marp2High - marp2Low) / 2)
+
+marp3High = ta.sma(peak, marp3Length)
+marp3Low = ta.sma(trough, marp3Length)
+marp3 = marp3Low + ((marp3High - marp3Low) / 2)
+
+
+//////////// plots ////////////
+
+
+plot(showMARP1 ? marp1 : na, color = marp1Color)
+plot(showMARP2 ? marp2 : na, color = marp2Color)
+plot(showMARP3 ? marp3 : na, color = marp3Color)

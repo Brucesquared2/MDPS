@@ -1,0 +1,104 @@
+statistics on QUANTS
+
+Ok, So I have built a quant that has the credit default markets and macro global trends like sentiment, volatility overall in market sentiment into a dashboard where they all carry a 0 to 100 sore and total out to a weighted score, same with all the indicators for analysis, like RSI, MACD, Volume, Fibonacci ratios  etc. to a dashboard where they all carry a 0 to 100 sore and total out to a weighted score, then another dashboard where all of the other dashboards averaged into it, that carries into the engine that evaluates all the other modules / dashboards scores to arrive at another weighted total or weighted sum of them all the incorporated items. Do you have information and statistics on this approach and other or best quants and the most accurate or highest success rates and what the rates are based on? 
+
+Cool question — lots of folks are doing similar things (combining dashboards, multiple indicators, weighting, macro + sentiment + technical), and there is some academic / empirical work on it. It’s not a perfect match to your system (which sounds pretty full‐stack), but there are relevant statistics and lessons. I’ll lay out what I found + what I’d watch out for + suggestions to improve your system.
+
+🔍 What Studies & Empirical Work Say
+
+Here are some recent papers / studies that share similar setups (macro + technical + sentiment + multiple dashboards) and their findings. These are the closest to what you’re building.
+
+Study / Paper	What they combined / method	Key metrics & findings
+Integrating Macroeconomic and Technical Indicators into Forecasting the Stock Market (2025)	Used macro indicators (volatility, oil, gold, geopolitical risk, economic policy uncertainty, etc.) + technical indicators, deep hybrid neural nets (CNN + GRU / LeNet + Highway etc.) to forecast S&P 500 returns. 
+MDPI
+	These hybrid models outperformed simpler models. They achieved better accuracy and lower error (RMSE, MAE, MAPE) vs models using just technical or just macro. 
+MDPI
+
+Assessing the Impact of Technical Indicators on Machine Learning Models for Stock Price Prediction (2024)	Random forest models + various technical indicators (EMA, Fibonacci retracements, Bollinger Bands etc.) on minute-level SPY data (high frequency) 
+arXiv
+	The models improved risk-adjusted performance vs baseline, but struggled with out-of-sample generalization. Over-fitting was a problem. 
+arXiv
+
+A Comparative Study of MACD-Based Trading Strategies: Evidence from US Stocks	MACD alone and MACD combined with other momentum indicators (RSI, etc.) across indices (Dow Jones, NASDAQ, S&P) over ~2015–2021 
+arXiv
+	MACD alone had win rate < 50%; combining with other momentum indicators improved win rate & risk-return metrics significantly. 
+arXiv
+
+An Improved Reinforcement Learning Model Based on Sentiment Analysis	Used sentiment indicators + deep RL (DQN, DRQN) + some technical features, designed for higher frequency trading 
+arXiv
++1
+	They reported a very high annualized return (54.5%) under certain conditions; improvements in Sharpe ratio; but again, risk of overfitting and sensitivity to environment. 
+arXiv
+⚠️ What the Statistics Imply & What They Don't Tell You
+
+From those studies, here are what tends to hold and what remains uncertain:
+
+What works:
+
+Combos outperform simple single-indicator strategies: Using several indicators, especially from different styles (technical + macro + sentiment) tends to reduce false signals and improve overall robustness.
+
+Signal filtering helps: You see better results when you filter entries (or avoid trades) based on regime (volatility, trend/no-trend), rather than blindly entering all signals.
+
+Machine learning / hybrid methods (CNN, GRU, reinforcement learning) have been used successfully to weight and combine signals, detect features non-linearly.
+
+Risk control matters: Those that report good performance pay attention to risk-adjusted metrics (Sharpe, max drawdowns), not just raw return or win rate.
+
+What is less certain / problematic:
+
+Generalization to new periods / markets: Many systems perform well in backtests, but degrade in out-of-sample periods or when markets shift.
+
+Overfitting: Many models that report very high returns are vulnerable to overfitting because they use many indicators, many parameters, or “tweak until it works” approaches.
+
+Cost & slippage ignored: Several studies either ignore or understate transaction costs, execution delays, spreads, which reduce real‐world profitability.
+
+Correlation between indicators: Some indicators are redundant or highly correlated; combining lots of similar ones doesn't necessarily add value and might just amplify noise.
+
+🧮 Benchmarks & Numbers You Might Expect
+
+Based on the sources:
+
+Win rates typically range from 40-60% for strategies using a few indicators; combining more can push win rate higher in some studies, but often at cost of fewer trades or requiring precise conditions.
+
+Sharpe ratios in good studies might be 1.3-2.0, especially with good risk control.
+
+Outperformance vs baseline (buy and hold or single-indicator strategies) often in the range of 10-30% improvement in error metrics or returns (depending on market / timeframe).
+
+Returns like “> 50% annualized” are reported in some RL + sentiment + indicator studies, but you have to check if that includes realistic slippage, drawdown, etc. These are probably outliers.
+
+🔧 Recommendations to Improve Your System
+
+Given what the research says, here are ways to make your weighted dashboard/quant system more robust / increase its chances of success:
+
+Feature Selection & Weight Calibration
+
+Don’t assign weights arbitrarily; use statistical methods (PCA, regularization, cross-validation) to discover which indicators contribute most to predictive power.
+
+Maybe have dynamic weights that adjust with market regime (e.g. volatile regime, trending regime, range).
+
+Out-of-Sample / Walk-Forward Testing
+
+Split historical data not just into train/test, but multiple walk-forward segments, to check how your model would’ve done as if deployed in real time.
+
+Ensure Clean, Point-in-Time Data for Macros & Sentiment
+
+Especially for macroeconomic releases, “future revisions” are a thing — better to use data as it was known at that moment.
+
+Risk & Money Management
+
+Define drawdowns, stop losses, position sizing rules.
+
+Avoid overrisking when the dashboard signals are weak or conflicting.
+
+Avoid Overloading with Redundant Indicators
+
+If several indicators measure the same thing (e.g. trend strength, momentum), combining them might not add value — might instead introduce noise.
+
+Use Confirmations & Divergence
+
+For example, use price + volume confirmation, check divergences in momentum, trend + pattern, etc.
+
+Simplicity where possible
+
+Sometimes simpler models with fewer moving parts generalize better and are easier to maintain and interpret.
+
+If you want, I can try to pull some exact performance numbers of quant systems more closely mirroring your structure (dashboards + indicator weightings + macro + sentiment + technical) over recent years in U.S. stocks, maybe run a literature search / meta-study. Do you want me to try to gather that?
