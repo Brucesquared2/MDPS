@@ -1,0 +1,2 @@
+vortex: indicators.vortex:vortex_run
+clime: indicators.clime:clime_run
