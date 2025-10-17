@@ -198,6 +198,11 @@ mkdocs==1.5.2
 # - Financial APIs require API keys and registration
 # - Some packages may have conflicting versions - adjust as needed
 
+# API Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
 # Development and Production Environment Variables
 # Set these in your environment or .env file:
 # PYTHONPATH=./

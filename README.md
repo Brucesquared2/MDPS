@@ -375,6 +375,60 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Website**: https://mdps-trading.com
 - **Documentation**: https://docs.mdps-trading.com
 
+## 🚀 FastAPI Wrapper
+
+MDPS now includes a FastAPI wrapper for running MDPS jobs via REST API!
+
+### Quick Start
+
+1. **Install dependencies** (if not already installed):
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Set the entrypoint** (optional, can be set per-request):
+   ```bash
+   export MDPS_ENTRYPOINT="module:callable"
+   ```
+
+3. **Start the API server**:
+   ```bash
+   # Using the startup script
+   ./app/start.sh
+
+   # Or directly with uvicorn
+   python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+   ```
+
+4. **Create a job**:
+   ```bash
+   curl -X POST http://localhost:8000/jobs \
+     -H "Content-Type: application/json" \
+     -d '{"parameters": {"symbol": "EURUSD"}}'
+   ```
+
+5. **Check job status**:
+   ```bash
+   curl http://localhost:8000/jobs/{job_id}
+   ```
+
+### Features
+
+- **Dynamic Entrypoint Loading**: Configure via `MDPS_ENTRYPOINT` environment variable
+- **Asynchronous Job Execution**: Non-blocking background task execution
+- **Job Status Tracking**: Real-time status updates in `.quant_runs/` directory
+- **RESTful API**: Standard HTTP endpoints for job management
+- **Interactive Docs**: Swagger UI at `http://localhost:8000/docs`
+
+For detailed API documentation, see [app/README.md](app/README.md)
+
+### DevContainer Support
+
+Open in VS Code with Dev Containers extension for automatic setup:
+1. Command Palette → "Dev Containers: Reopen in Container"
+2. Wait for setup to complete
+3. Run `./app/start.sh` or `python app/main.py`
+
 ## 🎯 Roadmap
 
 ### v2.1 (Next Release)
