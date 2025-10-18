@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import pandas_ta as ta
 from typing import Dict, List
 
@@ -36,5 +35,5 @@ class TechnicalIndicatorGenerator:
         results = {}
         for indicator in indicators:
             if indicator in self.indicators:
-                results[indicator] = self.indicators[indicator](data,%20**params.get(indicator,%20{}))
+                results[indicator] = self.indicators[indicator](data, **params.get(indicator, {}))
         return results

@@ -1,14 +1,44 @@
 """
 MetaTrader5 Connection and Data Feed Management
 """
-import MetaTrader5 as mt5
+# Safe import guard for MetaTrader5 (optional dependency)
+try:
+    import MetaTrader5 as mt5
+    MT5_AVAILABLE = True
+except ImportError:
+    MT5_AVAILABLE = False
+    mt5 = None
+
 from PyQt5.QtCore import QObject, pyqtSignal
 import logging
 from pathlib import Path
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 import os
 import winreg
+
+
+def mt5_initialize(**kwargs):
+    """
+    Safe wrapper for mt5.initialize() that checks if MT5 is available.
+    
+    Args:
+        **kwargs: Arguments to pass to mt5.initialize()
+        
+    Returns:
+        bool: True if initialization successful, False otherwise
+    """
+    if not MT5_AVAILABLE:
+        return False
+    return mt5.initialize(**kwargs)
+
+
+def mt5_shutdown():
+    """
+    Safe wrapper for mt5.shutdown() that checks if MT5 is available.
+    """
+    if MT5_AVAILABLE and mt5 is not None:
+        mt5.shutdown()
 
 class MT5ConnectionManager(QObject):
     # Define signals for connection status updates
@@ -91,9 +121,17 @@ class MT5ConnectionManager(QObject):
             bool: True if connection successful, False otherwise
         """
         try:
+            # Check if MT5 is available
+            if not MT5_AVAILABLE:
+                error = "MetaTrader5 module is not available. Please install it with: pip install MetaTrader5"
+                self.logger.error(error)
+                self.connection_error.emit(error)
+                self.connection_status.emit(False)
+                return False
+
             # Shutdown existing connection if any
             if self.is_connected:
-                mt5.shutdown()
+                mt5_shutdown()
                 self.is_connected = False
 
             # Use specified path or default path
@@ -114,8 +152,8 @@ class MT5ConnectionManager(QObject):
             
             self.logger.info(f"Connecting to MT5... Server: {server}")
             
-            if not mt5.initialize(**init_params):
-                error = f"MT5 Initialize failed. Error: {mt5.last_error()}"
+            if not mt5_initialize(**init_params):
+                error = f"MT5 Initialize failed. Error: {mt5.last_error() if mt5 else 'MT5 not available'}"
                 self.logger.error(error)
                 self.connection_error.emit(error)
                 self.connection_status.emit(False)
@@ -132,7 +170,7 @@ class MT5ConnectionManager(QObject):
                 self.logger.error(error)
                 self.connection_error.emit(error)
                 self.connection_status.emit(False)
-                mt5.shutdown()
+                mt5_shutdown()
                 return False
             
             # Get account info
@@ -142,7 +180,7 @@ class MT5ConnectionManager(QObject):
                 self.logger.error(error)
                 self.connection_error.emit(error)
                 self.connection_status.emit(False)
-                mt5.shutdown()
+                mt5_shutdown()
                 return False
                 
             # Successfully connected
@@ -179,8 +217,8 @@ class MT5ConnectionManager(QObject):
             self.connection_error.emit(error_msg)
             self.connection_status.emit(False)
             try:
-                mt5.shutdown()
-            except:
+                mt5_shutdown()
+            except Exception:
                 pass
             return False
             
@@ -189,7 +227,7 @@ class MT5ConnectionManager(QObject):
         try:
             self.logger.info("Disconnecting from MT5...")
             if self.is_connected:
-                mt5.shutdown()
+                mt5_shutdown()
                 self.is_connected = False
                 self.connection_status.emit(False)
                 self.logger.info("Successfully disconnected from MT5")
@@ -204,24 +242,26 @@ class MT5ConnectionManager(QObject):
     def check_connection(self):
         """Check if MT5 is still connected"""
         try:
-            if not mt5.terminal_info():
+            if not MT5_AVAILABLE or not mt5.terminal_info():
                 self.is_connected = False
                 self.connection_status.emit(False)
                 return False
             return True
-        except:
+        except Exception:
             self.is_connected = False
             self.connection_status.emit(False)
             return False
             
     def get_symbols(self):
         """Get available symbols"""
-        if not self.is_connected:
+        if not self.is_connected or not MT5_AVAILABLE:
             return []
         return mt5.symbols_get()
         
     def get_timeframes(self):
         """Get available timeframes"""
+        if not MT5_AVAILABLE:
+            return {}
         return {
             "M1": mt5.TIMEFRAME_M1,
             "M5": mt5.TIMEFRAME_M5,
@@ -243,7 +283,7 @@ class MT5ConnectionManager(QObject):
             from_date: Start date for historical data
             to_date: Optional end date (defaults to now)
         """
-        if not self.is_connected:
+        if not self.is_connected or not MT5_AVAILABLE:
             return None
             
         if to_date is None:
