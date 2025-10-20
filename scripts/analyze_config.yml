@@ -1,0 +1,48 @@
+# Analyzer configuration: controls which linter/test outputs are blocking vs advisory,
+# what auto-fix behavior is allowed, and file globs to ignore.
+# Edit values to fit your repo's tolerance for strictness.
+
+linters:
+  ruff:
+    enabled: true
+    auto_fix_allowed: false
+    blocking_rules: []
+    advisory_rules: []
+  mypy:
+    enabled: true
+    treat_errors_as_blocking: false
+  unittest:
+    enabled: true
+    fail_blocking: true
+  psscriptanalyzer:
+    enabled: true
+    treat_parse_errors_blocking: true
+    auto_fix_allowed: false
+
+blocking_patterns:
+  - "TerminatorExpectedAtEndOfString"
+  - "SyntaxError"
+  - "ParseError"
+
+marker_patterns:
+  todo_like:
+    - "TODO"
+    - "FIXME"
+    - "NEEDS-CLARITY"
+    - "REVIEW"
+    - "ASK"
+
+excludes:
+  - "data/**"
+  - ".venv/**"
+  - "venv/**"
+  - "node_modules/**"
+  - "build/**"
+
+interactive:
+  open_in_editor: true
+  require_manual_confirmation_for_auto_fix: true
+
+report:
+  show_full_output: true
+  redact_secrets: true
