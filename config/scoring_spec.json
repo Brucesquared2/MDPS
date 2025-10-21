@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "generated_by": "copilot/assistant",
+  "global": {
+    "normalization": { "method": "percentile", "fallback": "zscore" },
+    "meta_model_enabled": false,
+    "meta_model_path": "models/meta_model_v1.pkl",
+    "alert_cooldown_seconds": 3600,
+    "max_report_kb": 200
+  },
+  "buckets": {
+    "crypto": {
+      "description": "Token & chain-level signals (Santiment, CoinGecko, Glassnode)",
+      "default_top_n": 20,
+      "methods": {
+        "method_basic": { "description": "30d zscore + 7d pct + volume spike", "weight": 1.0, "predictive_power_prior": 1.0 },
+        "method_exponential": { "description": "expo-weighted dev activity + volatility filter", "weight": 1.0, "predictive_power_prior": 0.9 },
+        "method_ml_v1": { "description": "light gradient boosting model on features", "weight": 1.2, "predictive_power_prior": 1.3, "requires_model_artifact": true, "model_artifact_path": "services/crypto/models/ml_v1.pkl" }
+      },
+      "scoring": { "feature_map": { "dev_30_z": 0.4, "volume_24h_z": 0.2, "price_pct_7": 0.15, "volatility_30d": -0.1, "onchain_whale_inflow": 0.15 }, "min_samples_for_rolling": 14, "min_predictive_power": 0.5 },
+      "alerting": { "zscore_threshold": 2.0, "global_score_threshold": 0.75, "per_symbol_cooldown_seconds": 7200 },
+      "bucket_weight": 1.0
+    },
+    "stocks": {
+      "description": "Equities (price, fundamentals, news/event driven)",
+      "default_top_n": 15,
+      "methods": { "method_basic": { "description": "momentum + earnings surprise", "weight": 1.0, "predictive_power_prior": 1.0 }, "method_earnings_event": { "description": "event-driven earnings model", "weight": 1.2, "predictive_power_prior": 1.1 } },
+      "scoring": { "feature_map": { "rsi_14": -0.1, "price_pct_30": 0.3, "earnings_surprise": 0.4, "volume_spike": 0.2 }, "min_samples_for_rolling": 30 },
+      "alerting": { "earnings_surprise_threshold": 0.05, "global_score_threshold": 0.70, "per_symbol_cooldown_seconds": 10800 },
+      "bucket_weight": 1.0
+    },
+    "forex": {
+      "description": "FX pairs (rates, vols, macro drivers)",
+      "default_top_n": 10,
+      "methods": { "method_basic": { "description": "volatility breakout + macro filter", "weight": 1.0, "predictive_power_prior": 1.0 }, "method_vol_spike": { "description": "intraday vol spike detector", "weight": 1.1, "predictive_power_prior": 0.9 } },
+      "scoring": { "feature_map": { "volatility_30d": 0.3, "price_pct_7": 0.4, "macro_indicator_corr": 0.3 }, "min_samples_for_rolling": 30 },
+      "alerting": { "volatility_pct_threshold": 0.03, "global_score_threshold": 0.65, "per_symbol_cooldown_seconds": 3600 },
+      "bucket_weight": 1.0
+    },
+    "macro": {
+      "description": "Debt markets and global risk-on/risk-off signals",
+      "default_top_n": 5,
+      "methods": { "method_debt": { "description": "yield curve & credit spread analyzer", "weight": 1.4, "predictive_power_prior": 1.4 }, "method_sentiment_agg": { "description": "global sentiment aggregator", "weight": 1.2, "predictive_power_prior": 1.1 } },
+      "scoring": { "feature_map": { "yield_curve_10_2": -0.5, "credit_spread_ig_hy": -0.3, "global_sentiment_z": 0.8 }, "min_samples_for_rolling": 30 },
+      "alerting": { "10_2_spread_threshold": -0.5, "credit_spread_threshold_pct": 1.0, "global_score_threshold": 0.8, "per_symbol_cooldown_seconds": 21600 },
+      "bucket_weight": 1.5
+    },
+    "micro": {
+      "description": "Idiosyncratic company/token events and filings",
+      "default_top_n": 10,
+      "methods": { "method_filings": { "description": "filing and headline scanner", "weight": 1.0, "predictive_power_prior": 0.9 }, "method_whale": { "description": "onchain whale transfer detector", "weight": 1.1, "predictive_power_prior": 1.0 } },
+      "scoring": { "feature_map": { "filing_signal": 0.6, "whale_transfer_pct": 0.4 }, "min_samples_for_rolling": 7 },
+      "alerting": { "filing_delta_threshold": 0.05, "per_symbol_cooldown_seconds": 7200 },
+      "bucket_weight": 0.8
+    }
+  },
+  "aggregation": { "global_score_formula": "sum(bucket_weight * normalized_score * confidence * sqrt(predictive_power)) / sum(weights)", "normalization": "percentile_by_bucket", "default_bucket_weights": { "macro": 1.5, "crypto": 1.0, "stocks": 1.0, "forex": 1.0, "micro": 0.8 }, "meta_model": { "enabled": false, "inference_timeout_ms": 200 } }
+}
