@@ -1,0 +1,74 @@
+"ADXcellence"
+
+//@version=5
+indicator(title="ADXcellence", format=format.price, precision=4, timeframe="", timeframe_gaps=true)
+
+darkenColor(color, factor) =>
+    r = color.r(color)
+    g = color.g(color)
+    b = color.b(color)
+
+    rd = int(r * factor)
+    gd = int(g * factor)
+    bd = int(b * factor)
+    color.rgb(rd, gd, bd)
+
+
+lensig = input.int(8, title="ADX Smoothing", minval=1, maxval=50, group = "Indicator Settings")
+adx_ema_len = input.int(5, title="ADX Slope Signal", minval=1, maxval=50, group = "Indicator Settings")
+len    = input.int(13, minval=1, title="DI Length", group = "Indicator Settings")
+
+top_level = input.int(40, title = "Strong Trend Level", group = "Trend Levels")
+mid_level = input.int(25, title = "Trending Level", group = "Trend Levels")
+bottom_level = input.int(10, title = "Low Volatility Level", group = "Trend Levels")
+
+
+midc   = input.color(color.silver , title = "ADX"   , group = "Colors", inline = "Colors")
+bullc  = input.color(color.green      , title = "DI+"      , group = "Colors", inline = "Colors")
+bearc  = input.color(color.red   , title = "DI-"      , group = "Colors", inline = "Colors")
+
+
+up = ta.change(high)
+down = -ta.change(low)
+plusDM = na(up) ? na : (up > down and up > 0 ? up : 0)
+minusDM = na(down) ? na : (down > up and down > 0 ? down : 0)
+trur = ta.rma(ta.tr, len)
+plus = fixnan(100 * ta.rma(plusDM, len) / trur)
+minus = fixnan(100 * ta.rma(minusDM, len) / trur)
+sum = plus + minus
+adx = 100 * ta.rma(math.abs(plus - minus) / (sum == 0 ? 1 : sum), lensig)
+adx_ema = ta.ema(adx,adx_ema_len)
+
+trend_level         = hline(mid_level, color = color.new(color.silver,55), linestyle = hline.style_dotted)
+strong_trend_level  = hline(top_level, color = color.new(color.silver,55), linestyle = hline.style_dotted)
+weak_trend_level  = hline(bottom_level, color = color.new(color.silver,55), linestyle = hline.style_dotted)
+
+
+adx_col = color.from_gradient(adx, bottom_level,top_level,darkenColor(midc, 0.2),midc)
+adx_ema_plot = plot(adx_ema, color = color.black)
+minus_col = color.from_gradient(minus, bottom_level,top_level, darkenColor(bearc, 0.2) ,bearc)
+plus_col = color.from_gradient(plus, bottom_level,top_level,   darkenColor(bullc, 0.2) ,bullc)
+
+adx_plot        = plot(adx, color=adx_col, title="ADX")
+diplus_plot     = plot(plus, color=plus_col, title="+DI")
+diminus_plot    = plot(minus, color=minus_col, title="-DI")
+mid_plot        = plot(mid_level, color=midc, title="DMI_Mid", display = display.none) 
+
+bull_top_col     = plus > minus? color.new(bullc, 55) : chart.bg_color
+bear_top_col     = plus < minus? color.new(bearc, 55) : chart.bg_color
+
+bull_bottom_col  = plus > minus? chart.bg_color : darkenColor(bearc, 0.2)
+bear_bottom_col  = plus < minus? chart.bg_color : darkenColor(bullc, 0.2)
+
+bull_top = plus > minus? top_level : mid_level
+bear_top = plus < minus? top_level : mid_level
+
+bull_bottom = plus > minus? mid_level : bottom_level
+bear_bottom = plus < minus? mid_level : bottom_level
+
+bgcolor(adx > adx_ema? plus > minus? color.new(bullc, 95) : color.new(bearc, 95) : na)
+fill(mid_plot, diplus_plot,  top_value = bull_top, bottom_value = bull_bottom, top_color = bull_top_col, bottom_color = bull_bottom_col)
+fill(diminus_plot, mid_plot, top_value = bear_top, bottom_value = bear_bottom, top_color = bear_top_col, bottom_color = bear_bottom_col)
+
+
+

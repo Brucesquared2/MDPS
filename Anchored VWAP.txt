@@ -1,0 +1,109 @@
+"Anchored VWAP"
+
+//@version=6
+indicator("Anchored VWAP + Prev Session Levels by Avenoir", overlay=true)
+
+// Inputs
+anchorOpt = input.string("Weekly", "Anchor timeframe", options=["Weekly","Monthly","Quarterly","Yearly"])
+srcOpt    = input.string("HLC3", "Price source", options=["Close","HLC3"])
+nDev      = input.float(1.0, "Std Dev (σ)", minval=0.0, step=0.1)
+showPrev  = input.bool(true, "Show previous session levels & labels")
+
+// Source & weights
+p = srcOpt == "Close" ? close : hlc3
+w = volume
+
+// Map selection to timeframe string
+string tf = switch anchorOpt
+    "Weekly"    => "W"
+    "Monthly"   => "M"
+    "Quarterly" => "3M"
+    => "12M" // Yearly
+
+// Detect new anchor (BOOLEAN)
+reset = (ta.change(time(tf)) != 0) or barstate.isfirst
+
+// Running weighted sums (reset at new anchor)
+var float sumPV  = 0.0
+var float sumW   = 0.0
+var float sumP2V = 0.0
+
+if reset
+    sumPV  := p * w
+    sumW   := w
+    sumP2V := p * p * w
+else
+    sumPV  += p * w
+    sumW   += w
+    sumP2V += p * p * w
+
+// VWAP and weighted stdev
+vwap = sumW != 0 ? sumPV / sumW : na
+E_p2 = sumW != 0 ? sumP2V / sumW : na
+variance = na(vwap) or na(E_p2) ? na : math.max(E_p2 - vwap * vwap, 0)
+stdev = na(variance) ? na : math.sqrt(variance)
+
+// ±σ bands
+upper = na(vwap) or na(stdev) ? na : vwap + nDev * stdev
+lower = na(vwap) or na(stdev) ? na : vwap - nDev * stdev
+
+// ─────────────── Prev-session finals (draw across current session) ───────────────
+var line  prevU_line = na
+var line  prevM_line = na
+var line  prevL_line = na
+var label prevU_lab  = na
+var label prevM_lab  = na
+var label prevL_lab  = na
+var float prevU_val  = na
+var float prevM_val  = na
+var float prevL_val  = na
+
+// When a new session starts, lock in the *final* values of the session that just ended:
+// those are at index [1] on the first bar of the new session.
+if reset and not barstate.isfirst and showPrev
+    prevU_val := upper[1]
+    prevM_val := vwap[1]
+    prevL_val := lower[1]
+
+    // Clean old objects
+    if not na(prevU_line)
+        line.delete(prevU_line)
+    if not na(prevM_line)
+        line.delete(prevM_line)
+    if not na(prevL_line)
+        line.delete(prevL_line)
+    if not na(prevU_lab)
+        label.delete(prevU_lab)
+    if not na(prevM_lab)
+        label.delete(prevM_lab)
+    if not na(prevL_lab)
+        label.delete(prevL_lab)
+
+    // Create new extended-right lines starting at the boundary
+    if not na(prevU_val)
+        prevU_line := line.new(bar_index - 1, prevU_val, bar_index, prevU_val,extend=extend.right, color=color.new(color.gray, 0), width=1, style=line.style_dotted)
+        prevU_lab  := label.new(bar_index, prevU_val, text="Previous High",textcolor=color.gray, style=label.style_label_left, size=size.tiny, color=color.new(color.white, 100))
+    if not na(prevM_val)
+        prevM_line := line.new(bar_index - 1, prevM_val, bar_index, prevM_val,extend=extend.right, color=color.new(color.aqua, 0), width=1, style=line.style_dotted)
+        prevM_lab  := label.new(bar_index, prevM_val, text="Previous Mid",textcolor=color.aqua, style=label.style_label_left, size=size.tiny, color=color.new(color.white, 100))
+    if not na(prevL_val)
+        prevL_line := line.new(bar_index - 1, prevL_val, bar_index, prevL_val,extend=extend.right, color=color.new(color.gray, 0), width=1, style=line.style_dotted)
+        prevL_lab  := label.new(bar_index, prevL_val, text="Previous Low",textcolor=color.gray, style=label.style_label_left, size=size.tiny, color=color.new(color.white, 100))
+
+// Keep labels pinned to the right edge as new bars print
+if showPrev
+    if not na(prevU_lab) and not na(prevU_val)
+        label.set_x(prevU_lab, bar_index)
+        label.set_y(prevU_lab, prevU_val)
+    if not na(prevM_lab) and not na(prevM_val)
+        label.set_x(prevM_lab, bar_index)
+        label.set_y(prevM_lab, prevM_val)
+    if not na(prevL_lab) and not na(prevL_val)
+        label.set_x(prevL_lab, bar_index)
+        label.set_y(prevL_lab, prevL_val)
+
+// ─────────────── Plots ───────────────
+plot(vwap,  "VWAP",       color=color.new(color.aqua, 0), linewidth=2)
+uPlot = plot(upper, "Upper (+σ)", color=color.new(color.gray, 0), linewidth=1)
+lPlot = plot(lower, "Lower (-σ)", color=color.new(color.gray, 0), linewidth=1)
+fill(uPlot, lPlot, color=color.new(color.gray, 90))

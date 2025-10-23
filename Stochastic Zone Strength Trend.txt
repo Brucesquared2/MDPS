@@ -1,0 +1,129 @@
+Stochastic Zone Strength Trend
+
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © bruce67576
+
+// © wbburgin
+//@version=5
+indicator('Stochastic Zone Strength Trend [wbburgin]', overlay=false)
+
+import wbburgin/wbburgin_utils/2 as utils
+
+anysource_zonestrength(int amplitude, simple int wavelength, float source) =>
+
+//EXPLANATION OF ZONE STRENGTH
+//  First, the highest and lowest values of the source are taken for the amplitude period.
+	hx = ta.highest(source,amplitude)
+	lx = ta.lowest(source,amplitude)
+
+//  Next, a skewed Heikin-Ashi transformation is performed using the highest and lowest values. This essentially is the 
+//  OHLC4 value but instead of using the current highs or lows, it uses the amplitude period highs and lows. This smooths
+//  out the data.
+
+    HLA = .25 * ((2*source) + hx + lx)
+    OCP = source[1]
+    g = math.avg(HLA, OCP)
+
+//  Then, a distance metric is taken to measure how far the price actually moved within the candle. Most indicators
+//  typically use a displacement metric (like close - open) instead of measuring how far the price actually moved (up and
+//  down) within a candlestick. This is what the zone strength concept represents - the hesitation within the candlestick
+//  that is not typically represented in typical momentum indicators.
+
+    stringer_prerun = if HLA > OCP
+        if hx > HLA
+            hx - HLA + hx - OCP
+            hx - OCP
+    else
+        if lx < HLA
+            lx - OCP - HLA + lx
+            lx - OCP
+
+    h = g * (1 + (stringer_prerun)* -1 / g)
+
+//  Finally, the highest and lowest values of the distance metric are retrieved and their exponential moving averages
+//  are compared to the actual high-low average of the current candlestick. This measures the current candle's 
+//  relationship to previous distances traveled.
+
+    amp_highest = ta.highest(h, amplitude)
+    amp_lowest = ta.lowest(h, amplitude)
+    s = ta.ema(amp_lowest, wavelength)
+    t = ta.ema(amp_highest, wavelength)
+    u = (HLA - s) / (t - s) - .5
+
+anysource_str(int amplitude, float source)=>
+
+//  The STR function is the exact same distance metric. Zone Strength is just the oscillating transform of the function.
+
+	hx = ta.highest(source,amplitude)
+	lx = ta.lowest(source,amplitude)
+    ha_close =  .25 * ((2*source) + hx + lx)
+    ha_open = source[1]
+    haAVG = math.avg(ha_close, ha_open)
+    stringer_prerun = if ha_close > ha_open
+        if hx > ha_close
+            hx - ha_close + hx - ha_open
+            hx - ha_open
+    else
+        if lx < ha_close
+            lx - ha_open - ha_close + lx
+            lx - ha_open
+    str = math.abs(stringer_prerun)
+    str
+
+stochzonestrength(float source, string form,simple int amplitude,simple int wavelength,simple int smoothing=3)=>
+    zs = anysource_zonestrength(amplitude, wavelength,source)
+    k2 = ta.sma(ta.stoch(zs, zs, zs, wavelength), smoothing)
+    zsp = ta.ema(anysource_str(amplitude,source), wavelength)
+    k4 = ta.sma(ta.stoch(zsp, zsp, zsp, wavelength),smoothing)
+    szs = form=="Normal"? k2 : form=="Deviated" ? k4 : na 
+    szs
+
+amplitude = input(title='Amplitude', defval=15, group="ZS Source")
+wavelength = input(title='Wavelength', defval=200, group="ZS Source")
+smoothK = input.int(3, "Smoothing Factor", minval=1,group="Stochastic")
+showZone = input.bool(true,"Show Zone Strength",group="Display")
+showTrend = input.bool(true,"Show Trend Strength",group="Display")
+trendStrengthSigLength = input.int(14,"Trend Strength Signal Length",group="Display")
+trendForm = input.string("50","Trend Anchor",options = ["0","50"],group="Display",
+ tooltip="'0' (default) will display the Trend as an absolute, nondirectional indicator, like the ADX. '50' will"+
+  " display the Trend as a directional momentum indicator. Both can be useful in different circumstances, but should"+
+   " be interpreted differently.")
+trendTransformLength = input.int(200,"Trend Transform MA Length",group="Display",
+ tooltip = "If your Trend is anchored at 50, this is the moving average that the plot uses as a baseline. ")
+trendPlotType = input.string("Area",options=["Area","Line"],title="Trend Plot Type",group="Display",tooltip="Only"+
+ " works if the Anchor is at 0")
+zoneColorLow = input.color(color.red,"Zone Low Color",inline="ZS Col",group="Display")
+zoneColorHigh = input.color(color.yellow,"Zone High Color",inline="ZS Col",group="Display")
+trendColorLow = input.color(color.new(color.black,50),"Trend Low Color",inline="TCol",group="Display")
+trendColorHigh = input.color(color.new(color.purple,50),"Trend High Color",inline="TCol",group="Display")
+
+//Zone Strength
+zs = anysource_zonestrength(amplitude,wavelength,close)
+
+//Stochastic Zone Strength - Normal
+stoch = stochzonestrength(close,"Normal",amplitude,wavelength,smoothK)
+
+//Stochastic Zone Strength - Trend Strength
+trend = stochzonestrength(close,"Deviated",amplitude,wavelength,smoothK)
+trend_form2 = (trend - ta.ema(trend, trendTransformLength)) + 50
+
+color_stoch = color.from_gradient(zs,ta.lowest(zs,wavelength),ta.highest(zs,wavelength),zoneColorLow,zoneColorHigh)
+
+color_trend = color.from_gradient(stoch, 0, 100, trendColorLow, trendColorHigh)
+
+plot(showZone ? stoch : na, "Zone Strength", color=color_stoch)
+
+plot(showTrend and trendForm == "0" and trendPlotType == "Area"? trend : na, "Trend Strength - Regular - Area", 
+ color=color_trend, style= plot.style_area )
+plot(showTrend and trendForm == "0" and trendPlotType == "Line"? trend : na, "Trend Strength - Regular - Line", 
+ color=color_trend, style= plot.style_line )
+
+tf2 = plot(showTrend and trendForm == "50" ? trend_form2 : na, "Trend Transform", color=color_trend)
+midline = plot(50,color=color.white)
+
+
+fill(tf2,midline,color=showTrend and trendForm == "50" ? color_trend : na)
+
+overbought = hline(80)
+oversold = hline(20)
+fill(overbought,oversold,color.new(color.purple,95))

@@ -1,0 +1,242 @@
+"QuantumSync Pulse"
+
+//@version=6
+indicator(title="QuantumSync Pulse [ w.aritas ]", shorttitle="QSP [ w.aritas ]", overlay=false, precision=2)
+
+// Credit for libraries to @andre_007
+import andre_007/Utils/11 as UTIL
+import andre_007/MovingAveragesProxy/4 as MAP
+
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+// QuantumSync Pulse
+// Software Developed by AM @insidermike
+// Copyright (C) 2025
+// 
+// Technical Indicator combining momentum, mean reversion, and regime detection
+// with advanced entropy and quantum-inspired calculations.
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+/// Inputs
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+group_general = "General Settings"
+len = input.int(20, title="Momentum Length", minval=1, group=group_general, tooltip="Lookback for momentum calculation; higher values smooth signals.")
+entropyLen = input.int(14, title="Entropy Lookback", minval=2, group=group_general, tooltip="Period for entropy analysis; affects uncertainty sensitivity.")
+atrLen = input.int(14, title="ATR Length (Volatility)", minval=1, group=group_general, tooltip="ATR period for volatility normalization.")
+q = input.float(1.5, title="Tsallis q Parameter", minval=0.01, maxval=5.0, group=group_general, tooltip="Entropy sensitivity; higher values emphasize extremes.")
+quantumWeight = input.float(0.5, title="Quantum/Entropy Weight", minval=0.0, maxval=1.0, group=group_general, tooltip="Balances quantum tunneling vs. entropy in signal.")
+htf = input.timeframe("5", title="Higher Timeframe (MTF)", group=group_general, tooltip="Timeframe for trend alignment; e.g., '5' for 5m.")
+
+group_mean_reversion = "Advanced Mean Reversion"
+ou_decay = input.float(0.99, title="OU Decay Factor", minval=0.0, maxval=1.0, group=group_mean_reversion, tooltip="Mean reversion speed; lower values increase responsiveness.")
+ou_corr_len = input.int(100, title="OU Correlation Length", minval=1, group=group_mean_reversion, tooltip="Period for mean reversion correlation analysis.")
+ou_threshold = input.float(2.0, title="OU Threshold (Std Dev)", minval=0.1, group=group_mean_reversion, tooltip="Std dev threshold for mean reversion signals.")
+
+group_regime = "Enhanced Regime Detection"
+hurst_len = input.int(100, title="Hurst Exponent Lookback", minval=10, group=group_regime, tooltip="Period for trend persistence analysis.")
+z_score_len = input.int(50, title="Z-Score Normalization Lookback", minval=10, group=group_regime, tooltip="Period for signal normalization.")
+volatility_ratio_len = input.int(20, title="Volatility Ratio Lookback", minval=5, group=group_regime, tooltip="Period for volatility trend detection.")
+
+group_histogram = "DMI (Histogram)"
+source = input.source(ohlc4, title="Source", group=group_histogram, inline="A", tooltip="Price source for DMI histogram; typically OHLC4.")
+lenMultiplier = input.float(2, minval=1, title="Multiplier", group=group_histogram, inline="10", tooltip="Scales histogram amplitude for visibility.")
+lenDI = input.int(55, minval=1, title="DI Length", group=group_histogram, inline="10", tooltip="Period for Directional Indicator calculation.")
+DIsmooth = input.bool(false, title="Smooth DI?", group=group_histogram, inline="10", tooltip="Enable smoothing for Directional Indicator.")
+lenDIsmooth = input.int(3, minval=1, title="DI Smooth", group=group_histogram, inline="11", tooltip="Smoothing period for Directional Indicator.")
+typeDISmooth = input.int(defval=2, title="Type of Smooth", options=[1, 2, 3, 4, 5, 6, 7, 8, 9], inline="11", group=group_histogram, tooltip="Moving average type for DI smoothing.")
+
+group_levels = "Custom Levels for Histogram's Theme"
+level1Histogram = input.int(defval=10, title="Level 1", minval=0, maxval=100, group=group_levels, inline="1", tooltip="First threshold for histogram color gradient.")
+level2Histogram = input.int(defval=20, title="Level 2", minval=0, maxval=100, group=group_levels, inline="1", tooltip="Second threshold for histogram color gradient.")
+level3Histogram = input.int(defval=30, title="Level 3", minval=0, maxval=100, group=group_levels, inline="1", tooltip="Third threshold for histogram color gradient.")
+level4Histogram = input.int(defval=40, title="Level 4", minval=0, maxval=100, group=group_levels, inline="2", tooltip="Fourth threshold for histogram color gradient.")
+level5Histogram = input.int(defval=50, title="Level 5", minval=0, maxval=100, group=group_levels, inline="2", tooltip="Fifth threshold for histogram color gradient.")
+
+group_color_settings = "Histogram Color Settings"
+transparencyHistogramUp = input.int(0, minval=0, maxval=100, inline="1", title="Transparency", group=group_color_settings, tooltip="Transparency for positive histogram bars.")
+transparencyHistogramDown = input.int(0, minval=0, maxval=100, inline="1", title="Transparency", group=group_color_settings, tooltip="Transparency for negative histogram bars.")
+
+colorHistogramDown_1 = input(color.rgb(255, 0, 0), "", inline="2", group=group_color_settings, tooltip="First color for negative histogram gradient.")
+colorHistogramDown_2 = input(color.rgb(255, 30, 30), "", inline="2", group=group_color_settings, tooltip="Second color for negative histogram gradient.")
+colorHistogramDown_3 = input(color.rgb(255, 60, 60), "", inline="2", group=group_color_settings, tooltip="Third color for negative histogram gradient.")
+colorHistogramDown_4 = input(color.rgb(255, 90, 90), "", inline="2", group=group_color_settings, tooltip="Fourth color for negative histogram gradient.")
+colorHistogramDown_5 = input(color.rgb(255, 120, 120), "", inline="2", group=group_color_settings, tooltip="Fifth color for negative histogram gradient.")
+colorHistogramDown_6 = input(color.rgb(255, 150, 150), "", inline="2", group=group_color_settings, tooltip="Sixth color for negative histogram gradient.")
+
+colorHistogramUp_1 = input(color.new(#1c3bfb, 0), "", inline="2", group=group_color_settings, tooltip="First color for positive histogram gradient.")
+colorHistogramUp_2 = input(color.new(#2855fc, 0), "", inline="2", group=group_color_settings, tooltip="Second color for positive histogram gradient.")
+colorHistogramUp_3 = input(color.new(#346ffd, 0), "", inline="2", group=group_color_settings, tooltip="Third color for positive histogram gradient.")
+colorHistogramUp_4 = input(color.new(#4078fe, 0), "", inline="2", group=group_color_settings, tooltip="Fourth color for positive histogram gradient.")
+colorHistogramUp_5 = input(color.new(#5b9bf9, 0), "", inline="2", group=group_color_settings, tooltip="Fifth color for positive histogram gradient.")
+colorHistogramUp_6 = input(color.new(#72b6fc, 0), "", inline="2", group=group_color_settings, tooltip="Sixth color for positive histogram gradient.")
+
+themeHistoP = input.int(defval=71, title="Theme #1", options=[1, 2, 10, 11, 12, 13, 14, 15, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71, 80, 81, 90, 91, 100, 101, 102, 103, 104, 105, 106, 107, 120, 121, 122, 123, 130, 131, 132, 133, 134, 135, 136, 137, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 160, 161, 162, 163, 164, 165, 170, 171, 180, 181, 182, 183, 184, 185, 190, 191], inline="1", group="Theme for Histogram above 0", tooltip="Color theme for positive histogram values.")
+themeHistoN = input.int(defval=190, title="Theme #2", options=[1, 2, 10, 11, 12, 13, 14, 15, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71, 80, 81, 90, 91, 100, 101, 102, 103, 104, 105, 106, 107, 120, 121, 122, 123, 130, 131, 132, 133, 134, 135, 136, 137, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 160, 161, 162, 163, 164, 165, 170, 171, 180, 181, 182, 183, 184, 185, 190, 191], inline="1", group="Theme for Histogram below 0", tooltip="Color theme for negative histogram values.")
+
+/// Helper Functions
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+// Adaptive OU Model with initialization guards
+adaptive_ou_signal(src, decay_base, corr_base, threshold) =>
+    var float decay = nz(decay_base, 0.99)
+    var int corr_len = math.max(corr_base, 5)
+    returns = bar_index > 0 ? math.log(src / nz(src[1], src)) : 0.0
+    autocorr = ta.correlation(returns, returns[1], 5)
+    autocorr := nz(autocorr, 0.0)
+    decay := math.min(math.max(decay_base * (1 + math.abs(autocorr)), 0.01), 0.999)
+    corr_len := math.max(math.round(math.max(corr_base, 5) * (1 - math.abs(autocorr))), 5)
+    
+    var float ewma_mu = src
+    ewma_mu := decay * nz(ewma_mu[1], src) + (1 - decay) * src
+    mu = ewma_mu
+    rho1 = ta.correlation(returns, returns[1], corr_len)
+    rho1 := math.max(nz(rho1, 0.0001), 0.0001)
+    sigma = ta.stdev(src, corr_len)
+    deviation = (src - mu) / math.max(nz(sigma, ta.stdev(src, 20)), 1e-4)
+    nz(deviation, 0.0)
+
+// ADX Histogram Calculation
+adx(simple int lengthDI, simple bool smoothDI, simple int typeMA, simple int lengthMA, float source) =>
+    _high = ta.highest(source, 1)
+    _low = ta.lowest(source, 1)
+
+    up = ta.change(_high)
+    down = -ta.change(_low)
+
+    plusDM = na(up) ? na : up > down and up > 0 ? up : 0
+    minusDM = na(down) ? na : down > up and down > 0 ? down : 0
+
+    trueRange = na(_high[1]) ? _high - _low : math.max(math.max(_high - _low, math.abs(_high - source[1])), math.abs(_low - source[1]))
+
+    trur = ta.rma(trueRange, lengthDI)
+    plus = fixnan(100 * ta.rma(plusDM, lengthDI) / trur)
+    minus = fixnan(100 * ta.rma(minusDM, lengthDI) / trur)
+
+    diff = plus - minus
+
+    smoothDI ? MAP.getMovingAverage(typeID = typeMA, src = diff, len = lengthMA) : diff
+
+// Histogram Color Calculation
+getHistogramColor(sourceVal, sourcePrevVal, themePositive, themeNegative, level1, level2, level3, level4, level5) =>
+    var vc = UTIL.valueColorSpectrum.new()
+    if sourceVal >= 0
+        UTIL.setCustomLevels(vc, level1, level2, level3, level4, level5)
+        UTIL.setTheme(vc, themePositive)
+        vc.currentValue := sourceVal
+        vc.previousValue := sourcePrevVal
+        UTIL.setCurrentColorValue(vc)
+        vc.currentColorValue
+    else
+        UTIL.setCustomLevels(vc, level1, level2, level3, level4, level5)
+        UTIL.setTheme(vc, themeNegative)
+        vc.currentValue := sourceVal
+        vc.previousValue := sourcePrevVal
+        UTIL.setCurrentColorValue(vc)
+        vc.currentColorValue
+
+// Hurst Exponent Calculation with NA protection
+hurst_exp(src, len) =>
+    if bar_index < len
+        0.5
+    else
+        mean = ta.sma(src, len)
+        dev = src - mean
+        Z = ta.cum(dev)
+        R = ta.highest(Z, len) - ta.lowest(Z, len)
+        S = ta.stdev(src, len)
+        RS = R / (S * math.sqrt(len) + 1e-8)
+        h = math.log(nz(RS, 1e-8)) / math.log(len)
+        math.max(math.min(h, 1.0), 0.0)
+
+// 3-State Tsallis Entropy with initialization
+tsallis_entropy(momentum_norm, lookback, q_value, threshold) =>
+    float pUp = 0.0, pNeutral = 0.0, pDn = 0.0
+    validLookback = math.max(lookback, 1)
+    for i = 0 to validLookback-1
+        float val = nz(momentum_norm[i], 0.0)
+        if val > threshold
+            pUp += 1
+        else if val < -threshold
+            pDn += 1
+        else
+            pNeutral += 1
+    pUp := pUp / validLookback
+    pNeutral := pNeutral / validLookback
+    pDn := pDn / validLookback
+    
+    float entropy = 0.0
+    if q_value != 1
+        entropy := (1 - (math.pow(pUp, q_value) + math.pow(pNeutral, q_value) + math.pow(pDn, q_value))) / math.max(q_value - 1, 0.001)
+    else
+        entropy := -( (pUp > 0 ? pUp * math.log(math.max(pUp, 1e-10)) : 0) + 
+                     (pNeutral > 0 ? pNeutral * math.log(math.max(pNeutral, 1e-10)) : 0) + 
+                     (pDn > 0 ? pDn * math.log(math.max(pDn, 1e-10)) : 0) )
+    nz(entropy, 0.0)
+
+/// Core Calculations
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+// Price Analysis
+vol = math.max(ta.atr(atrLen), 1e-4)
+momentum = close - close[len]
+momentum_norm = momentum / nz(vol, 1.0)
+
+// 3-State Entropy Calculation with guard rails
+entropy_threshold = bar_index >= entropyLen ? math.max(ta.stdev(momentum_norm, entropyLen) * 0.5, 0.01) : 0.01
+tsallis = tsallis_entropy(momentum_norm, entropyLen, q, entropy_threshold)
+certainty = math.exp(-math.min(nz(tsallis, 0.0), 100))
+
+// Dynamic Quantum Tunneling with volatility floor
+volatility_ratio = math.max(vol / ta.sma(vol, volatility_ratio_len), 0.1)
+tunneling_slope = math.sqrt(nz(volatility_ratio, 1.0))
+tunnelingProb = 1.0 / (1.0 + math.exp(-momentum_norm / math.max(tunneling_slope, 0.1)))
+
+// Smart MTF Synchronization with NA protection
+rawOsc = momentum_norm * ((1 - quantumWeight) * certainty + quantumWeight * tunnelingProb)
+mtfOsc = request.security(syminfo.tickerid, htf, rawOsc, gaps=barmerge.gaps_on, lookahead=barmerge.lookahead_off)
+mtf_alignment = math.sign(nz(rawOsc, 0.0)) == math.sign(nz(mtfOsc, 0.0)) ? 1.0 : 0.0
+combined = rawOsc + mtf_alignment * quantumWeight * nz(mtfOsc, 0.0)
+
+// Adaptive SuperSmoother Filter with length validation
+volatility_factor = math.sqrt(math.max(nz(volatility_ratio, 1.0), 0.1))
+adaptive_len = math.max(math.round(len * volatility_factor), 5)
+a1 = math.exp(-math.sqrt(2.0) * math.pi / adaptive_len)
+b1 = 2 * a1 * math.cos(math.sqrt(2.0) * math.pi / adaptive_len)
+c2 = b1
+c3 = -a1 * a1
+c1 = 1 - c2 - c3
+var float qedo_signal = 0.0
+qedo_signal := bar_index < 2 ? combined : c1 * (nz(combined, 0.0) + nz(combined[1], 0.0)) / 2 + c2 * nz(qedo_signal[1], 0.0) + c3 * nz(qedo_signal[2], 0.0)
+
+// Enhanced Regime Detection with initialization
+hurst = hurst_exp(close, math.max(hurst_len, 10))
+vol_regime = ta.roc(vol, 5)
+vol_regime := nz(vol_regime, 0.0) > 0 ? 1 : -1
+regime = (nz(hurst, 0.5) * 0.6) + (vol_regime * 0.4)
+w_momentum = (1.0 + regime) / 2.0
+w_mean_reversion = 1 - w_momentum
+
+// Advanced Mean Reversion with NA guards
+mr_signal = adaptive_ou_signal(close, ou_decay, ou_corr_len, ou_threshold)
+
+// Dynamic Normalization with minimum lookback
+zedo = (qedo_signal - ta.sma(qedo_signal, z_score_len)) / math.max(ta.stdev(qedo_signal, z_score_len), 1e-4)
+zmr = (mr_signal - ta.sma(mr_signal, z_score_len)) / math.max(ta.stdev(mr_signal, z_score_len), 1e-4)
+
+// Intelligent Signal Blending with fallback
+final_z = ta.rsi(nz(w_momentum * zedo + w_mean_reversion * zmr, 0.0), 14)
+
+/// Visualization
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+histogram = adx(lengthDI=lenDI, smoothDI=DIsmooth, typeMA=typeDISmooth, lengthMA=lenDIsmooth, source=final_z)
+histogram := histogram * lenMultiplier
+
+histogram_ohlc4 = adx(lengthDI = lenDI, smoothDI = DIsmooth, typeMA = typeDISmooth, lengthMA = lenDIsmooth, source = ohlc4) // Initialise DMI Histogram
+histogram_ohlc4 := histogram_ohlc4 * lenMultiplier
+
+colorHistogram = getHistogramColor(histogram, histogram[1], themeHistoP, themeHistoN, level1Histogram, level2Histogram, level3Histogram, level4Histogram, level5Histogram)
+colorHistogramOHLC = getHistogramColor(histogram_ohlc4, histogram_ohlc4[1], themeHistoP, themeHistoN, level1Histogram, level2Histogram, level3Histogram, level4Histogram, level5Histogram)
+
+plot(histogram, color=color.new(colorHistogram, histogram >= 0 ? transparencyHistogramUp : transparencyHistogramDown), style=plot.style_histogram, title="Mean")
+plot(histogram_ohlc4, color = color.new(colorHistogramOHLC, histogram_ohlc4 >= 0 ? transparencyHistogramUp : transparencyHistogramDown), style = plot.style_histogram, title = 'Price')

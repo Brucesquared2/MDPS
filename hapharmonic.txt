@@ -1,0 +1,267 @@
+hapharmonic
+
+
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/  
+// © hapharmonic, modified by Claudio 28/09/2025.
+
+//@version=6
+
+FV = format.volume
+FP = format.percent
+indicator('Delta Volume Signals by Claudio [hapharmonic]', format = FV, max_bars_back = 4999, max_labels_count = 500)
+
+//------------------------------------------
+//                Settings                 
+//------------------------------------------
+bool usecandle = input.bool(true, title = 'Volume on Candles',display=display.none)
+
+color C_Up   = input.color(#12cef8, title = 'Volume Buy', inline = ' ', group = 'Style')
+color C_Down = input.color(#f23645, title = 'Volume Sell', inline = ' ', group = 'Style')
+
+color signalUpColor   = input.color(color.new(#04fa0c, 0), "Signal Up Color", group = "Signals")
+color signalDownColor = input.color(color.new(#f90303, 0), "Signal Down Color", group = "Signals")
+
+string P_    = input.string(position.top_right,"Position",options = [position.top_right,position.top_center,position.middle_right,
+                                                                         position.middle_left,position.bottom_center,position.middle_center,
+                                                                         position.bottom_left,position.bottom_right,position.top_left],
+                                                                         group = "Style",display=display.none)
+string sL = input.string(size.small , 'Size Label', options = [size.tiny, size.small, size.normal, size.large], group = 'Style',display=display.none)
+string sT = input.string(size.small, 'Size Table', options = [size.tiny, size.small, size.normal, size.large], group = 'Style',display=display.none)
+bool Label = input.bool(false, inline = '0')
+History = input.bool(true, inline = 'l')
+
+// Inputs EMA + volumen
+bool MAV = input.bool(true, title = 'EMA', group = 'EMA')
+string volumeOption = input.string('Use Volume Confirmation', title = 'Volume Option', options = ['none', 'Use Volume Confirmation'], group = 'EMA',display=display.none)
+bool useVolumeConfirmation = volumeOption == 'none' ? false : true
+int emaFastLength = input(12, title = 'Fast EMA Length', group = 'EMA',display=display.none)
+int emaSlowLength = input(26, title = 'Slow EMA Length', group = 'EMA',display=display.none)
+int volumeConfirmationLength = input(6, title = 'Volume Confirmation Length', group = 'EMA',display=display.none)
+string alert_freq = input.string(alert.freq_once_per_bar_close, title="Alert Frequency",
+                                         options=[alert.freq_once_per_bar, alert.freq_once_per_bar_close],group = "EMA",
+                                         tooltip="If you choose once_per_bar, you will receive immediate notifications (but this may cause interference or indicator repainting).\n However, if you choose once_per_bar_close, it will wait for the candle to confirm the signal before notifying.",display=display.none)
+
+//------------------------------------------
+//     Input SMA para porcentajes
+//------------------------------------------
+smaLength = input.int(9, "SMA Length (for % Buy/Sell)", minval=1, group="SMA")
+
+//------------------------------------------
+//             UDT_identifier              
+//------------------------------------------
+type OHLCV
+	float O = open
+	float H = high
+	float L = low
+	float C = close
+	float V = volume
+
+type VolumeData
+	float buyVol
+	float sellVol
+	float pcBuy
+	float pcSell
+	bool isBuyGreater
+	float higherVol
+	float lowerVol
+	color higherCol
+	color lowerCol
+
+//------------------------------------------
+calcVolumes(OHLCV ohlcv) =>
+    var VolumeData data = VolumeData.new()
+    data.buyVol       := ohlcv.V * (ohlcv.C - ohlcv.L) / (ohlcv.H - ohlcv.L)
+    data.sellVol      := ohlcv.V - data.buyVol
+    data.pcBuy        := data.buyVol / ohlcv.V * 100
+    data.pcSell       := 100 - data.pcBuy
+    data.isBuyGreater := data.buyVol > data.sellVol
+    data.higherVol    := data.isBuyGreater ? data.buyVol  : data.sellVol
+    data.lowerVol     := data.isBuyGreater ? data.sellVol : data.buyVol
+    data.higherCol    := data.isBuyGreater ? C_Up     : C_Down
+    data.lowerCol     := data.isBuyGreater ? C_Down   : C_Up
+    data
+
+//------------------------------------------
+ohlcv   = OHLCV.new()
+volData = calcVolumes(ohlcv)
+
+//------------------------------------------
+// Abreviador K/M/B con un decimal
+//------------------------------------------
+S(D, F) =>
+    if na(D)
+        "na"
+    else
+        v   = float(D)
+        av  = math.abs(v)
+        signStr = v < 0 ? "-" : ""
+        if av >= 1000000000
+            scaled = av / 1000000000
+            signStr + str.tostring(math.round(scaled * 10) / 10) + "B"
+        else if av >= 1000000
+            scaled = av / 1000000
+            signStr + str.tostring(math.round(scaled * 10) / 10) + "M"
+        else if av >= 1000
+            scaled = av / 1000
+            signStr + str.tostring(math.round(scaled * 10) / 10) + "K"
+        else
+            signStr + str.tostring(math.round(av * 10) / 10)
+
+//------------------------------------------
+// ✅ Variables globales Δ Vol
+//------------------------------------------
+deltaVol           = volData.buyVol - volData.sellVol
+deltaVolStr        = S(math.abs(deltaVol), FV) // ⚡ Mostrar valor absoluto (sin signo)
+deltaVolPercent    = (ohlcv.V > 0) ? (deltaVol / ohlcv.V) * 100 : 0
+deltaVolPercentStr = str.tostring(math.round(math.abs(deltaVolPercent))) + " %" // ⚡ Mostrar porcentaje absoluto (sin signo)
+deltaBgColor       = deltaVol >= 0 ?  color.new(#186d1a, 0) : color.new(#f23645, 0)
+
+//------------------------------------------
+// Plot Volumen 
+//------------------------------------------
+plot(ohlcv.V          , color=color.new(volData.higherCol, 90), style=plot.style_columns, title='Total',display = display.all - display.status_line)
+plot(ohlcv.V          , color=volData.higherCol, style=plot.style_stepline_diamond, title='Total2', linewidth = 2,display = display.pane)
+plot(volData.higherVol, color=volData.higherCol, style=plot.style_columns, title='Higher Volume', display = display.all - display.status_line)
+plot(volData.lowerVol , color=volData.lowerCol , style=plot.style_columns, title='Lower Volume',display = display.all - display.status_line)
+
+//------------------------------------------
+volStr        = S(volData.buyVol + volData.sellVol, FV)
+buyVolStr     = S(volData.buyVol, FV)
+sellVolStr    = S(volData.sellVol, FV)
+buyPercentStr = str.tostring(math.round(volData.pcBuy)) + " %"
+sellPercentStr= str.tostring(math.round(volData.pcSell)) + " %"
+
+totalbuyPercentC_ = volData.buyVol  / (volData.buyVol + volData.sellVol) * 100
+sup = not na(ohlcv.V)
+
+//------------------------------------------
+// --- SMA de % Buy/Sell
+//------------------------------------------
+smaBuy  = ta.sma(volData.pcBuy, smaLength)
+smaSell = ta.sma(volData.pcSell, smaLength)
+delta_sma = ta.sma(volData.pcBuy, smaLength) - ta.sma(volData.pcSell, smaLength)
+
+//------------------------------------------
+// --- Tabla
+//------------------------------------------
+if sup
+    TC = text.align_center
+    CW = color.white
+    var table tb = table.new(P_, 6, 7, bgcolor = color.rgb(19, 23, 32), frame_width = 2, frame_color = chart.fg_color, border_width = 1, border_color = CW)
+    tb.cell(0, 0, text = 'Candle Volume Order Flow', text_color = CW, bgcolor = #0E2841, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.merge_cells(0, 0, 5, 0)
+
+   // tb.cell(0, 5, text = 'Δ Volume', text_color = CW, bgcolor = #0B3040, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(0, 5, text =  'Δ Volume Force  ' + deltaVolStr + "  =  " + deltaVolPercentStr, text_color =CW, bgcolor = deltaBgColor, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.merge_cells(0, 5, 1, 5)
+
+    tb.cell(1, 1, text = 'Buyer', text_color = CW, bgcolor = #186d1a, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(0, 1, text = 'Seller', text_color = CW, bgcolor = #f23645, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+
+    tb.cell(1, 2, text = buyVolStr, text_color =CW, bgcolor = #186d1a, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(0, 2, text = sellVolStr, text_color =CW, bgcolor = #f23645, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+
+    tb.cell(1, 3, text = buyPercentStr, text_color = CW, bgcolor = #186d1a, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(0, 3, text = sellPercentStr, text_color = CW, bgcolor = #f23645, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+
+    tb.cell(1, 4, text = "      " + "SMA٠" + str.tostring(smaLength) + " = " + str.tostring(math.round(smaBuy)) + " %" + "      ", text_color = CW, bgcolor = #186d1a, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(0, 4, text = "       " + "SMA٠" + str.tostring(smaLength) + " = " + str.tostring(math.round(smaSell)) + " %" + "       ", text_color = CW, bgcolor = #f23645, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+
+    tb.cell(0,6, text = 'Σ Volume  ' + volStr, text_color = CW, bgcolor = #0B3040, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+    tb.cell(1, 6, text = 'Δ SMA Tend ' +  str.tostring(math.round(math.abs(delta_sma))) + ' %', text_color = CW, bgcolor = #0B3040, text_halign = TC, text_valign = TC, text_size = sT, text_formatting = text.format_bold)
+   
+    // 🔲 Casilleros de fuerza (solo pintan los 4 espacios libres después de Σ SMA)
+    deltaNorm = math.min(math.abs(delta_sma), 100)
+    dirColor  = smaBuy > smaSell ? #04f80c : smaSell > smaBuy ? #f90404 : color.black
+
+    cell1Color = deltaNorm >= 12  ? dirColor : color.black
+    cell2Color = deltaNorm >= 25 ? dirColor : color.black
+    cell3Color = deltaNorm >= 40 ? dirColor : color.black
+    cell4Color = deltaNorm >= 60 ? dirColor : color.black
+
+    tb.cell(2, 6, "", bgcolor=cell1Color)
+    tb.cell(3, 6, "", bgcolor=cell2Color)
+    tb.cell(4, 6, "", bgcolor=cell3Color)
+    tb.cell(5, 6, "", bgcolor=cell4Color)
+
+    cellCount = 20
+    filledCells = 0
+    for r = 5 to 1 by 1
+        for c = 2 to 5 by 1
+            if filledCells < cellCount * (totalbuyPercentC_ / 100)
+                tb.cell(c, r, text = '', bgcolor = C_Up)
+            else
+                tb.cell(c, r, text = '', bgcolor = C_Down)
+            filledCells += 1
+
+    if Label
+        sp = '               '
+        l = label.new(bar_index, ohlcv.V, 
+                      text=str.format('Net: {0}\nBuy: {1} ({2})\nSell: {3} ({4})\nΔVol = {5} ({6})\n{7}/\\\n {7}l\n {7}l', 
+                                      volStr, buyVolStr, buyPercentStr, sellVolStr, sellPercentStr, deltaVolStr, deltaVolPercentStr, sp), 
+                      style=label.style_none, textcolor=volData.higherCol, size=sL, textalign=text.align_left)
+        if not History
+            (l[1]).delete()
+//------------------------------------------
+// Candles con volumen
+//------------------------------------------
+float base  = na,float value = na
+bool uc = usecandle and sup 
+if volData.isBuyGreater
+    base  := math.min(ohlcv.O, ohlcv.C)
+    value := base + math.abs(ohlcv.O - ohlcv.C) * (volData.pcBuy  / 100)
+else
+    base  := math.max(ohlcv.O, ohlcv.C)
+    value := base - math.abs(ohlcv.O - ohlcv.C) * (volData.pcSell / 100)
+
+barcolor(sup ? color.new(na, na)  :  ohlcv.C < ohlcv.O ? color.red : color.green,display = usecandle? display.all:display.none)
+UseC = uc ? volData.higherCol:color.new(na, na)
+plotcandle(uc?base:na, uc?base:na, uc?value:na, uc?value:na,
+           title='Body', color=UseC, bordercolor=na, wickcolor=UseC, 
+           display = usecandle ? display.all - display.status_line : display.none, force_overlay=true,editable=false)
+plotcandle(uc?ohlcv.O:na, uc?ohlcv.H:na, uc?ohlcv.L:na, uc?ohlcv.C:na,
+           title='Fill', color=color.new(UseC,80), bordercolor=UseC, wickcolor=UseC,
+           display = usecandle ? display.all - display.status_line : display.none, force_overlay=true,editable=false)
+
+//------------------------------------------------------------
+// EMA + Volumen Confirmation
+//------------------------------------------------------------
+float emaFast = ta.ema(ohlcv.C, emaFastLength)
+float emaSlow = ta.ema(ohlcv.C, emaSlowLength)
+bool signal = emaFast > emaSlow
+color c_signal = signal ? C_Up : C_Down
+float volumeMA = ta.sma(ohlcv.V, volumeConfirmationLength)
+bool crossover = ta.crossover(emaFast, emaSlow)
+bool crossunder = ta.crossunder(emaFast, emaSlow)
+isVolumeConfirmed(source, length, ma) =>
+    math.sum(source > ma ? source : 0, length) >= math.sum(source < ma ? source : 0, length)
+bool ISV = isVolumeConfirmed(ohlcv.V, volumeConfirmationLength, volumeMA)
+bool crossoverConfirmed = crossover and (not useVolumeConfirmation or ISV)
+bool crossunderConfirmed = crossunder and (not useVolumeConfirmation or ISV)
+PF = MAV ? emaFast : na
+PS = MAV ? emaSlow : na
+p1 = plot(PF, color = c_signal, editable = false, force_overlay = true, display = display.pane)
+plot(PF, color = color.new(c_signal, 80), linewidth = 10, editable = false, force_overlay = true, display = display.pane)
+plot(PF, color = color.new(c_signal, 90), linewidth = 20, editable = false, force_overlay = true, display = display.pane)
+plot(PF, color = color.new(c_signal, 95), linewidth = 30, editable = false, force_overlay = true, display = display.pane)
+plot(PF, color = color.new(c_signal, 98), linewidth = 45, editable = false, force_overlay = true, display = display.pane)
+p2 = plot(PS, color = c_signal, editable = false, force_overlay = true, display = display.pane)
+plot(PS, color = color.new(c_signal, 80), linewidth = 10, editable = false, force_overlay = true, display = display.pane)
+plot(PS, color = color.new(c_signal, 90), linewidth = 20, editable = false, force_overlay = true, display = display.pane)
+plot(PS, color = color.new(c_signal, 95), linewidth = 30, editable = false, force_overlay = true, display = display.pane)
+plot(PS, color = color.new(c_signal, 98), linewidth = 45, editable = false, force_overlay = true, display = display.pane)
+fill(p1, p2, top_value=crossover ? emaFast : emaSlow,
+     bottom_value     =crossover ? emaSlow : emaFast,
+     top_color        =color.new(c_signal, 80),
+     bottom_color     =color.new(c_signal, 95)
+     )
+plotshape(crossoverConfirmed  and MAV, style=shape.triangleup  , location=location.belowbar, color=signalUpColor  , size=size.small, force_overlay=true,display =display.pane)
+plotshape(crossunderConfirmed and MAV, style=shape.triangledown, location=location.abovebar, color=signalDownColor, size=size.small, force_overlay=true,display =display.pane)
+string msg = '---------\n'+"Buy volume ="+buyVolStr+"\nBuy Percent = "+buyPercentStr+"\nSell volume = "+sellVolStr+"\nSell Percent = "+sellPercentStr+"\nNet = "+volStr+'\n---------'
+if crossoverConfirmed
+    alert("Price (" + str.tostring(close) + ") Crossed over  MA\n" + msg, alert_freq)
+if crossunderConfirmed
+    alert("Price (" + str.tostring(close) + ") Crossed under MA\n" + msg, alert_freq)
+    
+//////////
+//////////

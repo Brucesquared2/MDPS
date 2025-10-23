@@ -1,0 +1,16 @@
+import ccxt
+import pandas as pd
+
+exchange = ccxt.bitget({
+    "apiKey": "your_real_api_key",
+    "secret": "your_real_api_secret",
+    "password": "your_real_api_password",
+    "enableRateLimit": True,
+})
+
+ohlcv = exchange.fetch_ohlcv('BTC/USDT', timeframe='1h', limit=500)
+df = pd.DataFrame(ohlcv, columns=['timestamp','open','high','low','close','volume'])
+df['datetime'] = pd.to_datetime(df['timestamp'], unit='ms')
+df.set_index('datetime', inplace=True)
+df.to_csv('data/BTC_USDT_1h.csv')
+print(df.head())
