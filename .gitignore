@@ -1,3 +1,9 @@
 
 .env
 *.env
+
+# Ignore local Python virtualenv
+mdps_venv/
+.venv/
+venv/
+
