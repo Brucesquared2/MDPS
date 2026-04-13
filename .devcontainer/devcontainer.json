@@ -1,0 +1,13 @@
+{
+    "name": "MDPS Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "postCreateCommand": "python -m pip install --upgrade pip && python -m pip install -r requirements.txt -r requirements-api.txt && python -m pip install -e . && python -m ipykernel install --user --name mdps-dev --display-name 'MDPS (devcontainer)'",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance"
+            ]
+        }
+    }
+}
